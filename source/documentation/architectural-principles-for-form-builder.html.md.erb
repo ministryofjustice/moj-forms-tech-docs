@@ -1,0 +1,36 @@
+---
+title: Architectural principles for Form Builder
+last_reviewed_on: 2021-06-01
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+MOJ already has technical and security guidance and standards, which we should follow by default:
+
+* [MOJ technical guidance & standards](https://ministryofjustice.github.io/technical-guidance/#moj-technical-guidance)
+* [MOJ security guidance & standards](https://ministryofjustice.github.io/security-guidance)
+* [Architecture principles for Justice](https://docs.google.com/document/d/1XBTuCw0y--4fZpHcTLWilSFx_qz3aewTiWYJGTZU4sA/edit#)
+
+There are also government-wide standards and principles which are relevant to our technical decisions:
+
+* [Service standard](https://www.gov.uk/service-manual/service-standard)
+* [Technology code of practice](https://www.gov.uk/government/publications/technology-code-of-practice/technology-code-of-practice)
+* [Design principles](https://www.gov.uk/guidance/government-design-principles)
+
+Here are some extra principles on top of those which are specific to Form Builder.
+
+###1. Form Builder assumes that all data submitted through a form is sensitive personal data
+
+And handles it securely enough for that throughout the lifetime of the data. Users of the platform shouldn’t have to make decisions about security levels unless there’s a direct impact on users of a form.
+Confidentiality of submitted data is the top priority, closely followed by integrity; availability of submitted data is a lower priority, given the generally low volumes and back-office processing time expected for services on the platform.
+
+###2. The representation of the form as data is the core of Form Builder
+
+It’s the enabler for easy form creation, test automation, logic validation, multiple presentations, interoperability, transparency. The data representation is what makes it possible for Form Builder to be the preferred choice for building digital services, over custom building.
+
+###3. Form Builder should make services more transparent, not less
+Using a platform to build services could make their workings less transparent to people outside the service team, but also gives us opportunities to radically increase transparency at scale. As a minimum, services built with Form Builder should be as open and transparent as they would normally be if custom-built.
+
+###4. Form Builder should support and build on other MOJ and cross-government platforms
+Stitching them together to enable creation of digital services without bespoke software development. Government as a Platform FTW! There’s some value in keeping options open for Form Builder to be used outside MOJ in future - the vision of GOV.UK Submit is still relevant and needed.

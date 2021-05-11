@@ -1,29 +1,68 @@
-# Hello, World!
+# MOJ Forms Tech Docs
 
-## Edit Me!
+## Who is this documentation for?
+These Tech Docs are used and maintained by the MoJ Forms team and provide technical infomation for maintining the services.
 
-Open `source/documentation/index.html.md.erb` in your favourite text editor and start editing!
+For  infomation on the product there is a [product website](https://moj-forms.service.justice.gov.uk).
 
-You can write content in [Markdown](https://daringfireball.net/projects/markdown/) using **all** of the _usual_ syntax that you're used to!
+## MOJ Forms Plaftom
+Context
 
-This means you can use things like tables:
+### [Editor](documentation/services/editor.html)
 
-<div style="height:1px;font-size:1px;">&nbsp;</div>
+### [Runner](documentation/services/editor.html)
 
-Food | Kind | Tasty?
---- | --- | ---
-Bananas | Fruit | Yes
-Aubergines | Vegetable | No
-Apricots | Fruit | Yes
+### [Hosting](documentation/services/hosting.html)
 
-<div style="height:1px;font-size:1px;">&nbsp;</div>
+### API Endpoint and the Adapter
 
-If you want slightly more control, you can always use <strong>HTML</strong>.
+## Runbooks
+Procedures and operations that the MOJ Forms Tech Team carry out, these
+can be used for reference also.
+<ul>
+  <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
+    <% if page.data.category == "runbooks" %>
+        <li><%= link_to(page.data.title, page.path) %></li>
+    <% end %>
+<% end %>
+</ul>
 
-For more detail and troubleshooting, take a look at the [README] file in the root of this project.
+## [How We Work](/documentation/how-we-work.html)
+Documentation on how the techincal team woirks and process for doing awesome work.
 
-## Link to other pages
+## [Incident Process](/documentation/so-you-are-having-an-incident.html)
+Our process for managing incidents
 
-* [Like this](/documentation/foo/bar.html)
+##Architecture
+### Architecture Descision Records
+To understand why we are recording decisions and how we are doing it, please see ADR-001.
 
-[README]: https://github.com/ministryofjustice/template-documentation-site#template-documentation-site
+<% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
+    <% if page.data.category == "adr" %>
+        <%= page.data.statusicon %> [<%= page.data.reference %> - <%= page.data.title %>](<%= page.path %>)
+    <% end %>
+<% end %>
+
+Statuses:
+🤔 Proposed
+✅ Accepted
+❌ Rejected
+♻️ Amended
+⌛️ Superseded
+
+### [Architectural principles for MOJ Forms](documentation/architectural-principles-for-form-builder.html)
+
+
+## Classic Form Builder
+[Jumping off point for the Classic Form Builder Documentation](https://github.com/ministryofjustice/form-builder) [Archived]
+
+## Updating the Tech Docs
+* Write content tips
+* run local
+* Raise PR
+* Merge
+
+## More Information
+[moj-technical-guidance](https://ministryofjustice.github.io/technical-guidance/#moj-technical-guidance)
+
+[cyber-and-technical-security-guidance](https://ministryofjustice.github.io/security-guidance/#cyber-and-technical-security-guidance)
