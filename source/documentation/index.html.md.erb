@@ -8,11 +8,11 @@ For  infomation on the product there is a [product website](https://moj-forms.se
 ## MOJ Forms Plaftom
 Context
 
-### [Editor](documentation/services/editor.html)
+### [Editor](/documentation/services/editor.html)
 
-### [Runner](documentation/services/editor.html)
+### [Runner](/documentation/services/editor.html)
 
-### [Hosting](documentation/services/hosting.html)
+### [Hosting](/documentation/services/hosting.html)
 
 ### API Endpoint and the Adapter
 
@@ -22,7 +22,10 @@ can be used for reference also.
 <ul>
   <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
     <% if page.data.category == "runbooks" %>
-        <li><%= link_to(page.data.title, page.path) %></li>
+        <li>
+            <%= page.data.title %><%= page.url %>
+            [<%= page.data.title %>](<%= page.url %>)
+        </li>
     <% end %>
 <% end %>
 </ul>
@@ -39,7 +42,7 @@ To understand why we are recording decisions and how we are doing it, please see
 
 <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
     <% if page.data.category == "adr" %>
-        <%= page.data.statusicon %> [<%= page.data.reference %> - <%= page.data.title %>](<%= page.path %>)
+        <%= page.data.statusicon %> [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) (<%= page.data.status %>)
     <% end %>
 <% end %>
 
@@ -50,10 +53,11 @@ Statuses:
 ♻️ Amended
 ⌛️ Superseded
 
-### [Architectural principles for MOJ Forms](documentation/architectural-principles-for-form-builder.html)
+### [Architectural principles for MOJ Forms](/documentation/architectural-principles-for-form-builder.html)
 
 
 ## Classic Form Builder
+
 [Jumping off point for the Classic Form Builder Documentation](https://github.com/ministryofjustice/form-builder) [Archived]
 
 ## Updating the Tech Docs
@@ -63,6 +67,5 @@ Statuses:
 * Merge
 
 ## More Information
-[moj-technical-guidance](https://ministryofjustice.github.io/technical-guidance/#moj-technical-guidance)
 
-[cyber-and-technical-security-guidance](https://ministryofjustice.github.io/security-guidance/#cyber-and-technical-security-guidance)
+Add links
