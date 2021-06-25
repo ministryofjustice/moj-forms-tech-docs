@@ -1,0 +1,102 @@
+---
+title: API and Adapter
+category: platform
+last_reviewed_on: 2021-06-25
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+## Sending data to an API
+The form builder platform has the ability to send the data to an API (application programming interface) endpoint.
+The data is a JSON format and includes the question, answers and links to any uploaded documents.
+The JSON is encrypted by a key pair. There are 2 Architecture Decision Records outlining exactly how they work:
+( [ADR-002](/documentation/adr/ADR-002-secure-json-output.html) and
+[ADR-003](/documentation/adr/ADR-003-files-in-JSON-output.html) )
+
+The json payload:
+
+```json
+{
+   "serviceSlug":"my-form-name",
+   "submissionId":"3c50f43d-55a9-4ada-949d-b9bc2363966d",
+   "submissionAnswers":{
+      "first_name":"Luke",
+      "last_name":"Skywalker",
+      "email_address":"luke.skywalker@digital.justice.gov.uk",
+      "auto_name__1":"Not answered",
+      "auto_name__2":"Not answered",
+      "form_date":"1982-04-14",
+      "description":"Best day ever",
+      "address_1":"The Moisture Farm",
+      "address_2":"Mos Eisley",
+      "address_3":"Tatooine",
+      "postcode":"SW1A 9AJ",
+      "checked_no":"yes"
+   },
+   "attachments":[
+
+   ]
+}
+```
+
+## HMCTS Adapter [Legacy]
+
+Handles submissions for two forms on behalf of HMCTS. It maps submission payloads to the required keys before sending them on to the OPTICS case management system.
+
+Repository: [hmcts-complaints-formbuilder-adapter](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter)
+
+Despite the name it accepts submissions for both complaints and correspondence form types.
+
+The two namespaces associated with it are:
+
+- hmcts-complaints-formbuilder-adapter-production
+- hmcts-complaints-formbuilder-adapter-staging
+
+Both forms require `SERVICE_OUTPUT_JSON_ENDPOINT` and `SERVICE_OUTPUT_JSON_KEY` to be set in their configuration before publishing.
+
+![alt text](hmcts-adapter-in-the-platform.png "Diagram of the formbuilder platform showing the links to the API Adapter.")
+
+### Complaints
+
+Form repository: [fb-hmcts-complaints](https://github.com/ministryofjustice/fb-hmcts-complaints)
+
+It is called `complain-about-a-court-or-tribunal` in the [Publisher](https://fb-publisher-live.apps.live-1.cloud-platform.service.justice.gov.uk/services/complain-about-a-court-or-tribunal).
+
+The API endpoint is `/v1/complaint`.
+
+The first. It works. Just let it be.
+
+### Correspondence
+
+Form repository: [money-claim-queries](https://github.com/ucd-hmcts/money-claim-queries)
+
+It is called `Money claim queries` in the [Publisher](https://fb-publisher-live.apps.live-1.cloud-platform.service.justice.gov.uk/services/money-claim-queries).
+
+The API endpoint is `/v1/correspondence`.
+
+This has significant business logic in order to map the correct properties that OPTICS is expecting. [The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/correspondence.rb) is very much the documentation here so there is no need to repeat it.
+
+The form caters for two different types of users (the person filling out the form). In terms of nomenclature the `Applicant` is always the person filling out the form.
+
+
+#### Representing
+
+The `Applicant` in these instances are also known as a `Representative` . OPTICS also has the idea of an `Intermediary` but currently there is nothing in the form that maps this in the payload.
+
+They will be filling out the form on behalf of a `Client` or `Subject`.
+
+OPTICS will log this user as an `Agent`.
+
+#### Self Representing
+
+The `Applicant` is filling out the form for themselves.
+
+OPTICS will log this user as `Main`.
+
+There is one unused field, `CaseContactCustom18.Subject`, which was meant the `Intermediary` mentioned above but in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.
+
+#### Other considerations
+
+
+There is one unused field, `CaseContactCustom18.Subject`, which was meant the `Intermediary` mentioned above but in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.

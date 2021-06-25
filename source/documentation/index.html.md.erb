@@ -5,16 +5,21 @@ These Tech Docs are used and maintained by the MoJ Forms team and provide techni
 
 For  infomation on the product there is a [product website](https://moj-forms.service.justice.gov.uk).
 
-## MOJ Forms Plaftom
-Context
+## MOJ Forms Platform
+MOJ Forms is a tool for creating and publishing digital forms using components from the GOV.UK Design System.
 
-### [Editor](/documentation/services/editor.html)
+![alt text](/documentation/services/platform-overview.png "Logo Title Text 2")
 
-### [Runner](/documentation/services/editor.html)
-
-### [Hosting](/documentation/services/hosting.html)
-
-### API Endpoint and the Adapter
+The Whole platform can be broken down into smaller parts.
+<ul>
+  <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
+    <% if page.data.category == "platform" %>
+        <li>
+            [<%= page.data.title %>](<%= page.url %>)
+        </li>
+    <% end %>
+<% end %>
+</ul>
 
 ## Runbooks
 Procedures and operations that the MOJ Forms Tech Team carry out, these
@@ -23,7 +28,6 @@ can be used for reference also.
   <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
     <% if page.data.category == "runbooks" %>
         <li>
-            <%= page.data.title %><%= page.url %>
             [<%= page.data.title %>](<%= page.url %>)
         </li>
     <% end %>
