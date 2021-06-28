@@ -14,7 +14,21 @@ The JSON is encrypted by a key pair. There are 2 Architecture Decision Records o
 ( [ADR-002](/documentation/adr/ADR-002-secure-json-output.html) and
 [ADR-003](/documentation/adr/ADR-003-files-in-JSON-output.html) )
 
-The json payload:
+## Legacy
+
+### Config vars
+
+Your form needs to be configured in Publisher to enable the JSON output feature. You must set both:
+
+1. `SERVICE_OUTPUT_JSON_ENDPOINT` which is the external endpoint you want JSON sent to.
+2. `SERVICE_OUTPUT_JSON_KEY` which is the 16 byte shared secret used for encryption.
+
+### Encryption & Decryption
+
+The JSON output is sent as an encrypted payload, you will need to decrypt it to use it.
+Images are also attached as URLs and stored encrypted.
+
+### JSON Payload
 
 ```json
 {
@@ -35,14 +49,60 @@ The json payload:
       "checked_no":"yes"
    },
    "attachments":[
-
+      {
+         url: 'example.com/1',
+         encryption_key: 'bar1',
+         encryption_iv: 'baz1',
+         mimetype: 'application/pdf',
+         filename: 'form1.pdf'
+      }, {
+         url: 'example.com/2',
+         encryption_key: 'bar2',
+         encryption_iv: 'baz2',
+         mimetype: 'application/pdf',
+         filename: 'form2.pdf'
+      }
    ]
 }
 ```
+The key in the `submissionAnswers` hash is the `Input_name` that is set on your form
+field either in the editor or in the JSON.
+
+#### Encrypted Body
+
+The JSON payload is encrypted with [JSON Web Encryption](https://openid.net/specs/draft-jones-json-web-encryption-02.html).
+You can decrypt the payload using the shared secret key that you set as the
+`SERVICE_OUTPUT_JSON_KEY`. For an example of this see the
+[HMCTS Complaints Adapter](#hmcts-adapter-legacy)
+
+#### Encrypted Files
+
+** Attachment payload **
+
+Attachments are sent in the JSON payload as an `attachments` array. Each attachment
+object has the following data:
+
+- `url` which is the URL to the encrypted file data. This expires after 15 minutes.
+- `encryption_key` which is the key needed to decrypt the file.
+- `encryption_iv` which is the initialisation vector needed to decrypt the file.
+- `mimetype` which is the mimetype of the file.
+- `filename` which is the user generated name of the file.
+
+** Decrypting Files **
+
+Files are encrypted using the `AES-256-CBC` protocol. You need both the `encryption_key` and
+`encryption_iv` to decrypt the file. These values are unique per file.
+
+** Links Expire **
+
+Please note that the URLs to the encrypted files expire 15 minutes after being
+generated. You cannot re-request new URLs so you will need to retrieve the file
+within this timeframe.
 
 ## HMCTS Adapter [Legacy]
 
-Handles submissions for two forms on behalf of HMCTS. It maps submission payloads to the required keys before sending them on to the OPTICS case management system.
+Handles submissions for two forms on behalf of HMCTS. It maps submission payloads to the required keys
+before sending them on to the OPTICS case management system.
 
 Repository: [hmcts-complaints-formbuilder-adapter](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter)
 
@@ -61,7 +121,8 @@ Both forms require `SERVICE_OUTPUT_JSON_ENDPOINT` and `SERVICE_OUTPUT_JSON_KEY` 
 
 Form repository: [fb-hmcts-complaints](https://github.com/ministryofjustice/fb-hmcts-complaints)
 
-It is called `complain-about-a-court-or-tribunal` in the [Publisher](https://fb-publisher-live.apps.live-1.cloud-platform.service.justice.gov.uk/services/complain-about-a-court-or-tribunal).
+It is called `complain-about-a-court-or-tribunal` in the
+[Publisher](https://fb-publisher-live.apps.live-1.cloud-platform.service.justice.gov.uk/services/complain-about-a-court-or-tribunal).
 
 The API endpoint is `/v1/complaint`.
 
@@ -75,14 +136,18 @@ It is called `Money claim queries` in the [Publisher](https://fb-publisher-live.
 
 The API endpoint is `/v1/correspondence`.
 
-This has significant business logic in order to map the correct properties that OPTICS is expecting. [The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/correspondence.rb) is very much the documentation here so there is no need to repeat it.
+This has significant business logic in order to map the correct properties that OPTICS is expecting.
+[The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/correspondence.rb) is
+very much the documentation here so there is no need to repeat it.
 
-The form caters for two different types of users (the person filling out the form). In terms of nomenclature the `Applicant` is always the person filling out the form.
+The form caters for two different types of users (the person filling out the form). In terms of nomenclature the `Applicant`
+is always the person filling out the form.
 
 
 #### Representing
 
-The `Applicant` in these instances are also known as a `Representative` . OPTICS also has the idea of an `Intermediary` but currently there is nothing in the form that maps this in the payload.
+The `Applicant` in these instances are also known as a `Representative` . OPTICS also has the idea of an `Intermediary`
+but currently there is nothing in the form that maps this in the payload.
 
 They will be filling out the form on behalf of a `Client` or `Subject`.
 
@@ -94,9 +159,7 @@ The `Applicant` is filling out the form for themselves.
 
 OPTICS will log this user as `Main`.
 
-There is one unused field, `CaseContactCustom18.Subject`, which was meant the `Intermediary` mentioned above but in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.
-
 #### Other considerations
 
-
-There is one unused field, `CaseContactCustom18.Subject`, which was meant the `Intermediary` mentioned above but in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.
+There is one unused field, `CaseContactCustom18.Subject`, which was meant the `Intermediary` mentioned above but
+in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.

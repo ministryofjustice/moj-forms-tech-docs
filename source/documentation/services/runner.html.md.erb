@@ -13,11 +13,74 @@ When a runner is
 
 ![alt text](runner-in-the-platform.png "Diagram of the platform focussing on a running form.")
 
-#### Repos
-* fb-Runner
-* fb-presenter-gem
-Uses the other stuff in the platform
-* user datastore
-* user filestore
-* av
-*
+## Runner [To be reviewed]
+Runners are single-tenanted, and each runner instance hosts an individual form.
+
+At the start of each request, the Runner must:
+
+- Read the userID from the users’ cookie
+
+  If not present, generate a userID and store it in the cookie
+
+- Read the userToken from the users’ cookie
+
+  If not present, generate a 256-bit random hex string and store it as userToken in the cookie
+
+- Read the Digest from the user’s cookie
+
+  The Digest MUST equal the SHA-256 Hash of userID + userToken + serviceToken
+
+  If it does not, the runner must return HTTP status 400 (Bad Request) and cease any further processing
+
+- Request the user data from the Datastore API
+
+  The URL will be of the form `/service/(service-slug)/user/(userId).json`
+
+  - The request must be signed using JWT with the service’s serviceToken (this will be injected into the Runner’s container as an environment variable called SERVICE_TOKEN, by Publisher). Suggested algorithm: HMAC with SHA-256
+  - Signing options should include iat: (current timestamp)to allow a time-limit and mitigate against replay attacks
+  - The resulting token must be passed as a header called x-access-token
+
+- If the data exists, the response will be a JSON packet of the form:
+
+  ```json
+  {
+    "timestamp": "(ISO8601-formatted datetime of last update)",
+    "payload": "(user data encrypted with userToken)"
+  }
+  ```
+
+  The Runner can then decrypt the payload with the userToken and use it as required
+
+- If the data does not exist, the response will have a 404 status and an empty body
+  - If the token is not present, the response will be 401 Unauthorised
+  - If the token is not valid, the response will be 403 Forbidden
+
+To store data in the user data store, the Runner must:
+
+- Encrypt the JSON packet containing the data to be stored with the AES-256 algorithm, using the userToken as the key
+
+
+- POST the payload to /service/(service slug)/user/(userId).json
+
+The body must be of the form:
+
+```json
+{
+  "payload": "(encrypted data)"
+}
+```
+
+The request must be signed using JWT with the service’s serviceToken (this will be injected into the Runner’s container as an environment variable called SERVICE_TOKEN, by Publisher) Signing options should include `iat: (current timestamp)` to allow a time-limit and mitigate against replay attacks
+The resulting token must be passed as a header called `x-access-token`
+
+- If the request was successful, the response status will be 201 Created (if no matching record previously existed) or 204 No Content (if a matching record did already exist)
+  - If the token is not present, the response will be 401 Unauthorised
+  - If the token is not valid, the response will be 403 Forbidden
+
+###Technology
+- Ruby on Rails
+
+###Repositories
+- [fb-runner](https://github.com/ministryofjustice/fb-runner)
+
+
