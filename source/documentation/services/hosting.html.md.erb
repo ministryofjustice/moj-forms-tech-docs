@@ -12,20 +12,222 @@ Form Builder is hosted on the Ministry of Justice Cloud Platform. To be able to 
 
 If you have any questions about the Cloud Platform, contact the Cloud Platform team on the `#ask-cloud-platform` Slack channel.
 
-## Environments
-Environments are split into slightly unusual groupings.  It’s unfortunately complicated.
-
-| Environment Type       | Potential Value    |
-| ---------------------- | ------------------ |
-| Platform Environment   | `test` or `live`       |
-| Deployment Environment | `dev` or `production` |
 
 
+## Let's get complicated...
+
+> To note, the hosting platform names have changed over time and left us with a siln old naming convention
+
+MOJ forms runs two platforms {platformEnv} `dev` (development) and `production`.
+
+Some services are per platformEnv, for example the Editor which will publish forms both Deployment Environments (deploymentEnv).
+
+| Environment   | Value                  |
+| ------------- | ---------------------- |
+| platformEnv   | `test` or `production` |
+| deploymentEnv | `dev` or `live`        |
+
+These values are used as a naming convention for the platform as `{platformEnv}-{deploymentEnv}`.
+
+The Editors (saas) are named with `test` or `live`.
+
+![diagram of the hosting of the environments](hosting-editor-to-submit-named-env-platform.png "diagram of the hosting of the environments")
+
+## Namespaces
+
+In each of these environments there are two namespaces - Services and Platform. The Services namespace contains the runners. The Platform namespace holds all the backend components.
+
+These are the namespaces that currently make up the Form Builder product:
+
+Namespace | Purpose
+------------ | -------------
+formbuilder-base-adapter-test | The base adapter is there to emulate an API endpoint for the JSON output
+formbuilder-monitoring | Contains all the infrastructure monitoring for the Form Builder platform
+formbuilder-platform-live-dev | Contains all the platform apps for the live-dev environment
+formbuilder-platform-live-production | Contains all the platform apps for the live-production environment
+formbuilder-platform-test-dev | Contains all the platform apps for the test-dev environment
+formbuilder-platform-test-production | Contains all the platform apps for the test-production environment
+formbuilder-product-page-prod | The Form Builder product page in the production environment
+formbuilder-product-page-staging | The Form Builder product page in the staging environment
+formbuilder-publisher-live | The Form Builder publisher catering for services running in live-dev and live-production
+formbuilder-publisher-test | The Form Builder publisher catering for services running in test-dev and test-production
+formbuilder-repos | Contains all the ECR repos required for all the Form Builder applications
+formbuilder-saas-test | Contains the V2 Form Builder Editor and Metadata API applications for the test environment
+formbuilder-saas-live | Contains the V2 Form Builder Editor and Metadata API applications for the live environment
+formbuilder-services-live-dev | Contains all the form services pods for the live-dev environment
+formbuilder-services-live-production | Contains all the form services pods for the live-production environment
+formbuilder-services-test-dev | Contains all the form services pods for the test-dev environment
+formbuilder-services-test-production | Contains all the form services pods for the test-production environment
+hmcts-complaints-formbuilder-adapter-production | Contains the HMCTS Complaints Adapter for the production environment
+hmcts-complaints-formbuilder-adapter-staging |  Contains the HMCTS Complaints Adapter for the staging environment
 
 
 
+## Network _[To be Reviewed]_
+This section explain how allt he services are coupled together.
 
-#### Picture
-Nice picture
-#### Repos
-* fb-???
+![diagram of the hosting platform](hosting-platform.png "diagram of the hosting platform")
+
+### formbuilder-saas-{platformEnv} namespace
+
+#### fb-editor-cron-sessions-trim-{platformEnv} pod
+
+#### fb-editor-web-{platformEnv} pod
+- Rails
+- *public-facing website for editing form data*
+- In-bound
+  - access controlled by `Auth0`
+  - credentials stored in `fb-editor-app-secrets-{platformEnv}`
+- Out-bound
+  - read/write to `editor-rds-instance` to update services
+  - [to check] write to `publisher-elasticache` (via resque)
+
+#### fb-editor-workers-{platformEnv} pod
+[to update]
+
+#### fb-metadata-api-{platformEnv}
+[to update]
+
+### formbuilder-publisher-{platformEnv} namespace (legacy)
+[to update]
+
+#### fb-publisher-web-{platformEnv} pod
+- Rails
+- *public-facing website for editing service data*
+- In-bound
+  - access controlled by `Auth0`
+  - credentials stored in `fb-publisher-app-secrets-{platformEnv}`
+- Out-bound
+  - read/write to `publisher-rds-instance` to update services
+  - write to `publisher-elasticache` (via resque)
+
+#### fb-publisher-workers-{platformEnv} pod
+- Resque
+- *internal queue/job manager for deploying services*
+- Out-bound
+  - read `publisher-rds-instance`
+  - read/write to `publisher-elasticache`
+  - write service token secrets to `formbuilder-services-{platformEnv}-{deploymentEnv}` namespaces
+  - create deployments in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespaces
+
+#### publisher-rds-instance module
+- Postgres
+- *Services data*
+- In-bound
+  - `url` with username/password from `rds-instance-formbuilder-publisher-{platformEnv}`
+  - access only allowed to `fb-publisher-web` and `fb-publisher-workers`
+
+#### publisher-elasticache module
+- Redis
+- *Service deployment jobs*
+- In-bound
+  - `primary_endpoint_address` and `auth_token` from `elasticache-formbuilder-publisher-{platformEnv}`
+  - access only allowed to `fb-publisher-web` and `fb-publisher-workers`
+
+
+### formbuilder-platform-{platformEnv}-{deploymentEnv} namespace
+
+#### fb-service-token-cache-{platformEnv}-{deploymentEnv} pod
+- Rails
+- *internal API to get service tokens*
+- In-bound
+  - ingress rule allows access only to pods in same namespace labelled `fb-service-token-cache-access: "true"`
+    - fb-user-datastore-api
+    - fb-user-filestore-api
+    - fb-submitter-api (except that's not true)
+- Out-bound
+  - read service token secrets in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespace
+  - read/write to `service-token-cache-elasticache`
+
+#### service-token-cache-elasticache module
+- Redis
+- *Service tokens*
+- In-bound
+  - `primary_endpoint_address` and `auth_token` from `elasticache-formbuilder-service-token-cache-{platformEnv}-{deploymentEnv}`
+  - access only allowed to `fb-service-token-cache-{platformEnv}-{deploymentEnv}`
+- Storage
+  - all data stored against service_slug key, as-is
+
+#### fb-user-datastore-api-{platformEnv}-{deploymentEnv} pod
+- Rails
+- *internal API to get/set user data*
+- In-bound
+  - ingress rules allow access only to pods in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespace
+  - all ingress must be
+    - for a specific user and service
+      `/service/:serviceSlug/user/:userId`
+    - accompanied with a JSON Web Token
+      - signed with that service's service token
+      - containing an iat timestamp
+- API
+  - GET `/service/:serviceSlug/user/:userId`
+  - POST `/service/:serviceSlug/user/:userId`
+    - Body
+      ```json
+      {
+        "payload": "{payload_encrypted_with_user_token}"
+      }
+      ```
+- Out-bound
+  - read from `fb-service-token-cache-{platformEnv}-{deploymentEnv}` for service tokens
+  - read/write to `user-datastore-rds-instance` to update user data
+- Storage
+  - all data stored against user_id key, pre-encrypted
+
+#### user-datastore-rds-instance module
+- Postgres
+- *User data*
+- In-bound
+  - `url` with username/password from `rds-instance-formbuilder-user-datastore-{platformEnv}-{deploymentEnv}`
+  - access only allowed to `fb-user-datastore-api-{platformEnv}-{deploymentEnv}`
+
+
+#### fb-submitter-api-{platformEnv}-{deploymentEnv}
+- Rails
+- *Submissions*
+- In-bound
+  - ingress rules allow access only to pods in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespace
+- Out-bound
+  - read from `fb-service-token-cache-{platformEnv}-{deploymentEnv}` for service tokens
+  - read/write `submitter-rds-instance`
+  - write to `publisher-elasticache`
+
+#### fb-submitter-workers-{platformEnv}-{deploymentEnv}
+- *internal queue/job manager for submissions*
+- In-bound
+- Out-bound
+  - read `submitter-rds-instance`
+  - read/write to `publisher-elasticache`
+  - access individual service output API in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespace
+  - create deployments in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespaces
+
+#### submitter-rds-instance module
+- Postgres
+- *Submissions data*
+- In-bound
+  - `url` with username/password from `rds-instance-formbuilder-submitter-{platformEnv}-{deploymentEnv}`
+  - access only allowed to `fb-submitter-api` and `fb-submitter-workers`
+
+#### submitter-elasticache module
+- Redis
+- *Submissions jobs*
+- In-bound
+  - `primary_endpoint_address` and `auth_token` from `elasticache-formbuilder-submitter-{platformEnv}-{deploymentEnv}`
+  - access only allowed to `fb-submitter-api` and `fb-submitter-workers`
+
+### formbuilder-services-{platformEnv}-{deploymentEnv}
+
+- ServiceAccounts
+  - `fb-publisher-workers-{platformEnv}` in `formbuilder-publisher-{platformEnv}`namespace - allows deployments
+  - `formbuilder-service-token-cache-{platformEnv}-{deploymentEnv}` in `formbuilder-platform-{platformEnv}-{deploymentEnv}` namespace - allows service tokens to be read
+- In-bound
+  - citizen
+    - WHAT DOES THE COOKIE LOOK LIKE?
+- Out-bound
+  - read/write to `fb-user-datastore-api-{platformEnv}-{deploymentEnv}`
+  - write to `fb-user-filestore-api-{platformEnv}-{deploymentEnv}`
+  - write to `fb-submitter-api-{platformEnv}-{deploymentEnv}`
+
+
+
+Additionally all publisher and platform apps are rails app which have a secret_key_base

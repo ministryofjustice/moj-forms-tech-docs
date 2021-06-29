@@ -77,7 +77,7 @@ You can decrypt the payload using the shared secret key that you set as the
 
 #### Encrypted Files
 
-** Attachment payload **
+**Attachment payload**
 
 Attachments are sent in the JSON payload as an `attachments` array. Each attachment
 object has the following data:
@@ -88,12 +88,12 @@ object has the following data:
 - `mimetype` which is the mimetype of the file.
 - `filename` which is the user generated name of the file.
 
-** Decrypting Files **
+**Decrypting Files**
 
 Files are encrypted using the `AES-256-CBC` protocol. You need both the `encryption_key` and
 `encryption_iv` to decrypt the file. These values are unique per file.
 
-** Links Expire **
+**Links Expire**
 
 Please note that the URLs to the encrypted files expire 15 minutes after being
 generated. You cannot re-request new URLs so you will need to retrieve the file
