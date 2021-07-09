@@ -7,10 +7,21 @@ review_in: 3 months
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
 ### Team
-Content
+MOJ Forms is a multi disciplinary team.
 
-### Trello / Sprints / Product team
-Blah
+The Tech Team is made from the technical roles within the wider team, the Developers and Technical Architect.
+
+Main forms of communication is a private Slack channel [#form-builder-keyboard-samurais](https://mojdt.slack.com/archives/G015FTRF1JB).
+
+The [MOJ Forms Team Intro](https://trello.com/b/u3QoR1jg/moj-forms-team-intro-board) Trello Board [Internal Link] has full information on how the work is organised and how the team works.
+
+In summary:
+
+- 2 week sprints
+- Managed using Trello
+
+### Onboarding
+You'll need to be a part of the MOJ Github Organisation and added to the form builder team.
 
 ### Adding a Ticket
 If you need to add a tickets, from an issue not related to the ticket you are working on to a good idea then either
@@ -22,18 +33,26 @@ for how we prefer to work on code.
 
 **In short:**
 
-- Name the branch which describews what yuoua re doing
+- Use a branch, no matter how small don't update the main branch
+- Name the branch which describes what you are doing
 - Commit locally regulary
 - Intreractive rebase
 - Push regulary
+- Make sure it is non-breaking - use local acceptance tests and manual testing
+- Developers are responsible for getting their work from local machine all the way through to production
 
-### Commit Messages
-We follow the [GDS Git Style Guide](https://github.com/alphagov/styleguides/blob/master/git.md)
+### Commit  Messages / Pull Requests
+We follow the [GDS Git Style Guide](https://github.com/alphagov/styleguides/blob/master/git.md).
 
-**MOJ Forms sppecific guidance:**
+**MOJ Forms specific guidance:**
 
-- something
-- something
+- The commit message will describe the change you have made if you can include:
+    - the context (what and why), a link to the ticket (if is long lived)
+    - how the code works now and any differences you've made
+    - add sheetshots if it helps explain
+- Make the PR small, split large ones out so they can be reviewed easier
+- List the main commits in the PR
+- Empty PRs messages get automatically closed by Dependabot
 
 ### Review / Merging
 - When raising a PR assign reviewers from the Tech Team
@@ -43,8 +62,5 @@ We follow the [GDS Git Style Guide](https://github.com/alphagov/styleguides/blob
 
 > Before commenting on a pull request, ensure you know how the person would prefer to get feedback. This might involve asking them first. Feedback options include face-to-face, pairing, via email/Slack, or commenting on a pull request
 
-### Ticket Backlog
-Content
-
 ### Form Builder Team Leavers Process
-https://docs.google.com/document/d/10wJ9zRQOoMGiZRMm1143Bxb3PPhxUL3OFNHflcaqLsc/edit?usp=sharing
+[Draft Leaver Process](https://docs.google.com/document/d/10wJ9zRQOoMGiZRMm1143Bxb3PPhxUL3OFNHflcaqLsc/edit?usp=sharing) [Internal Link]
