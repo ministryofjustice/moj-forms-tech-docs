@@ -11,7 +11,7 @@ A ruby on rails app which displays the form to the end user, the runner is singl
 
 When a runner is
 
-![alt text](runner-in-the-platform.png "Diagram of the platform focussing on a running form.")
+![Diagram of the platform focussing on a running form.](/images/runner-in-the-platform.png "Diagram of the platform focussing on a running form.")
 
 ## Runner [To be reviewed]
 Runners are single-tenanted, and each runner instance hosts an individual form.
@@ -60,7 +60,7 @@ To store data in the user data store, the Runner must:
 - Encrypt the JSON packet containing the data to be stored with the AES-256 algorithm, using the userToken as the key
 
 
-- POST the payload to /service/(service slug)/user/(userId).json
+- POST the payload to `/service/(service slug)/user/(userId).json`
 
 The body must be of the form:
 
