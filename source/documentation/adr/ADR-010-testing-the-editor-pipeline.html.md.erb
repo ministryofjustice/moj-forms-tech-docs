@@ -25,13 +25,13 @@ Date: <%= current_page.data.date %>
 
 Our pipeline follows a continuous delivery method with the manual gate to release to production.
 
-![alt text](0010-release-pipeline-context.png "Diagram of how the editor is released through the pipeline.")
+![Diagram of how the editor is released through the pipeline.](/images/0010-release-pipeline-context.png "Diagram of how the editor is released through the pipeline.")
 
 We have one Editor in test which causes issues when the rest of the team want to test a feature. Also, while the Editor is tied up in testing the pipeline is blocked for deploying to live-production.
 
 ## Decision
 
-![alt text](0010-release-pipeline-proposed.png "Diagram of how the editor is released through the pipeline to have a testable editor.")
+![Diagram of how the editor is released through the pipeline to have a testable editor.](/images/0010-release-pipeline-proposed.png "Diagram of how the editor is released through the pipeline to have a testable editor.")
 
 The main problem to solve is having a feature that is being developed available to the wider team to test. Running locally was not considered as the MOJ Macbooks are locked down to those outside of the technical disciplines.
 

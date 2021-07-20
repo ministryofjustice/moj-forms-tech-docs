@@ -23,12 +23,14 @@ Date: <%= current_page.data.date %>
 
 ## Context
 
-The Runner is the application that is a live form. It uses the metadata generated building a form to create the interactive online form. The current runner codebase is nodejs and when a form is published it is a self contained form running with it’s own ingress and url in the services namespace (i.e. formbuilder-services-live-production).
+The Runner is the application that is a live form. It uses the metadata generated building a form to create the
+interactive online form. The current runner codebase is nodejs and when a form is published it is a self
+contained form running with it’s own ingress and url in the services namespace (i.e. formbuilder-services-live-production).
 
-[How the Current Runner Works](https://github.com/ministryofjustice/form-builder/blob/master/documentation/running/runner/runner--sequence.md).
+[How the Current Runner Works](/documentation/services/runner.html).
 
 Reason why we have the current architecture:
-* designed in collaboration with the security team
+* designed in collaboration with the security teams
 * keep the forms as distinct entities
 * each form can be scaled independently
 * an error in one form does not impact the other forms
@@ -37,7 +39,7 @@ Reason why we have the current architecture:
 ### Why Rebuild the Runner
 The team has embarked on changing it’s offering and moving towards a self service model which the current editor could not fulfil.
 
-Replacing the storage mechanism from Gtithub to our own storage was the first part of this [ADR](https://github.com/ministryofjustice/form-builder/blob/master/decisions/0007-replacing-the-storage.md).
+Replacing the storage mechanism from Gtithub to our own storage was the first part of this [ADR](/documentation/adr/ADR-007-replacing-storage.html).
 
 As the current Runner is used in both the editor and the live forms so that the preview is exactly a representation of the live form (using the same code)
 
@@ -54,8 +56,7 @@ The design for the runner will also change as well as the technology.
 
 From a nodejs codebase, the decision is to use Ruby (and Rails) to create the new Runner (and Editor). The Tech Team has more experience with Ruby, enabling quicker development and feature roll out.
 
-![alt text](0008-the-runner.jpg "Diagram of the the new runner.")
-
+![Diagram of the the new runner.](/images/0008-the-runner.jpg "Diagram of the the new runner.")
 
 ## Metadata-Presenter
 This is a Ruby Gem which will take valid form metadata (in a json format) and convert it to valid HTML using the GOV.UK design system components. This gem will be consumed by both the Runner and the preview feature in the new Editor.
