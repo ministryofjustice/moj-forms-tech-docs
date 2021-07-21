@@ -7,13 +7,14 @@ review_in: 3 months
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
-Most of the information can be found in this runbook.
+Most of the information can be found in this [Runbook](../#runbooks)
+
 This is a quick guide about the common alerts you may come across in the [#form-builder-alerts](https://mojdt.slack.com/archives/CH4FJB8E4) channel.
 
 ## Application Related Alerts
 
 ### Failed Delayed Jobs
-This is something that needs to be investigated. A walk through of how to investigate these alerts are found in the [MOJ Form Builder Documentation](https://ministryofjustice.github.io/fb-guide-and-runbook/troubleshooting/find-a-failed-submission/#delayed-job-failures)
+This is something that needs to be investigated. A walk through of how to investigate these alerts are found in this [documentation](../#runbooks)
 
 ### Client Error Response
 These usually resolve within 5 minutes of firing.
@@ -36,7 +37,7 @@ If there are no pods restarting in the list, the best to chat with the team abou
 ### Kube Pod Crash Looping
 Each form has 2 pods, so the form should still be running despite a pod being down. Check the form, then check the logs. A way to fix this could be to restart the problem pod.
 
-[Documentation]((https://ministryofjustice.github.io/fb-guide-and-runbook/hosting/kubectl-commands/#check-logs)) on checking the logs and restarting the pods.
+[Documentation](../#runbooks)on checking the logs and restarting the pods.
 
 ### Namespace Missing
 To check whether the namespace is missing:
