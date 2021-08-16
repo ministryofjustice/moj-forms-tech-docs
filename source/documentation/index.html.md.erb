@@ -1,16 +1,16 @@
 # MOJ Forms Tech Docs
 
 ## Who is this documentation for?
-These Tech Docs are used and maintained by the MoJ Forms team and provide technical infomation for maintining the services.
+These Tech Docs are used and maintained by the MoJ Forms team and provide technical information for maintaining the services.
 
-For  infomation on the product there is a [product website](https://moj-forms.service.justice.gov.uk).
+For more information on the product there is a [product website](https://moj-forms.service.justice.gov.uk).
 
 ## MOJ Forms Platform
 MOJ Forms is a tool for creating and publishing digital forms using components from the GOV.UK Design System.
 
 ![alt text](/documentation/services/platform-overview.png "Logo Title Text 2")
 
-The Whole platform can be broken down into smaller parts.
+The whole platform can be broken down into smaller parts.
 <ul>
   <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
     <% if page.data.category == "platform" %>
@@ -22,7 +22,7 @@ The Whole platform can be broken down into smaller parts.
 </ul>
 
 ## Runbooks
-Procedures and operations that the MOJ Forms Tech Team carry out, these
+Procedures and operations that the MoJ Forms Tech Team carry out, these
 can be used for reference also.
 <ul>
   <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
@@ -35,13 +35,13 @@ can be used for reference also.
 </ul>
 
 ## [How We Work](/documentation/how-we-work.html)
-Documentation on how the techincal team woirks and process for doing awesome work.
+Documentation on how the technical team works and the process for doing awesome work.
 
 ## [Incident Process](/documentation/so-you-are-having-an-incident.html)
 Our process for managing incidents
 
 ##Architecture
-#### Architecture Descision Records
+#### Architecture Decision Records
 To understand why we are recording decisions and how we are doing it, please see ADR-001.
 
 <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
