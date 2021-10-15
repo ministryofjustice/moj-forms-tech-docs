@@ -4,7 +4,7 @@ category: runbooks
 last_reviewed_on: 2020-10-15
 review_in: 3 months
 ---
-# <%= current_page.data.title %>
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
 The Form Bulder platform and services use git-crypt in order to encrypt secrets. The repos that contain them are checked out in each app's deployment pipeline and the decrypted for injection into the app's configuration.
 
