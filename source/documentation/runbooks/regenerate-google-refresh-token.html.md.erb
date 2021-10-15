@@ -4,7 +4,7 @@ category: runbooks
 last_reviewed_on: 2020-10-15
 review_in: 3 months
 ---
-# <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
 ## Sign into fb-acceptance-tests account
 
@@ -14,7 +14,7 @@ Password is stored in the shared LastPass account. It has 2FA enabled so use one
 
 Go to the [Developer Console](https://console.developers.google.com/).
 
-![developer console](../images/developer_console.png)
+![developer console](/images/developer_console.png)
 
 Click on `Credentials`, and under 'OAuth 2.0 Client IDs' you should see the 'FB Acceptance Tests' credentials.
 
