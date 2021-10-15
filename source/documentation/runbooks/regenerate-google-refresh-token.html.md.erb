@@ -18,35 +18,35 @@ Go to the [Developer Console](https://console.developers.google.com/).
 
 Click on `Credentials`, and under 'OAuth 2.0 Client IDs' you should see the 'FB Acceptance Tests' credentials.
 
-![credentials page](../images/credentials.png)
+![credentials page](/images/credentials.png)
 
 Click on that and you will see the Client ID and Client Secret.
 
-![view credentials](../images/view_credentials.png)
+![view credentials](/images/view_credentials.png)
 
 ## Regenerate Refresh Token
 
 Next go to the [OAuth Playground](https://developers.google.com/oauthplayground). On the right hand side click on the cog icon.
 
-![oauth config](../images/oauth_config.png)
+![oauth config](/images/oauth_config.png)
 
 The `Oauth flow` needs to be "Server-side", `Access type` should be "Offline". Tick the `Use your own OAuth Credentials` box and then enter the `Client ID` and `Client secret` from the previous Credentials page into the fields.
 
 On the left hand side of the screen you will see `Step 1 Select & Authorize APIs`.
 
-![playground step 1](../images/playground_step_1.png)
+![playground step 1](/images/playground_step_1.png)
 
 Search for the `Gmail V1 API` and make sure "https://mail.google.com" is selected.
 
 Click `Authorize APIs` and you will be presented with a permissions screen.
 
-![allow access](../images/allow_access.png)
+![allow access](/images/allow_access.png)
 
 Click `Allow` and follow the instructions.
 
 Step 2 is where you generate the tokens.
 
-![generate refresh token](../images/playground_step_2.png)
+![generate refresh token](/images/playground_step_2.png)
 
 Click `Exchange authorization code for tokens`. The Refresh Token is the important one.
 
