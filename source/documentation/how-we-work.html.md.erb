@@ -64,3 +64,28 @@ We follow the [GDS Git Style Guide](https://github.com/alphagov/styleguides/blob
 
 ### Form Builder Team Leavers Process
 [Draft Leaver Process](https://docs.google.com/document/d/10wJ9zRQOoMGiZRMm1143Bxb3PPhxUL3OFNHflcaqLsc/edit?usp=sharing) [Internal Link]
+
+### Support
+Developers are on support during working hours and rotated on a weekly basis, the rota is found in the Team Google Drive.
+If you are unable to be on support (ie: due to leave etc), let the team know on the [#form-builder-keyboard-samurais](https://mojdt.slack.com/archives/G015FTRF1JB) channel and see if you can swap your week or days with another developer.
+
+The purpose of the support rota is to have one point of contact to handle support issues and questions accordingly. This will hopefully ensure other team members are not distracted by support tasks and alerts.
+
+The individual on support is not expected to solve support issues on their own - they should reach out to the appropriate team member as required.
+
+The [MOJ Forms Tech Docs](https://ministryofjustice.github.io/moj-forms-tech-docs/) should assist in resolving common issues that arise. Common alerts are outlined in the [Alerts Quick Guide](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/alerts-quick-guide.html#alerts-quick-guide). The [Delayed Job Failures](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/delayed-job-failures.html#delayed-job-failures) might also be useful to refer to when on support.
+
+### Slack Channel
+The first port of call for users of Formbuilder is the [#ask-formbuilder](https://mojdt.slack.com/archives/CE26QEL1Z) Slack channel. This channel will be monitored by the Product Managers who will contact the support dev as required.
+
+### Alerts
+We have two alerts channels, [#form-builder-alerts](https://mojdt.slack.com/archives/CH4FJB8E4) and [#form-builder-alerts-low-severity](https://mojdt.slack.com/archives/C013L7PA4N4).
+
+Generally, we do not need to action the alerts in the #form-builder-alerts-low-severity channel as these alerts are concerned about the test environment. However, if there are any Sentry alerts that have been triggered and dealt with, please remember to resolve these in [Sentry](https://sentry.io/organizations/ministryofjustice/issues/).
+
+### Incidents
+We have an incidents channel, [#form-builder-incidents](https://mojdt.slack.com/archives/GPW15H23V)
+When an incident occurs, the steps to take are provided in the [MOJ Forms Tech Docs](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/so-you-are-having-an-incident.html#so-you-re-having-an-incident).
+
+### Security Updates
+We receive automated alerts on our Github repositories, the person on support is responsible for checking if any of these alerts are security issues that can be rectified. If a security issue is not easily resolved, raise a card in Trello and notify the rest of the team.
