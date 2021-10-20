@@ -7,7 +7,7 @@ review_in: 3 months
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
-![alt text](runner-in-the-platform.png "Diagram of the platform focussing on a running form.")
+![Diagram of the platform focussing on a running form.](/images/runner-in-the-platform.png)
 
 ## User Datastore
 Services deployed using MOJ Forms/ Formbuilder require a component to store data submitted by their users in a secure way.
@@ -202,6 +202,29 @@ Return file as body of repsonse
 
 ## Service Token Cache
 
+The services which make up the platform communicate and verify that they can do so. All requests used a signed JSON Web Tokens (JWT) with the corresponding service’s service token.
+
+![The flow of communocation between service in the platform.](/images/service-token-cache-flow.png)
+
+**Flow for using the Service Token cache**
+
+App A - for example the Runner
+
+1. Encrypts payload
+
+2. Encodes a JWT and signs with the private key
+
+3. Sends to App B (Datastore)
+
+4. Decodes the token, get the service slug
+
+5. Requests the Service Token Cache for the public key of App A - requests from k8s if it needs to
+
+6. Verify the signature of the JWT
+
+7. All okay, continue the request
+
+8. Error with return a  401 Unauthorised (hash is wrong) or 422 Unprocessable Entity (payload error)
 
 ## Antivirus
 Proves uploaded document scanning.
