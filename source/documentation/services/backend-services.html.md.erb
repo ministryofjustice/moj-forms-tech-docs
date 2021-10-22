@@ -91,10 +91,21 @@ Requests should be checked for the presence of `encrypted_user_id_and_token` (as
 
 #### Creating S3 key
 
+The Legacy Runner does:
+
 - Create digest from service token + user id + file fingerprint
 - Encrypt digest via AES-256 with the encrypted_user_id_and_token as key
 - Generate hash of encrypted digest
 - Key is /{service_slug}/{user_id}/{hashed_digest}
+
+The New Runner does:
+
+- Create digest from user id + file fingerprint (no service token)
+- Encrypt digest via AES-256 with the encrypted_user_id_and_token as key
+- Base64 encode the digest
+- Key is {user_id}{hashed_digest} (no / in between and no service_slug)
+
+The difference is only for the name of the file that resides on S3.
 
 #### Store file
 
