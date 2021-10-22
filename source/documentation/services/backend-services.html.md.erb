@@ -202,7 +202,7 @@ Return file as body of repsonse
 
 ## Service Token Cache
 
-The services which make up the platform communicate and verify that they can do so. All requests used a signed JSON Web Tokens (JWT) with the corresponding service’s service token.
+The services which make up the platform communicate and verify that they can do so. All requests use a signed JSON Web Token (JWT) with the corresponding service’s service token.
 
 ![The flow of communication between service in the platform.](/images/service-token-cache-flow.png)
 
@@ -224,7 +224,7 @@ App A - for example the Runner
 
 7. All okay, continue the request
 
-8. Error with return a  401 Unauthorised (hash is wrong) or 422 Unprocessable Entity (payload error)
+8. Error then return a 401 Unauthorised (hash is wrong) or 422 Unprocessable Entity (payload error)
 
 ## Antivirus
 Proves uploaded document scanning.
