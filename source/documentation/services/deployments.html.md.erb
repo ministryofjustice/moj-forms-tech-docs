@@ -41,6 +41,12 @@ If however your branch build fails for some reason Jean Luc will express his dis
 
 ![alt text](editor-deployment-pipeline.png "Diagram of the deployment process for the testable editor, from creating a branch through the pipeline to live.")
 
+### Caveats
+
+All the different Editors share the use of the same database. This means that we should be _very_ careful when doing anything that involves database migrations as this can lead to many issues.
+
+Also the Workers containers for all the Editor apps share the same database too. When a Delayed Job (Publishing or Unpublishing) is first created on the database there is no guarantee that the Worker that picks up the job to process it will be running the same code as the app where the Job was actually created. Any of the available Editor apps could be the one to pick up the job and process it.
+
 ### Testable Editor teardown
 
 Once all testing has been completed the Developer can raise a PR from the testable branch as normal for review etc. Once the branch has been merged (and deleted in Github, which is automatic for the Editor repo settings) then a job in CircleCI is triggered which runs a rake task:
