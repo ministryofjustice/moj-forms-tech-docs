@@ -1,0 +1,41 @@
+---
+title: Editor Admin Feature
+category: platform
+last_reviewed_on: 2021-11-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+## Editor Admin Feature
+
+The Editor Admin Feature is available only to developers in the MoJ Forms team. The feature was added to assist developers with supporting the MOJ Forms service.
+
+Once logged into MoJ Forms, the Admin feature is accessed via the 'Admin' button located at the top of the page.
+
+The feature is available in three environments:
+- Local
+- Test
+- Live
+
+### Duplicating a service
+Although duplicatng a service is possible in all three environments, it is recommended we duplicate services in local and test environments only.
+
+In the local environment, there is a 'Duplicate' button available in the 'Services' tab, which creates a copy of the service and appends the service name with '-COPY'.
+
+In the test environment, the 'Duplicate' button is not an option and as such duplicating a service in this environment has a few more steps. It requires a copy and paste of the desired service metadata and the creation of a new form where the desired metadata will be pasted into.
+
+Steps to duplicate a form in the Test environment:
+- Create a new form
+- In the Admin feature, click on the 'Services' tab in the sidebar
+- Click into your newly created service and take a copy of the `service_id` and your user id, which is the value of `created_by`
+- Click into the service you wish to duplicate
+- Copy the metadata of the form you wish to duplicate. This can be done by clicking the 'Edit' button.
+- Go back to your new form and paste the metadata in via the 'Edit' button
+- Replace the `service_id` and `created_by` values with the values in step 3
+- Ensure the `service_name` is unique
+- Click 'Save'. A green banner should appear with a success message
+
+Things to note:
+- You can log onto the Editor via a @digital.justice or @justice account as a result an individual may have two user ids in the system
+- An individual's user id will be different in all 3 environments
