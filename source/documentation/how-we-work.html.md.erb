@@ -44,6 +44,36 @@ for how we prefer to work on code.
 ### Commit  Messages / Pull Requests
 We follow the [GDS Git Style Guide](https://github.com/alphagov/styleguides/blob/master/git.md).
 
+### Workflow
+
+Current (as of November 2021) workflow is:
+
+![workflow columns](/images/workflow-columns.png "diagram of the workflow columns")
+
+The purpose of each column are:
+
+**In Progress** - The ticket is currently being worked on.
+
+**Blocked**  - Unable to progress with the work due to some issues. Please add a comment explaining why the ticket is blocked and get help to unblock the ticket.
+
+**In Testable Editor** - This column is applicable only to the tickets related to the Editor app. The developer creates a [Testable Editor](/documentation/services/deployments.html#workflow) based off of the code specific to their story. This generates a URL which can be visited for testing by any interested party. Developer should add the Testable Editor URL to the ticket.
+
+**In Review** - The developer has raised a PR and it is being reviewed by other developers on the team.
+
+**In Test Environment** - The PR has been merged into main/master and the code has been deployed to the Test environment (test-dev and test-production for apps that are not the Editor). Further testing should happen here - first by the developer and then by interested parties.
+
+**In Live Environment** - The developer has deployed the work to Live (live-dev and live-production for those apps that are not the Editor). Further testing should happen here - first by the developer (only testing the feature/change that was added) and then by interested parties.
+
+**Done** - The change is working as expected in Live and the all acceptance criteria specified in the ticket are met.
+
+### Workflow And Environments
+
+![workflow and apps](/images/workflow-and-environments.png "diagram of the workflow and environments")
+
+The Test environment spans the majority of the workflow columns. At each stage of their work the developer should move the corresponding card to the correct column.
+
+It is the developers responsibility to make sure that the work is deployed correctly to the Test and Live environments and has been tested in both.
+
 **MOJ Forms specific guidance:**
 
 - The commit message will describe the change you have made if you can include:
