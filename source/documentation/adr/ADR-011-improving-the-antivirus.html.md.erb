@@ -114,11 +114,11 @@ renaming and repurposing the base adapter.
 The proposed new flow for a file in the User Filestore:
 1. File is uploaded and given arbitrary name
 2. Saved to disc in `tmp/quarantine` with the User Filestore
-4. The file size is checked
-5. The file type is checked
-6. File scanned in situ
-7. When size, type and results are correct the file is encrypted and sent to the S3 bucket
-8. File in `quarantine` is deleted
+3. The file size is checked
+4. The file type is checked
+5. File scanned in situ
+6. When size, type and results are correct the file is encrypted and sent to the S3 bucket
+7. File in `quarantine` is deleted
 
 Monitoring and alerts will need to be added to make sure the definitions are updated in the mirror and
 the user filestore and when a virus is detected from a scan.
