@@ -31,11 +31,11 @@ problem (malware found) within it.
 The current flow for a file in the User Filestore:
 1. File is uploaded and given arbitrary name
 2. Saved to disc in `tmp/quarantine` with the User Filestore
-4. The file size is checked
-5. The file type is checked
-6. Streamed to fb-av
-7. When size, type and results are correct the file is encrypted and sent to the S3 bucket
-8. File in `quarantine` is deleted
+3. The file size is checked
+4. The file type is checked
+5. Streamed to fb-av
+6. When size, type and results are correct the file is encrypted and sent to the S3 bucket
+7. File in `quarantine` is deleted
 
 ## Performance Problem
 Due to the real time need from scanning documents that an end user has uploaded, a queue can
