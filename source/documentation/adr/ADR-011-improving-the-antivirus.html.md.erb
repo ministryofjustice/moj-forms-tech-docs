@@ -28,11 +28,9 @@ The main reason for streaming the file rather than adding the file to a queue is
 document is getting a real time message that the file has been uploaded successfully or that there is a
 problem (malware found) within it.
 
-The flow for a file in the User Filestore:
-
-1. The new flow for a file in the User Filestore:
-2. File is uploaded and given arbitrary name
-3. Saved to disc in `tmp/quarantine` with the User Filestore
+The current flow for a file in the User Filestore:
+1. File is uploaded and given arbitrary name
+2. Saved to disc in `tmp/quarantine` with the User Filestore
 4. The file size is checked
 5. The file type is checked
 6. Streamed to fb-av
