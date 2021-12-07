@@ -72,6 +72,7 @@ Also considered GDS Notify, [https://github.com/alphagov/notifications-antivirus
 their documentation it does incorporate a queue.
 6. Build something
 This is the best route, as the current method meets our needs except scalability.
+Three options include: 
     1. Adding a controller application which will orchestrate documents to independently
 running ClamAV pods for scanning and report back the response (virus found or not).
 The application will need to manage which pods are being used so it can direct traffic correctly.
