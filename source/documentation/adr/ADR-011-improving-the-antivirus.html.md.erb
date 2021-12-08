@@ -1,0 +1,135 @@
+---
+title: Improving the Anti-virus
+category: adr
+reference: ADR-011
+status: Accepted
+statusicon: ✅
+date: 2021-12-06
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Context
+[Github Repo for fb-av](https://github.com/ministryofjustice/fb-av)
+
+The main reason for streaming the file rather than adding the file to a queue is that the user uploading the
+document is getting a real time message that the file has been uploaded successfully or that there is a
+problem (malware found) within it.
+
+The current flow for a file in the User Filestore:
+1. File is uploaded and given arbitrary name
+2. Saved to disc in `tmp/quarantine` with the User Filestore
+3. The file size is checked
+4. The file type is checked
+5. Streamed to fb-av
+6. When size, type and results are correct the file is encrypted and sent to the S3 bucket
+7. File in `quarantine` is deleted
+
+## Performance Problem
+Due to the real time need from scanning documents that an end user has uploaded, a queue can
+not be added before the antivirus. Scaling the fb-av pods width ways did not work as expected,
+one file is streamed to be scanned at a time to one pod - not to other pods running.
+
+There is also a networking issue with how Kubernetes works, as there is only one pod running
+when recycled kubernetes will create a new pod and when ready kill the running pod which is
+expected behaviour. If the pod is being used and a file is being streamed and the pod is killed
+then we get the error, as it seems streaming to the pod is not detectable.
+
+Another performance issue has arisen, Clam AV will restrict traffic if calls to update the
+virus definitions come from the same IP address, this causes problems with the acceptance tests
+overnight as the process locks the scanning so the tests fail.
+
+## Options
+1. Remove the Virus Check
+We can’t - see the following guidance. [https://ministryofjustice.github.io/security-guidance/malware-protection-guidance-defensive-layer-2/#malware-protection-guide-defensive-layer-2]
+(https://ministryofjustice.github.io/security-guidance/malware-protection-guidance-defensive-layer-2/#malware-protection-guide-defensive-layer-2)
+2. Do Nothing
+Hope that file upload remains in small numbers and accept that we have a bottleneck, failing
+acceptance tests and network issues.
+3. Adding a Queue
+Majority of files will be small (under 7mb) and take seconds to upload/stream, scan and respond.
+So adding a queue will be resilient but could give a poor user experience if many happen at once.
+4. 3rd Party Offering
+There are many services available from paid for service through the Digital Marketplace to the
+well known companies - for the usage we are currently expecting the cost does not balance.
+Having the service sitting outside the MOJ platform would require encrypting the file for
+transmission outside our boundary which will make scanning more complicated to build and scale.
+5. Reuse
+Looking at the MOJ repos at the virus checking they seem to have the same issues that ours does.
+Also considered GDS Notify, [https://github.com/alphagov/notifications-antivirus](https://github.com/alphagov/notifications-antivirus), after reviewing
+their documentation it does incorporate a queue.
+6. Build something
+This is the best route, as the current method meets our needs except scalability.
+Three options include: 
+    1. Adding a controller application which will orchestrate documents to independently
+running ClamAV pods for scanning and report back the response (virus found or not).
+The application will need to manage which pods are being used so it can direct traffic correctly.
+    2. Utilise a Lambda function to scan the file when adding a file to the s3 bucket,
+this tags the file and a response is sent back to the user dialog. The down side of
+this is that the file will be encrypted and will need to be either unencrypted, breaking
+our principle of everything is encrypted or the file is scanned within our boundary before encryption.
+    3. Scanning the file from within the user-filestore. The file is already stored there and
+this removes streaming to another service and will be able to scale width ways.
+
+
+Options 6.1 and 6.3 will require us to set up a mirror of the clamav definitions and therefore
+prevent slowing down or temporarily blocked for obtaining the definitions.
+Options for setting up a mirror:
+A. Reuse another mirror on the estate, on searching github, we do not have another mirror running
+within MOJ.
+
+B. Basic setup, have the definitions downloaded and store in a read only s3 bucket and update all
+instances of the File Userstore from that.
+
+C. Use the method clamav suggestion in their documentation - [https://github.com/Cisco-Talos/cvdupdate](https://github.com/Cisco-Talos/cvdupdate).
+
+## Decision
+
+Option 3 of Build something is recommended Moving clamav to be run from the user filestore.
+Using a hybrid of option B and C for mirroring the database creating a mirror using ClamAVs
+solution and saving the definitions to a read only s3 bucket for use to the rest of MOJ.
+
+Location of the clamav mirror. Adding the platform apps would make sense, but as these are
+2x2 deployments it would require four running and doing the same updates individually.
+We would require ideally 2, for test and prod but one would be sufficient.
+
+For development and testing we could utilise formbuilder-base-adapter-test namespace,
+with either creating a new over arching namespace(s) for these sorts of applications or
+renaming and repurposing the base adapter.
+
+![alt text](/images/adr011-moj-forms-data-flow-new-av.png "Diagram of user-filestore withint he platform.")
+
+The proposed new flow for a file in the User Filestore:
+1. File is uploaded and given arbitrary name
+2. Saved to disc in `tmp/quarantine` with the User Filestore
+3. The file size is checked
+4. The file type is checked
+5. File scanned in situ
+6. When size, type and results are correct the file is encrypted and sent to the S3 bucket
+7. File in `quarantine` is deleted
+
+Monitoring and alerts will need to be added to make sure the definitions are updated in the mirror and
+the user filestore and when a virus is detected from a scan.
+
+### Consequences
+* Virus checking will not be interrupted while pods are recycled
+* Multiple uploaded files can be checked at once
+* Virus definition updates can be made multiple times a day
+* ClamAV definitions available to other MOJ teams
+* Monitoring
+
+### Constraints
+* Extra service to support and maintain
+* Complicated getting all the services to update and the correct time
