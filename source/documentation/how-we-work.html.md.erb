@@ -109,7 +109,30 @@ The [MOJ Forms Tech Docs](https://ministryofjustice.github.io/moj-forms-tech-doc
 The first port of call for users of Formbuilder is the [#ask-formbuilder](https://mojdt.slack.com/archives/CE26QEL1Z) Slack channel. This channel will be monitored by the Product Managers who will contact the support dev as required.
 
 ### Alerts
-We have two alerts channels, [#form-builder-alerts](https://mojdt.slack.com/archives/CH4FJB8E4) and [#form-builder-alerts-low-severity](https://mojdt.slack.com/archives/C013L7PA4N4).
+We have three alerts channels, [#form-builder-alerts](https://mojdt.slack.com/archives/CH4FJB8E4), [#form-builder-alerts-low-severity](https://mojdt.slack.com/archives/C013L7PA4N4) and [#form-builder-alerts-400s](https://mojdt.slack.com/archives/C02TQKB1810).
+
+The #form-builder-alerts-400s is used for all the 400s we get from the `formbuilder-services-live-production` namespace. This was added because our services are constantly probed by bots but we do not necessarily need to act on every 400 alert that happens. We do need to keep an eye on the number of 400s over time and respond accordingly but the high severity alert channel is really for something that has gone absolutely wrong. Too many alerts will desensitise the developers. The high severity channel contains people who are stakeholders for the platform but not necessarily developers.
+
+Slack have deprecated how webhooks are used within their platform now. An "app" has to be created in their admin interface and then a webhook generated for it which is tied to a single slack channel. This is limiting but unfortunately just how it is. As a result we have a mixture of the old slack webhook and newer app based system.
+
+Cloud Platform provide [a guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts) on how to ask them to route Alert Manager notifications from our platform to specific Slack channels. We hold the webhooks for these in the `formbuilder-repos` namespace in two sets of secrets:
+
+- slack-webhooks
+- fb-low-severity-alerts-slack-webhook
+
+You can view all the secrets by running: `kubectl get secrets -n formbuilder-repos`
+
+The `fb-low-severity-alerts-slack-webhook` is specifically for the low severity channel. However the `slack-webhooks` secret now takes precedence and contains several webhooks. We do not remove the former because frankly it is too much effort to get it changed over in Cloud Platform and it works just fine.
+
+The `slack-webhooks` secret has four properties: `alerts_high`, `alerts_low`, `deployments` and `400s`. They are pretty self explanatory.
+
+You can add an additional webhook to the `slack-webhooks` secret by running:
+
+`kubectl edit secrets -n formbuilder-repos slack-webhooks`
+
+It should open your editor of choice and enable you to add another property and value. Remember to base64 encode the string before saving it. Also update the annotations section with the same information. Saving should apply it directly to Kubernetes.
+
+Alert Manager alerts are configured in the [fb-monitoring](https://github.com/ministryofjustice/fb-monitoring) repo. CircleCI is configured to apply changes.
 
 Generally, we do not need to action the alerts in the #form-builder-alerts-low-severity channel as these alerts are concerned about the test environment. However, if there are any Sentry alerts that have been triggered and dealt with, please remember to resolve these in [Sentry](https://sentry.io/organizations/ministryofjustice/issues/).
 
