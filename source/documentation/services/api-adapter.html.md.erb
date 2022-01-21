@@ -99,6 +99,18 @@ Please note that the URLs to the encrypted files expire 15 minutes after being
 generated. You cannot re-request new URLs so you will need to retrieve the file
 within this timeframe.
 
+**Creating the SERVICE_OUTPUT_JSON_KEY**
+
+***Ruby***
+
+```
+irb
+require 'securerandom'
+puts SecureRandom.hex(64)
+```
+
+Take 16 characters from the outputted string.
+
 ## HMCTS Adapter [Legacy]
 
 Handles submissions for two forms on behalf of HMCTS. It maps submission payloads to the required keys
