@@ -39,7 +39,7 @@ Below the above rule you'll also find the `Slack Notification on User Signup` ru
 
 ## Debugging
 
-If a developer needs to debug the real login screen then they will need to change the URL that the initial POST request goes to. This resides in the home controller of the Editor app. `/auth/developer` would need to be changed to `/auth/auth0`. They will also need to add `http://localhost:3000/auth/auth0/callback` to the Allowed Callback URLs list and `http://localhost:3000` to the Allowed Logout URLs list. Both are comma separated lists.
+If a developer needs to debug the real login screen then they will need to change the URL that the initial POST request goes to. This resides in the home controller of the Editor app. `/auth/developer` would need to be changed to `/auth/auth0`. They will also need to add `http://localhost:3000/auth/auth0/callback` to the Allowed Callback URLs list and `http://localhost:3000` to the Allowed Logout URLs list. Both are comma separated lists found under the application's 'Settings' tabs in the Auth0 Dashboard.
 
 You will also need to set the following environment variables:
 
@@ -48,5 +48,7 @@ AUTH0_CLIENT_ID
 AUTH0_CLIENT_SECRET
 AUTH0_DOMAIN
 ```
+
+These values are found under the application's 'Settings' tabs in the Auth0 Dashboard.
 
 Once those changes are in place, opening the editor locally in an incognito window, or clearing the associated cookie, will allow a login experience very similar to what an end user will see.
