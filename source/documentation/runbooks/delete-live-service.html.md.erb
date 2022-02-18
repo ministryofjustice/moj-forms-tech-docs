@@ -1,0 +1,30 @@
+---
+title: Delete a live service
+category: runbooks
+last_reviewed_on: 2022-02-18
+review_in: 3 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+The MOJ Forms development team have access to an Admin dashboard. This is found in the header of the Live Editor.
+
+### Remove Pindgdom Alerts
+
+All live forms have a Pingdom check, this is a health check to ensure the form is up and running. We need to remove this alert before unpublishing the form.
+
+We can remove alerts by going into the 'Uptime Checks' section of the Admin dashboard. Delete the check associated with the form you want to remove.
+The form should no longer be under the 'With Checks' list.
+
+### Unpublish Form
+
+Some forms may have been added to Pingom manually, check there is no alert in the [Cloud Platform Environments](https://github.com/ministryofjustice/cloud-platform-environments) repo.
+
+Once the alert has been removed, you can remove the form through the Admin dashboard:
+
+- Find the service under the 'Services'
+- Click 'Unpublish Live'
+- If required, click 'Unpublish Test'
+
+The service should now be removed.
+
+Note: We do not not need to remove the service metadata from the database as we require this for audit purposes.
