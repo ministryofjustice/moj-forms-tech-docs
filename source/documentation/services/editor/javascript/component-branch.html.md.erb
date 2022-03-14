@@ -1,0 +1,85 @@
+---
+title: Branch Component
+category: platform
+last_reviewed_on: 2022-03-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+Category: [Editor](../../editor.html) | [JavaScript](../javascript.html) | [Components](../javascript.html#components)
+
+* * *
+
+Editable item to aid in configuring decision making within the Editor for form setup. Branches consist of one or more BranchCondition items that need to be true, in order for the form journey to continue on to the page specified by the related BranchDestination propery.
+
+```
+new Branch(jQuery wrapped DIV node [, configurable options ]);
+```
+
+<small>Code: [javascript/src/component_branch.js](https://github.com/ministryofjustice/fb-editor/blob/main/app/javascript/src/component_branch.js)</small>
+<br>
+<small>JS test: [test/component_branch_test.js](https://github.com/ministryofjustice/fb-editor/blob/main/test/component_branch_test.js)</small>
+
+
+
+
+* * *
+
+
+# Branch
+
+To add ***Branch*** component functionality to your HTML you simply need to create an instance by passing, as a minimum, your target `<div class=branch" />` markup element.
+
+*Code Example:*
+
+```
+var $node = $(".branchMarkupElement");
+var branch = new Branch($node, {
+      branch_index: this._branchCount,
+      css_classes_error: "error govuk-form-group--error",
+      selector_answer: ".answer",
+      selector_branch_remove: ".branch-remover",
+      selector_condition: ".condition",
+      selector_condition_add: ".condition-injector",
+      selector_condition_remove: ".condition-remover",
+      selector_destination: ".destination",
+      selector_error_messsage: ".govuk-error-message",
+      selector_question: ".question",
+      expression_url: ""/api/services/45/components/#{component_id}/conditionals/#{conditionals_index}/expressions/#{expressions_index}"",
+      question_label: "And",
+      template_condition: $(document.body).find("[data-component-template=condition]"),
+      dialog_delete: view.dialogConfirmationDelete,
+      view: view
+    });
+```
+
+
+<br>
+## Options
+To customise the ***Branch*** output and/or functionality you can pass in a configuration object. The configurable options feature below.
+
+<p style="color:red;font-weight:bold">TO BE COMPLETED...</p>
+
+<br>
+# BranchCondition
+
+
+<br>
+# BranchQuestion
+
+
+<br>
+# BranchAnswer
+
+
+<br>
+# BranchConditionInjector
+
+
+<br>
+# BranchDestination
+
+
+
+<br><br>

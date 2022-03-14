@@ -1,0 +1,106 @@
+---
+title: Editor
+category: platform
+last_reviewed_on: 2022-03-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+Category: [Editor](../editor.html)
+
+* * *
+
+# Frontend Documentation
+
+The main bulk of customised Frontend code has been focussed on the [fb-editor](https://github.com/ministryofjustice/fb-editor) project. Supporting views for the [fb-runner](https://github.com/ministryofjustice/fb-runner) are primarily based on standard GDS templates with minimal, if any, tweaks to support [fb-editor](https://github.com/ministryofjustice/fb-editor) requirements.
+
+<br>
+## File structure
+
+The file frontend file structure follows the standard organisation for other Rails based (Webpack setup) files structures. There are too many files to list them all here, but the following outline and example files should give an idea of how things are laid out, and where to start looking.
+
+```
+app/
+
+  assets/
+    images/
+    stylesheets/
+
+  javascript/
+    channels/
+    images/
+    packs/
+      application.js
+      govuk.js
+
+    src/
+      index.js
+      component_dialog.js
+      controller_default.js
+      ...
+
+    styles/
+      application.scss
+      _index.scss
+      _component_dialog.scss
+      ...
+
+  views/
+    layouts/
+      application.html.erb
+      ...
+
+    partials/
+      _header.html.erb
+      ...
+
+    services/
+      index.html.erb
+
+    ...
+
+test/
+
+  setup.js
+  component_dialog_test.js
+  ...
+
+```
+
+
+<br>
+## HTML
+
+All templates follow the Rails standard approach of being stored within this `app/views/` folder.
+
+* Templates (.html.erb)
+
+
+<br>
+## CSS
+
+Stylesheets can be found starting from `app/javascript/styles` folder. There is a linked in package for Gov.UK CSS but that is not covered within this documentation.
+
+<small>For more information on Gov.UK CSS see the [Gov.UK Design System](https://design-system.service.gov.uk/) documentation.</small>
+
+* Files (.scss)
+
+
+<br>
+## JavaScript
+
+JavaScript files can be found in the `app/javascript/src` folder. 
+
+[GitHub Files \(.js\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/src)
+
+
+* Setup
+* [Components](http://localhost:4567/documentation/services/editor/javascript.html#components)
+* Classes
+* Tests
+
+
+
+
+<br><br>
