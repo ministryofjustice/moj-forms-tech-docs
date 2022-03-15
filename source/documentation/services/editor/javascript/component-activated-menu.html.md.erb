@@ -5,7 +5,7 @@ last_reviewed_on: 2022-03-10
 review_in: 3 months
 ---
 
-<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+<% if current_page.url != "/" %> <%= current_page.data.title %><% end %>
 
 Category: [Editor](../../editor.html) | [JavaScript](../javascript.html) | [Components](../javascript.html#components)
 
@@ -51,7 +51,7 @@ To customise the ***ActivatedMenu*** output and/or functionality you can pass in
 <br>
 ### activator
 
-Specify a particular [jQuery object](https://api.jquery.com/jQuery/) to enhance with [ActivatedMenuActivator](#ActivatedMenuActivator) functionality. If nothing is provided a `<button>` element will be created and inserted directly before the targeted menu element.
+Specify a particular [jQuery object](https://api.jquery.com/jQuery/) to enhance with [ActivatedMenuActivator](#activatedmenuactivator) functionality. If nothing is provided a `<button>` element will be created and inserted directly before the targeted menu element.
 
 |Type |Default  |Optional |
 --- | --- | ---|
@@ -99,7 +99,7 @@ new ActivatedMenu($("ul.menu"), {
 <br>
 ### container\_id
 
-As part of the ***Activated Menu*** creation process and resulting component composition an [ActivatedMenuContainer](#ActivatedMenuContainer) (sub) component is created. You can specify an _HTML ID attribute_ value to be applied to this created element by using the configuration option ***container\_id***.
+As part of the ***Activated Menu*** creation process and resulting component composition an [ActivatedMenuContainer](#activatedmenucontainer) (sub) component is created. You can specify an _HTML ID attribute_ value to be applied to this created element by using the configuration option ***container\_id***.
 
 Note: If no _ID_ value is passed one is automatically generated and applied. This is done each time the component is created so cannot be referenced from within any applied CSS.
 
@@ -117,7 +117,7 @@ new ActivatedMenu($("ul.menu"), {
 <br>
 ### container\_classname
 
-As part of the ***Activated Menu*** creation process and resulting component composition an [ActivatedMenuContainer](#ActivatedMenuContainer) (sub) component is created. You can specify an _HTML class attribute_ value to be applied to this created element by using the configuration option ***container\_classname***. This might be required to help reference a particular menu from within any applied CSS.
+As part of the ***Activated Menu*** creation process and resulting component composition an [ActivatedMenuContainer](#activatedmenucontainer) (sub) component is created. You can specify an _HTML class attribute_ value to be applied to this created element by using the configuration option ***container\_classname***. This might be required to help reference a particular menu from within any applied CSS.
 
 |Type |Default  |Optional |
 --- | --- | ---|
@@ -274,7 +274,7 @@ menu.close();
 <br>
 ## Events
 
-You can tap into the events triggered as part of the original [jQueryUI menu widget](https://jqueryui.com/menu/) and learn more about that in the [menu widget api documentation](https://api.jqueryui.com/menu) or, read what is available in the [configurable selection\_event](#events_selection_event) option of the ***ActivatedMenu*** component.
+You can tap into the events triggered as part of the original [jQueryUI menu widget](https://jqueryui.com/menu/) and learn more about that in the [menu widget api documentation](https://api.jqueryui.com/menu) or, read what is available in the configurable [selection\_event](#selection-event) option of the ***ActivatedMenu*** component.
 
 
 * * *
