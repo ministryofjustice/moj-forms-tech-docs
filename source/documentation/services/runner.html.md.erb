@@ -80,7 +80,7 @@ The resulting token must be passed as a header called `x-access-token`
 
 Acceptance tests for both the new Runner and the Legacy Runner can be found in the [fb-acceptance-tests](https://github.com/ministryofjustice/fb-acceptance-tests) repo. All the forms that are tested against live in the `formbuilder-services-test-dev` namespace.
 
-The Legacy Runner makes use of several forms each broken down to test an individual component. They can be found in the [test Publisher](https://fb-publisher-test.apps.live-1.cloud-platform.service.justice.gov.uk/services?utf8=%E2%9C%93&query=acceptance).
+The Legacy Runner makes use of several forms each broken down to test an individual component. They can be found in the [test Publisher](https://fb-publisher-test.apps.live.cloud-platform.service.justice.gov.uk/services?utf8=%E2%9C%93&query=acceptance).
 
 There are quite a few forms:
 
@@ -111,8 +111,8 @@ The new Runner forms work very differently. There are only two:
 
 We do not have any RBAC in place yet for shared permission to the forms to you will have to visit each service URL directly in the Editor:
 
-- [New Runner Acceptance Tests in the Editor](https://fb-editor-test.apps.live-1.cloud-platform.service.justice.gov.uk/services/cd75ad76-1d4b-4ce5-8a9e-035262cd2683/edit)
-- [Acceptance Tests Branching Fixture 10 in the Editor](https://fb-editor-test.apps.live-1.cloud-platform.service.justice.gov.uk/services/e68dca75-20b8-468e-9436-e97791a914c5/edit)
+- [New Runner Acceptance Tests in the Editor](https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/services/cd75ad76-1d4b-4ce5-8a9e-035262cd2683/edit)
+- [Acceptance Tests Branching Fixture 10 in the Editor](https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/services/e68dca75-20b8-468e-9436-e97791a914c5/edit)
 
 Both of the above forms are tested whenever the [fb-runner](https://github.com/ministryofjustice/fb-runner) is deployed. Once the containers are deployed and restarted the [deployment pipline](https://app.circleci.com/pipelines/github/ministryofjustice/fb-runner) will trigger.
 
