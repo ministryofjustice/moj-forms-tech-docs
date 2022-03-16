@@ -15,7 +15,7 @@ Like other MoJ Forms applications, the Editor is deployed in a Continous Deliver
 
 Since it has a significant amount of feature development work that is done concurrently it has a slightly different workflow than the other applications. A developer can deploy out a separate editor in the Test environment that is entirely independent of the one that takes the code from `main`.
 
-The Editor that uses the code on `main` can be found at: [https://fb-editor-test.apps.live-1.cloud-platform.service.justice.gov.uk/](https://fb-editor-test.apps.live-1.cloud-platform.service.justice.gov.uk/).
+The Editor that uses the code on `main` can be found at: [https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/](https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/).
 
 ### Workflow
 
@@ -23,7 +23,7 @@ It is important that all the unit tests and acceptance tests have been updated a
 
 The Developer checks out a branch locally and prepends the name of that branch with `testable-`. eg `testable-some-new-awesome-feature`
 
-This branch is what is used to create the URL that a user will visit. The example above becomes `https://testable-some-new-awesome-feature.apps.live-1.cloud-platform.service.justice.gov.uk`. Therefore it is important to _not_ use `/` in branch names as that would then create an invalid URL.
+This branch is what is used to create the URL that a user will visit. The example above becomes `https://testable-some-new-awesome-feature.apps.live.cloud-platform.service.justice.gov.uk`. Therefore it is important to _not_ use `/` in branch names as that would then create an invalid URL.
 
 Good: `testable-make-it-work`
 
