@@ -1,0 +1,180 @@
+---
+title: Editor
+category: platform
+last_reviewed_on: 2022-04-05
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+Category: [Editor](../editor.html) | [Frontend Overview](./frontend-overview.html)
+
+* * *
+
+
+# HTML
+
+All templates follow the Rails standard approach of being stored within this `app/views/` folder.
+
+* Templates (.html.erb)
+
+
+## Semantic and lean markup
+
+HTML should be written using minimal, semantic markup with functional identifiers and, where possible, without any need for extra markup targeting visual requirement.
+
+e.g. Preference is for the Editor HTML to do this...
+
+```html
+<div class="branch">
+  ...
+  <div class="branch-condition">
+    <div class="branch-question">
+      ...
+    </div>
+    <div class="branch-answer">
+      ...
+    </div>
+  </div>
+</div>
+```
+
+...rather than this kind of thing:
+
+```html
+<div class="container-panel govuk-grid-column-two-thirds padding-10">
+  ...
+  <div class="bg-blue">
+    <div class="border-outline-intense margin-10">
+      <div class="govuk-!-width-one-half">
+        ...
+      </div>
+      <div class="govuk-!-width-one-half">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+Unfortunately, because there is the need to share space with GDS css, we sometimes have unwanted design/visual-based class names present. These should just be minimised for less intrusion and, should the future need arise, to allow the possibility of white-label site opportunity.
+
+
+## Layouts
+
+Files are organised using standard Rails approach, with Layouts, templates, and partials.
+
+A typical `(app/views/layouts/application.html.erb)` layout breakdown might be:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MoJ Forms</title>
+    % csrf_meta_tags %
+    %= csp_meta_tag %
+    %= render partial: 'partials/head_tags' %
+    %= render partial: 'partials/properties' %
+    %= stylesheet_pack_tag 'application', media: 'all' %
+    %= javascript_pack_tag 'application' %
+  </head>
+
+  <body class="govuk-body %= "#{controller_name}-#{action_name}" %">
+    %= render partial: 'partials/header' %
+
+    <main id="main-content" role="main">
+
+      %= yield %
+
+    </main>
+
+    %= render partial: 'partials/footer' %
+    %= render partial: 'partials/template_dialog' %
+    %= render partial: 'partials/template_dialog_confirmation' %
+    %= render partial: 'partials/template_dialog_confirmation_delete' %
+  </body>
+</html>
+
+```
+
+
+## Partials
+
+Partials are shared snippets of code that can be used across templates and layouts located in `app/views/partials` folder.
+
+One less obvious partial in the layout example, above, is the `partials/properties`. This is a file that is used to pass information from the HTML/template layer to the JavaScript. It essentially just initialises a JavaScript object with lots of properties for later recall.
+
+e.g. app/views/partials/_properties.html.erb
+
+```javascript
+<script>
+  var app = {
+    api: {
+      new_conditional: "/api/services/%= params[:id] %>/branches/%= @branch && @branch.flow_uuid %>/conditionals/#{conditional_index}",
+      get_expression: "/api/services/%= params[:id] %>/components/#{component_id}/conditionals/#{conditionals_index}/expressions/#{expressions_index}"
+    },
+    page: {
+      id: "%= params[:page_uuid] %",
+      action: "%= action_name %",
+      controller:  "%= controller_name %",
+      data_url: "%= yield :page_data_url %"
+    },
+    service: {
+      id: "%= params[:id] %"
+    },
+    text: {
+      aria: {
+        answers: "%= t('aria.answers') %",
+        hint: "%= t('aria.hint') %",
+        question: "%= t('aria.question') %",
+        section_heading: "%= t('aria.section_heading') %"
+      },
+
+  ...
+
+```
+
+Properties set in the above partials can be retrieved in JavaScript.
+
+```html
+<script>
+  console.log(app.text.hint);
+</script>
+```
+
+
+## Views
+
+Views are rendered by the Rails standard approach. The above layout example shows the `yield` keyword placeholder that will be swapped out by the corresponding view.
+
+e.g. For a `BranchesController#edit` action, `yield` will be replaced by the view code located in `app/views/branches/edit.html.erb`
+
+
+## Templates
+
+Lastly, the above layout example shows some partials named `partials/template_xyz...`. These are snippets of HTML used for JavaScript enhanced widgets/components.
+
+e.g. `partials/template_dialog` will inject something like this code into the HTML output:
+
+```html
+<script type="text/html"
+        data-component-template="Dialog"
+        data-classes="dialog-message"
+        data-text-cancel="Cancel"
+        data-text-ok="Ok">
+
+  <div class="component component-dialog" id="dialog">
+    <h3 data-node="heading" class="govuk-label govuk-label--m">
+      General heading here
+    </h3>
+    <p data-node="content">
+      General message here
+    </p>
+  </div>
+</script>
+```
+
+This is a basic piece of HTML picked up by JavaScript code and turned into a reusable Dialog component.
+
+
+<br><br>
