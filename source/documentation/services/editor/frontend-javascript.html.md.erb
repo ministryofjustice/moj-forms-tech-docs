@@ -1,21 +1,13 @@
 ---
-title: Editor
-category: platform
+title: Editor - Javascript
+category: platform-editor
 last_reviewed_on: 2022-03-10
 review_in: 3 months
 ---
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
-Category: [Editor](../editor.html) | [Frontend Overview](./frontend-overview.html)
-
-* * *
-
-
-# JavaScript
-
-
-JavaScript files can be found in the `app/javascript/src` folder. 
+JavaScript files can be found in the `app/javascript/src` folder.
 
 - [GitHub Files \(.js\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/src)
 - [JS Test files](https://github.com/ministryofjustice/fb-editor/tree/main/test)
@@ -39,7 +31,7 @@ var app {
 }
 ```
 
-The `app/javascript/src/index.js` file is the next important piece. This file extracts the Controller+Action as a string value and determinds the appropriate Controller class to create a Controller instance. 
+The `app/javascript/src/index.js` file is the next important piece. This file extracts the Controller+Action as a string value and determinds the appropriate Controller class to create a Controller instance.
 
 The above `app.page` values will result in `BranchesController#new` value, to mirror that used by the Rails backend. Once the type of controller is set, the kick-off line will initiate the JavaScript view build/enhancement using the appropriate controller+action.
 
@@ -87,7 +79,7 @@ class BranchesController extends DefaultController {
     BranchesController.enhanceBranchOtherwise.call(this, $otherwise);
   }
 }
-``` 
+```
 
 In all cases, this controller simply initiates all views using the `create()` function. Other controllers may use separate functions but for all, after this point it's just a case of following the JavaScript to see what a specific controller does.
 
@@ -132,7 +124,7 @@ Defaults can be set with ability to override if we use the utilities.mergeObject
 
 ### Making the instance available
 
-For all component classes where we pas in a jQuery node, we add a reference to the instance as data on the node. This means we can easily find and use the underlying class instance object even after we've captured the node by a separate jQuery lookup. 
+For all component classes where we pas in a jQuery node, we add a reference to the instance as data on the node. This means we can easily find and use the underlying class instance object even after we've captured the node by a separate jQuery lookup.
 
 e.g.
 
@@ -160,7 +152,7 @@ new Person($person, {
 });
 
 // later...
-$(".person").data("instance").name; // Returns "Fred" 
+$(".person").data("instance").name; // Returns "Fred"
 
 ```
 
@@ -193,6 +185,6 @@ To run a test with debugging:
 - Run this line to start the test:
 
   ```
-  ./node_modules/mocha/bin/mocha --inspect test/component_dialog_test.js 
+  ./node_modules/mocha/bin/mocha --inspect test/component_dialog_test.js
   ```
 

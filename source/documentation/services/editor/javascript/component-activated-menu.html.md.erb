@@ -1,6 +1,6 @@
 ---
 title: Activated Menu Component
-category: platform
+category: platform-editor-javascript
 last_reviewed_on: 2022-03-10
 review_in: 3 months
 ---
@@ -192,7 +192,7 @@ Inside the `menuselect` event listener already in place on the initial `<ul>` el
 |String |undefined |Yes |
 
 ```
-new ActivatedMenu($("ul.menu"), { 
+new ActivatedMenu($("ul.menu"), {
   selection_event: "label-to-identify-menu-selection-event"
 });
 
@@ -206,7 +206,7 @@ When the passed selection event is triggered, the ***ActivatedMenu*** functional
 ```
 // Event data available
 
-{ 
+{
   activator: <the item that was clicked>,
   menu: <the original UL element>,
   component: <the actual ActivatedMenu instance>,
