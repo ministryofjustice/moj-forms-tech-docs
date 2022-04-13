@@ -1,17 +1,11 @@
 ---
-title: Editor
-category: platform
+title: Editor - Frontend Overview
+category: platform-editor
 last_reviewed_on: 2022-03-10
 review_in: 3 months
 ---
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
-
-Category: [Editor](../editor.html)
-
-* * *
-
-# Frontend Documentation
 
 The main bulk of customised Frontend code has been focussed on the [fb-editor](https://github.com/ministryofjustice/fb-editor) project. Supporting views for the [fb-runner](https://github.com/ministryofjustice/fb-runner) are primarily based on standard GDS templates with minimal, if any, tweaks to support [fb-editor](https://github.com/ministryofjustice/fb-editor) requirements.
 
@@ -69,38 +63,31 @@ test/
 ```
 
 
-<br>
 ## HTML
 
-All templates follow the Rails standard approach of being stored within this `app/views/` folder.
+HTML files can be found in the `app/view` folder.
 
-* Templates (.html.erb)
+- [GitHub Files \(.html.erb\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/view)
+
+Further information and specific topics on [Editor HTML](frontend-html.html)
 
 
-<br>
 ## CSS
 
-Stylesheets can be found starting from `app/javascript/styles` folder. There is a linked in package for Gov.UK CSS but that is not covered within this documentation.
+Stylesheet files can be found in the `app/javascript/styles` folder.
 
-<small>For more information on Gov.UK CSS see the [Gov.UK Design System](https://design-system.service.gov.uk/) documentation.</small>
+- [GitHub Files \(.sass\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/styles)
 
-* Files (.scss)
+Further information and specific topics on [Editor CSS](frontend-css.html)
 
 
-<br>
 ## JavaScript
 
-JavaScript files can be found in the `app/javascript/src` folder. 
+JavaScript files can be found in the `app/javascript/src` folder.
 
-[GitHub Files \(.js\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/src)
+- [GitHub Files \(.js\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/src)
+- [JS Test files](https://github.com/ministryofjustice/fb-editor/tree/main/test)
 
-
-* Setup
-* [Components](/documentation/services/editor/javascript.html#components)
-* Classes
-* Tests
-
-
-
+Further information and specific topics on [Editor JavaScript](frontend-javascript.html)
 
 <br><br>

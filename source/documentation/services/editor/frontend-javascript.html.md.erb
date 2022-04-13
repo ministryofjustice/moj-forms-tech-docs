@@ -1,0 +1,190 @@
+---
+title: Editor - Javascript
+category: platform-editor
+last_reviewed_on: 2022-03-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+JavaScript files can be found in the `app/javascript/src` folder.
+
+- [GitHub Files \(.js\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/src)
+- [JS Test files](https://github.com/ministryofjustice/fb-editor/tree/main/test)
+
+
+<br>
+## Build
+
+JavaScript starts with creating the `app` namespaced object. It holds certain properties that will setup the data or allow text to be passed from templates to the script files. The most important properties are those that will initiate the required controller and view.
+
+e.g.
+
+```
+var app {
+  page: {
+      action: "new",
+      controller:  "branches",
+      ...
+  }
+  ...
+}
+```
+
+The `app/javascript/src/index.js` file is the next important piece. This file extracts the Controller+Action as a string value and determinds the appropriate Controller class to create a Controller instance.
+
+The above `app.page` values will result in `BranchesController#new` value, to mirror that used by the Rails backend. Once the type of controller is set, the kick-off line will initiate the JavaScript view build/enhancement using the appropriate controller+action.
+
+```
+$(document).ready( () => new Controller(app) );
+```
+
+Controller in the above would be `new BranchesController(app)` so the next step is to look for the `app/javascript/src/controller_branches.js` file. There is a file for each controller type.
+
+
+<br>
+## View Controllers
+
+Each view will have a corresponding view controller file. The controller and action values used will correspond to the same used by the backend. For the example Branches controller, we'd have something like this:
+
+```
+class BranchesController extends DefaultController {
+
+  constructor(app) {
+    super(app);
+    this.api = app.api;
+
+    switch(app.page.action) {
+      case "new":
+      case "create":
+      case "edit":
+      case "update":
+        this.create();
+    }
+  }
+
+  /* ACTION SETUP:
+   * Setup view for the create (new) action
+   **/
+  create() {
+    var $branches = this.branchNodes;
+    var $injectors = $(BRANCH_INJECTOR_SELECTOR);
+    var $otherwise = $(BRANCH_OTHERWISE_SELECTOR + " " + BRANCH_DESTINATION_SELECTOR);
+
+    this.branchConditionTemplate = createBranchConditionTemplate($branches.eq(0));
+
+    BranchesController.addBranchEventListeners(this)
+    BranchesController.enhanceCurrentBranches.call(this, $branches);
+    BranchesController.enhanceBranchInjectors.call(this, $injectors);
+    BranchesController.enhanceBranchOtherwise.call(this, $otherwise);
+  }
+}
+```
+
+In all cases, this controller simply initiates all views using the `create()` function. Other controllers may use separate functions but for all, after this point it's just a case of following the JavaScript to see what a specific controller does.
+
+
+<br>
+## OOP, scripting, and jQuery
+
+A common danger of using jQuery is proliferation of seemingly endless and unstructured scripting style, creating difficult to follow and maintain code. The Editor JavaScript tries to stick closely to Object Oriented Programming techniques to promote better organisation and code reuse, especially seeking to avoid numeroues and repeated jQuery search and find approaches.
+
+However, nothing is so rigid and inflexible to prevent a developer from choosing a preferred choice for any particular task. The expectation of judgement and effort to 'do the right thing' is required but developers are free to choose the right solution. There is no dictating framework or restrictive ruleset.
+
+As a result of this, the code in place is intended to continually evolve and imporove. The goal should always be to seek out repeatable patterns, with reusable components and code. Most important, we aim to keep it simple because things will always become more complicated than originally intended. Less frameworks and less bolt on third-party solutions will equal a lower learning curve and more ability to utilise existing JavScript knowledge.
+
+<br>
+## Common patterns
+
+
+### Creating a component
+
+A common pattern used for all components is to pass a jQuery target node, along with an object for configuration.
+
+e.g.
+
+```
+class Component {
+  #config;
+
+  constructor($node, config) {
+    this.#config = mergeObjects({
+      css_name: "something",
+      max: 3
+    }, config);
+
+    ...
+  }
+
+}
+```
+
+Defaults can be set with ability to override if we use the utilities.mergeObjects function (see above example).
+
+
+### Making the instance available
+
+For all component classes where we pas in a jQuery node, we add a reference to the instance as data on the node. This means we can easily find and use the underlying class instance object even after we've captured the node by a separate jQuery lookup.
+
+e.g.
+
+```
+class Person {
+  #config;
+
+  constructor($node, config) {
+    this.#config = mergeObjects({
+      name: "",
+      age: 0
+    }, config);
+
+    $node.data("instance", this);
+
+    ...
+  }
+
+}
+
+var $person = $(".person");
+new Person($person, {
+  name: "Fred",
+  age: 20
+});
+
+// later...
+$(".person").data("instance").name; // Returns "Fred"
+
+```
+
+
+
+<br>
+## Testing
+
+To run all the JavaScript tests:
+
+```
+npm run jstest test
+```
+
+To run a single JavaScript test file:
+
+```
+npm run jstest test/component_dialog_test.js
+```
+
+To run a test with debugging:
+
+- Open Chrome browser and type
+  ```
+  chrome://inspect
+  ```
+
+- Click the link 'Open dedicated DevTools for Node'
+- Add a breakpoint in your code by inserting 'debugger'
+- Run this line to start the test:
+
+  ```
+  ./node_modules/mocha/bin/mocha --inspect test/component_dialog_test.js
+  ```
+

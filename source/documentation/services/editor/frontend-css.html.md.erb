@@ -1,0 +1,45 @@
+---
+title: Editor - CSS
+category: platform-editor
+last_reviewed_on: 2022-03-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+Stylesheets can be found starting from `app/javascript/styles` folder. There is a linked in package for Gov.UK CSS but that is not covered within this documentation.
+
+<small>For more information on Gov.UK CSS see the [Gov.UK Design System](https://design-system.service.gov.uk/) documentation.</small>
+
+* Files (.scss)
+
+CSS for the Editor is mainly held within the one file, index.scss. It is likely over time this could be split into smaller, perhaps more controllable chunks but this would be nicety not necessity.
+
+Main aim for Editor CSS is to do things properly, identifying and labelling components through functionality, not visual representation. This provides a more robust and easier to maintain level of organisation. You should know what is being affected. GDS CSS does not do this, choosing instead to organise and identify based on visual requirement and applying multiple, Bootstrap CSS style, visual class names to multiple elements. This can make things very hard to customise and cause severely bloated stylesheets, but the Editor files cannot change or correct for that.
+
+e.g. Editor CSS results in this kind of thing (due to HTML non-visual markup approach):
+
+```
+.branch {
+  @include container_panel;
+  padding: 10px;
+}
+
+.branch-condition {
+  background-color: blue;
+  border: 1px solid grey;
+  margin-bottom: 10px;
+}
+
+.branch-question,
+.branch-answer {
+  width: 50px;
+}
+```
+
+The code tries to maintain an alphabetically ordered approach to property names and selector layouts, putting least specific priority first, but also sectioning components and areas together.
+
+Some components have their own stylesheets but there is plenty more room for more isolated organisation, if that becomes a requirement.
+
+
+<br><br>
