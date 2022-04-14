@@ -17,10 +17,13 @@ A Ruby on Rails app with a custom javascript frontend, that allows you to make c
 * [fb-metadata-api](https://github.com/ministryofjustice/fb-metadata-api)
 
 ## Documentation
+The documentation is split into the different areas:
 <ul>
-    <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
-        <% if page.data.category == "platform-editor" %>
-            <li><a href="<%= page.url %>"><%= page.data.title %></a></li>
-        <% end %>
+  <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
+    <% if page.data.category == "platform-editor" %>
+        <li>
+            [<%= page.data.title %>](<%= page.url %>)
+        </li>
     <% end %>
+<% end %>
 </ul>
