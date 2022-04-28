@@ -175,3 +175,14 @@ OPTICS will log this user as `Main`.
 
 There is one unused field, `CaseContactCustom18.Subject`, which was meant the `Intermediary` mentioned above but
 in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.
+
+### Comments
+
+Form repository: [Comments form](https://github.com/ministryofjustice/Comments-form)
+
+It is called `comments-form` in the
+[Publisher](https://fb-publisher-live.apps.live.cloud-platform.service.justice.gov.uk/services/comments-form).
+
+The API endpoint is `/v1/comment`.
+
+This is a simple form that takes the user's comments and the location in which the comment relates to. [The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/comment.rb) provides more information on the mappings.
