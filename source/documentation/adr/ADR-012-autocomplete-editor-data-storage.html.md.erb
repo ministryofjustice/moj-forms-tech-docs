@@ -1,0 +1,54 @@
+---
+title: Autocomplete Editor Data Storage
+category: adr
+reference: ADR-012
+status: Accepted
+statusicon: ✅
+date: 2022-05-24
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Context
+[Github Repo for fb-editor](https://github.com/ministryofjustice/fb-editor)
+
+The autocomplete component introduces a new concept into the Editor, that form users can upload their own data in the form of a CSV.
+This means we can have n number of options for n number of autocomplete components in any one form - we do not want to inject this data directly into the existing metadata table as this has the potential to grow exponentially.
+
+We will need to transform the uploaded CSV data into a JSON structure on the application level.
+
+## Options
+### 1. Use ElasticSearch
+This is a third party search engine. It is built to handle very large data sets and is highly scalable. Although it is a very powerful tool, the learning curve for this tool is quite steep and we will not have enough data to warrant using this tool.
+
+### 2. Use S3 buckets
+Upload the JSON file into a S3 bucket, this will be a bucket specifically for autocomplete options.
+This would be fine for version one of autocomplete - that is, any changes to the options would mean a new CSV file is uploaded.
+For V2 autocomplete however, forms may require the ability to upload a single option or delete an option - this would mean calling the bucket, manipulating the file then pushing the file back to the bucket, which is possible but also be cumbersome.
+
+
+###  3. Create a new table in the existing database
+We currently have a database that holds form metadata. This option involves creating a new table in this database that saves the autocomplete options as a JSON blob, identified through service id and component id. This is very similar to how the existing metadata table works.
+
+## Decision
+
+Option 3 of create a new table in the existing database.
+
+### Consequences
+* Individual autocomplete options can be removed/added with ease
+* We use an existing pathway to retrieve data
+
+### Constraints
+* Maximum row size within the table will dictate the maximum size of the JSON blob
