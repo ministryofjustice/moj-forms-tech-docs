@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Hosting - MOJ Forms Tech Docs</title>
+
+    <link href="../../stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/hosting.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="ministryofjustice.github.io" />
+      <meta name="twitter:image" content="https://ministryofjustice.github.io/moj-forms-tech-docs/images/govuk-large.png" />
+      <meta name="twitter:title" content="Hosting - MOJ Forms Tech Docs" />
+      <meta name="twitter:url" content="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/hosting.html" />
+
+      <meta property="og:image" content="https://ministryofjustice.github.io/moj-forms-tech-docs/images/govuk-large.png" />
+      <meta property="og:site_name" content="MOJ Forms Tech Docs" />
+      <meta property="og:title" content="Hosting" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/hosting.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/moj-forms-tech-docs" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__logotype">
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="govuk-header__logotype-crown"
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 132 97"
+            height="30"
+            width="36"
+          >
+            <path
+              fill="currentColor" fill-rule="evenodd"
+              d="M25 30.2c3.5 1.5 7.7-.2 9.1-3.7 1.5-3.6-.2-7.8-3.9-9.2-3.6-1.4-7.6.3-9.1 3.9-1.4 3.5.3 7.5 3.9 9zM9 39.5c3.6 1.5 7.8-.2 9.2-3.7 1.5-3.6-.2-7.8-3.9-9.1-3.6-1.5-7.6.2-9.1 3.8-1.4 3.5.3 7.5 3.8 9zM4.4 57.2c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.5-1.5-7.6.3-9.1 3.8-1.4 3.5.3 7.6 3.9 9.1zm38.3-21.4c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.6-1.5-7.6.3-9.1 3.8-1.3 3.6.4 7.7 3.9 9.1zm64.4-5.6c-3.6 1.5-7.8-.2-9.1-3.7-1.5-3.6.2-7.8 3.8-9.2 3.6-1.4 7.7.3 9.2 3.9 1.3 3.5-.4 7.5-3.9 9zm15.9 9.3c-3.6 1.5-7.7-.2-9.1-3.7-1.5-3.6.2-7.8 3.7-9.1 3.6-1.5 7.7.2 9.2 3.8 1.5 3.5-.3 7.5-3.8 9zm4.7 17.7c-3.6 1.5-7.8-.2-9.2-3.8-1.5-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.3 3.5-.4 7.6-3.9 9.1zM89.3 35.8c-3.6 1.5-7.8-.2-9.2-3.8-1.4-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.4 3.6-.3 7.7-3.9 9.1zM69.7 17.7l8.9 4.7V9.3l-8.9 2.8c-.2-.3-.5-.6-.9-.9L72.4 0H59.6l3.5 11.2c-.3.3-.6.5-.9.9l-8.8-2.8v13.1l8.8-4.7c.3.3.6.7.9.9l-5 15.4v.1c-.2.8-.4 1.6-.4 2.4 0 4.1 3.1 7.5 7 8.1h.2c.3 0 .7.1 1 .1.4 0 .7 0 1-.1h.2c4-.6 7.1-4.1 7.1-8.1 0-.8-.1-1.7-.4-2.4V34l-5.1-15.4c.4-.2.7-.6 1-.9zM66 92.8c16.9 0 32.8 1.1 47.1 3.2 4-16.9 8.9-26.7 14-33.5l-9.6-3.4c1 4.9 1.1 7.2 0 10.2-1.5-1.4-3-4.3-4.2-8.7L108.6 76c2.8-2 5-3.2 7.5-3.3-4.4 9.4-10 11.9-13.6 11.2-4.3-.8-6.3-4.6-5.6-7.9 1-4.7 5.7-5.9 8-.5 4.3-8.7-3-11.4-7.6-8.8 7.1-7.2 7.9-13.5 2.1-21.1-8 6.1-8.1 12.3-4.5 20.8-4.7-5.4-12.1-2.5-9.5 6.2 3.4-5.2 7.9-2 7.2 3.1-.6 4.3-6.4 7.8-13.5 7.2-10.3-.9-10.9-8-11.2-13.8 2.5-.5 7.1 1.8 11 7.3L80.2 60c-4.1 4.4-8 5.3-12.3 5.4 1.4-4.4 8-11.6 8-11.6H55.5s6.4 7.2 7.9 11.6c-4.2-.1-8-1-12.3-5.4l1.4 16.4c3.9-5.5 8.5-7.7 10.9-7.3-.3 5.8-.9 12.8-11.1 13.8-7.2.6-12.9-2.9-13.5-7.2-.7-5 3.8-8.3 7.1-3.1 2.7-8.7-4.6-11.6-9.4-6.2 3.7-8.5 3.6-14.7-4.6-20.8-5.8 7.6-5 13.9 2.2 21.1-4.7-2.6-11.9.1-7.7 8.8 2.3-5.5 7.1-4.2 8.1.5.7 3.3-1.3 7.1-5.7 7.9-3.5.7-9-1.8-13.5-11.2 2.5.1 4.7 1.3 7.5 3.3l-4.7-15.4c-1.2 4.4-2.7 7.2-4.3 8.7-1.1-3-.9-5.3 0-10.2l-9.5 3.4c5 6.9 9.9 16.7 14 33.5 14.8-2.1 30.8-3.2 47.7-3.2z"
+            ></path>
+            <image src="/assets/images/govuk-logotype-crown.png" xlink:href="" class="govuk-header__logotype-crown-fallback-image" width="36" height="32"></image>
+          </svg>
+          <span class="govuk-header__logotype-text">
+            GOV.UK
+          </span>
+        </span>
+        <span class="govuk-header__product-name">
+          MOJ Forms Tech Docs
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/moj-forms-tech-docs">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </a>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search">
+    <input type="hidden" name="as_sitesearch" value="https://ministryofjustice.github.io/moj-forms-tech-docs"/>
+    <label class="govuk-label search__label" for="search">
+      Search (via Google)
+    </label>
+    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#hosting"><span>Hosting</span></a>
+    <ul>
+      <li>
+        <a href="#let-39-s-get-complicated"><span>Let’s get complicated…</span></a>
+      </li>
+      <li>
+        <a href="#namespaces"><span>Namespaces</span></a>
+      </li>
+      <li>
+        <a href="#network-to-be-reviewed"><span>Network [To be Reviewed]</span></a>
+        <ul>
+          <li>
+            <a href="#formbuilder-saas-platformenv-namespace"><span>formbuilder-saas-{platformEnv} namespace</span></a>
+          </li>
+          <li>
+            <a href="#formbuilder-publisher-platformenv-namespace-legacy"><span>formbuilder-publisher-{platformEnv} namespace (legacy)</span></a>
+          </li>
+          <li>
+            <a href="#formbuilder-platform-platformenv-deploymentenv-namespace"><span>formbuilder-platform-{platformEnv}-{deploymentEnv} namespace</span></a>
+          </li>
+          <li>
+            <a href="#formbuilder-services-platformenv-deploymentenv"><span>formbuilder-services-{platformEnv}-{deploymentEnv}</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+            <h1 id="hosting">Hosting</h1><p>Form Builder is hosted on the Ministry of Justice Cloud Platform. To be able to use it, you need to <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#how-to-use-kubectl-to-connect-to-the-cluster">connect to the cluster</a>.</p>
+<p>If you have any questions about the Cloud Platform, contact the Cloud Platform team on the <code>#ask-cloud-platform</code> Slack channel.</p>
+<h2 id="let-39-s-get-complicated">Let&rsquo;s get complicated&hellip;</h2>
+<blockquote>
+<p>To note, the hosting platform names have changed over time and left us with a siln old naming convention</p>
+</blockquote>
+<p>MOJ forms runs two platforms {platformEnv} <code>dev</code> (development) and <code>production</code>.</p>
+<p>Some services are per platformEnv, for example the Editor which will publish forms both Deployment Environments (deploymentEnv).</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Environment</th>
+<th>Value</th>
+</tr>
+<tr>
+<td>platformEnv</td>
+<td><code>test</code> or <code>production</code></td>
+</tr>
+<tr>
+<td>deploymentEnv</td>
+<td><code>dev</code> or <code>live</code></td>
+</tr>
+
+        </table>
+      </div><p>These values are used as a naming convention for the platform as <code>{platformEnv}-{deploymentEnv}</code>.</p>
+<p>The Editors (saas) are named with <code>test</code> or <code>live</code>.</p>
+<p><a href="hosting-editor-to-submit-named-env-platform.png" target="_blank" rel="noopener noreferrer"><img src="hosting-editor-to-submit-named-env-platform.png" title="diagram of the hosting of the environments" alt="diagram of the hosting of the environments" /></a></p>
+<h2 id="namespaces">Namespaces</h2><p>In each of these environments there are two namespaces - Services and Platform. The Services namespace contains the runners. The Platform namespace holds all the backend components.</p>
+<p>These are the namespaces that currently make up the Form Builder product:</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+<tr>
+<td>formbuilder-base-adapter-test</td>
+<td>The base adapter is there to emulate an API endpoint for the JSON output</td>
+</tr>
+<tr>
+<td>formbuilder-monitoring</td>
+<td>Contains all the infrastructure monitoring for the Form Builder platform</td>
+</tr>
+<tr>
+<td>formbuilder-platform-live-dev</td>
+<td>Contains all the platform apps for the live-dev environment</td>
+</tr>
+<tr>
+<td>formbuilder-platform-live-production</td>
+<td>Contains all the platform apps for the live-production environment</td>
+</tr>
+<tr>
+<td>formbuilder-platform-test-dev</td>
+<td>Contains all the platform apps for the test-dev environment</td>
+</tr>
+<tr>
+<td>formbuilder-platform-test-production</td>
+<td>Contains all the platform apps for the test-production environment</td>
+</tr>
+<tr>
+<td>formbuilder-product-page-prod</td>
+<td>The Form Builder product page in the production environment</td>
+</tr>
+<tr>
+<td>formbuilder-product-page-staging</td>
+<td>The Form Builder product page in the staging environment</td>
+</tr>
+<tr>
+<td>formbuilder-publisher-live</td>
+<td>The Form Builder publisher catering for services running in live-dev and live-production</td>
+</tr>
+<tr>
+<td>formbuilder-publisher-test</td>
+<td>The Form Builder publisher catering for services running in test-dev and test-production</td>
+</tr>
+<tr>
+<td>formbuilder-repos</td>
+<td>Contains all the ECR repos required for all the Form Builder applications</td>
+</tr>
+<tr>
+<td>formbuilder-saas-test</td>
+<td>Contains the V2 Form Builder Editor and Metadata API applications for the test environment</td>
+</tr>
+<tr>
+<td>formbuilder-saas-live</td>
+<td>Contains the V2 Form Builder Editor and Metadata API applications for the live environment</td>
+</tr>
+<tr>
+<td>formbuilder-services-live-dev</td>
+<td>Contains all the form services pods for the live-dev environment</td>
+</tr>
+<tr>
+<td>formbuilder-services-live-production</td>
+<td>Contains all the form services pods for the live-production environment</td>
+</tr>
+<tr>
+<td>formbuilder-services-test-dev</td>
+<td>Contains all the form services pods for the test-dev environment</td>
+</tr>
+<tr>
+<td>formbuilder-services-test-production</td>
+<td>Contains all the form services pods for the test-production environment</td>
+</tr>
+<tr>
+<td>hmcts-complaints-formbuilder-adapter-production</td>
+<td>Contains the HMCTS Complaints Adapter for the production environment</td>
+</tr>
+<tr>
+<td>hmcts-complaints-formbuilder-adapter-staging</td>
+<td>Contains the HMCTS Complaints Adapter for the staging environment</td>
+</tr>
+
+        </table>
+      </div><h2 id="network-to-be-reviewed">Network <em>[To be Reviewed]</em></h2><p>This section explain how all the services are coupled together.</p>
+<p><a href="hosting-platform.png" target="_blank" rel="noopener noreferrer"><img src="hosting-platform.png" title="diagram of the hosting platform" alt="diagram of the hosting platform" /></a></p>
+<h3 id="formbuilder-saas-platformenv-namespace">formbuilder-saas-{platformEnv} namespace</h3><h4 id="fb-editor-cron-sessions-trim-platformenv-pod">fb-editor-cron-sessions-trim-{platformEnv} pod</h4><h4 id="fb-editor-web-platformenv-pod">fb-editor-web-{platformEnv} pod</h4>
+<ul>
+<li>Rails</li>
+<li><em>public-facing website for editing form data</em></li>
+<li>In-bound
+
+<ul>
+<li>access controlled by <code>Auth0</code></li>
+<li>credentials stored in <code>fb-editor-app-secrets-{platformEnv}</code></li>
+</ul></li>
+<li>Out-bound
+
+<ul>
+<li>read/write to <code>editor-rds-instance</code> to update services</li>
+<li>[to check] write to <code>publisher-elasticache</code> (via resque)</li>
+</ul></li>
+</ul>
+<h4 id="fb-editor-workers-platformenv-pod">fb-editor-workers-{platformEnv} pod</h4><p>[to update]</p>
+<h4 id="fb-metadata-api-platformenv">fb-metadata-api-{platformEnv}</h4><p>[to update]</p>
+<h3 id="formbuilder-publisher-platformenv-namespace-legacy">formbuilder-publisher-{platformEnv} namespace (legacy)</h3><p>[to update]</p>
+<h4 id="fb-publisher-web-platformenv-pod">fb-publisher-web-{platformEnv} pod</h4>
+<ul>
+<li>Rails</li>
+<li><em>public-facing website for editing service data</em></li>
+<li>In-bound
+
+<ul>
+<li>access controlled by <code>Auth0</code></li>
+<li>credentials stored in <code>fb-publisher-app-secrets-{platformEnv}</code></li>
+</ul></li>
+<li>Out-bound
+
+<ul>
+<li>read/write to <code>publisher-rds-instance</code> to update services</li>
+<li>write to <code>publisher-elasticache</code> (via resque)</li>
+</ul></li>
+</ul>
+<h4 id="fb-publisher-workers-platformenv-pod">fb-publisher-workers-{platformEnv} pod</h4>
+<ul>
+<li>Resque</li>
+<li><em>internal queue/job manager for deploying services</em></li>
+<li>Out-bound
+
+<ul>
+<li>read <code>publisher-rds-instance</code></li>
+<li>read/write to <code>publisher-elasticache</code></li>
+<li>write service token secrets to <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespaces</li>
+<li>create deployments in <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespaces</li>
+</ul></li>
+</ul>
+<h4 id="publisher-rds-instance-module">publisher-rds-instance module</h4>
+<ul>
+<li>Postgres</li>
+<li><em>Services data</em></li>
+<li>In-bound
+
+<ul>
+<li><code>url</code> with username/password from <code>rds-instance-formbuilder-publisher-{platformEnv}</code></li>
+<li>access only allowed to <code>fb-publisher-web</code> and <code>fb-publisher-workers</code></li>
+</ul></li>
+</ul>
+<h4 id="publisher-elasticache-module">publisher-elasticache module</h4>
+<ul>
+<li>Redis</li>
+<li><em>Service deployment jobs</em></li>
+<li>In-bound
+
+<ul>
+<li><code>primary_endpoint_address</code> and <code>auth_token</code> from <code>elasticache-formbuilder-publisher-{platformEnv}</code></li>
+<li>access only allowed to <code>fb-publisher-web</code> and <code>fb-publisher-workers</code></li>
+</ul></li>
+</ul>
+<h3 id="formbuilder-platform-platformenv-deploymentenv-namespace">formbuilder-platform-{platformEnv}-{deploymentEnv} namespace</h3><h4 id="fb-service-token-cache-platformenv-deploymentenv-pod">fb-service-token-cache-{platformEnv}-{deploymentEnv} pod</h4>
+<ul>
+<li>Rails</li>
+<li><em>internal API to get service tokens</em></li>
+<li>In-bound
+
+<ul>
+<li>ingress rule allows access only to pods in same namespace labelled <code>fb-service-token-cache-access: &quot;true&quot;</code></li>
+<li>fb-user-datastore-api</li>
+<li>fb-user-filestore-api</li>
+<li>fb-submitter-api (except that&rsquo;s not true)</li>
+</ul></li>
+<li>Out-bound
+
+<ul>
+<li>read service token secrets in <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespace</li>
+<li>read/write to <code>service-token-cache-elasticache</code></li>
+</ul></li>
+</ul>
+<h4 id="service-token-cache-elasticache-module">service-token-cache-elasticache module</h4>
+<ul>
+<li>Redis</li>
+<li><em>Service tokens</em></li>
+<li>In-bound
+
+<ul>
+<li><code>primary_endpoint_address</code> and <code>auth_token</code> from <code>elasticache-formbuilder-service-token-cache-{platformEnv}-{deploymentEnv}</code></li>
+<li>access only allowed to <code>fb-service-token-cache-{platformEnv}-{deploymentEnv}</code></li>
+</ul></li>
+<li>Storage
+
+<ul>
+<li>all data stored against service_slug key, as-is</li>
+</ul></li>
+</ul>
+<h4 id="fb-user-datastore-api-platformenv-deploymentenv-pod">fb-user-datastore-api-{platformEnv}-{deploymentEnv} pod</h4>
+<ul>
+<li>Rails</li>
+<li><em>internal API to get/set user data</em></li>
+<li>In-bound
+
+<ul>
+<li>ingress rules allow access only to pods in <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespace</li>
+<li>all ingress must be</li>
+<li>for a specific user and service
+<code>/service/:serviceSlug/user/:userId</code></li>
+<li>accompanied with a JSON Web Token
+
+<ul>
+<li>signed with that service&rsquo;s service token</li>
+<li>containing an iat timestamp</li>
+</ul></li>
+</ul></li>
+<li>API
+
+<ul>
+<li>GET <code>/service/:serviceSlug/user/:userId</code></li>
+<li>POST <code>/service/:serviceSlug/user/:userId</code></li>
+<li>Body
+<code>json
+{
+&quot;payload&quot;: &quot;{payload_encrypted_with_user_token}&quot;
+}
+</code></li>
+</ul></li>
+<li>Out-bound
+
+<ul>
+<li>read from <code>fb-service-token-cache-{platformEnv}-{deploymentEnv}</code> for service tokens</li>
+<li>read/write to <code>user-datastore-rds-instance</code> to update user data</li>
+</ul></li>
+<li>Storage
+
+<ul>
+<li>all data stored against user_id key, pre-encrypted</li>
+</ul></li>
+</ul>
+<h4 id="user-datastore-rds-instance-module">user-datastore-rds-instance module</h4>
+<ul>
+<li>Postgres</li>
+<li><em>User data</em></li>
+<li>In-bound
+
+<ul>
+<li><code>url</code> with username/password from <code>rds-instance-formbuilder-user-datastore-{platformEnv}-{deploymentEnv}</code></li>
+<li>access only allowed to <code>fb-user-datastore-api-{platformEnv}-{deploymentEnv}</code></li>
+</ul></li>
+</ul>
+<h4 id="fb-submitter-api-platformenv-deploymentenv">fb-submitter-api-{platformEnv}-{deploymentEnv}</h4>
+<ul>
+<li>Rails</li>
+<li><em>Submissions</em></li>
+<li>In-bound
+
+<ul>
+<li>ingress rules allow access only to pods in <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespace</li>
+</ul></li>
+<li>Out-bound
+
+<ul>
+<li>read from <code>fb-service-token-cache-{platformEnv}-{deploymentEnv}</code> for service tokens</li>
+<li>read/write <code>submitter-rds-instance</code></li>
+<li>write to <code>publisher-elasticache</code></li>
+</ul></li>
+</ul>
+<h4 id="fb-submitter-workers-platformenv-deploymentenv">fb-submitter-workers-{platformEnv}-{deploymentEnv}</h4>
+<ul>
+<li><em>internal queue/job manager for submissions</em></li>
+<li>In-bound</li>
+<li>Out-bound
+
+<ul>
+<li>read <code>submitter-rds-instance</code></li>
+<li>read/write to <code>publisher-elasticache</code></li>
+<li>access individual service output API in <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespace</li>
+<li>create deployments in <code>formbuilder-services-{platformEnv}-{deploymentEnv}</code> namespaces</li>
+</ul></li>
+</ul>
+<h4 id="submitter-rds-instance-module">submitter-rds-instance module</h4>
+<ul>
+<li>Postgres</li>
+<li><em>Submissions data</em></li>
+<li>In-bound
+
+<ul>
+<li><code>url</code> with username/password from <code>rds-instance-formbuilder-submitter-{platformEnv}-{deploymentEnv}</code></li>
+<li>access only allowed to <code>fb-submitter-api</code> and <code>fb-submitter-workers</code></li>
+</ul></li>
+</ul>
+<h4 id="submitter-elasticache-module">submitter-elasticache module</h4>
+<ul>
+<li>Redis</li>
+<li><em>Submissions jobs</em></li>
+<li>In-bound
+
+<ul>
+<li><code>primary_endpoint_address</code> and <code>auth_token</code> from <code>elasticache-formbuilder-submitter-{platformEnv}-{deploymentEnv}</code></li>
+<li>access only allowed to <code>fb-submitter-api</code> and <code>fb-submitter-workers</code></li>
+</ul></li>
+</ul>
+<h3 id="formbuilder-services-platformenv-deploymentenv">formbuilder-services-{platformEnv}-{deploymentEnv}</h3>
+<ul>
+<li>ServiceAccounts
+
+<ul>
+<li><code>fb-publisher-workers-{platformEnv}</code> in <code>formbuilder-publisher-{platformEnv}</code>namespace - allows deployments</li>
+<li><code>formbuilder-service-token-cache-{platformEnv}-{deploymentEnv}</code> in <code>formbuilder-platform-{platformEnv}-{deploymentEnv}</code> namespace - allows service tokens to be read</li>
+</ul></li>
+<li>In-bound
+
+<ul>
+<li>citizen</li>
+<li>WHAT DOES THE COOKIE LOOK LIKE?</li>
+</ul></li>
+<li>Out-bound
+
+<ul>
+<li>read/write to <code>fb-user-datastore-api-{platformEnv}-{deploymentEnv}</code></li>
+<li>write to <code>fb-user-filestore-api-{platformEnv}-{deploymentEnv}</code></li>
+<li>write to <code>fb-submitter-api-{platformEnv}-{deploymentEnv}</code></li>
+</ul></li>
+</ul>
+<p>Additionally all publisher and platform apps are rails app which have a secret_key_base</p>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-09-01">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 1 June 2021.
+
+        It needs to be reviewed again on 1 September 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 1 September 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs/blob/main/source/documentation/services/hosting.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs/issues/new?labels=bug&amp;title=Re:%20'Hosting'&amp;body=Problem%20with%20'Hosting'%20(https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/hosting.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="../../javascripts/application.js"></script>
+  </body>
+</html>

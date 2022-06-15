@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Activated Menu Component - MOJ Forms Tech Docs</title>
+
+    <link href="../../../../stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/editor/javascript/component-activated-menu.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="ministryofjustice.github.io" />
+      <meta name="twitter:image" content="https://ministryofjustice.github.io/moj-forms-tech-docs/images/govuk-large.png" />
+      <meta name="twitter:title" content="Activated Menu Component - MOJ Forms Tech Docs" />
+      <meta name="twitter:url" content="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/editor/javascript/component-activated-menu.html" />
+
+      <meta property="og:image" content="https://ministryofjustice.github.io/moj-forms-tech-docs/images/govuk-large.png" />
+      <meta property="og:site_name" content="MOJ Forms Tech Docs" />
+      <meta property="og:title" content="Activated Menu Component" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/editor/javascript/component-activated-menu.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/moj-forms-tech-docs" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__logotype">
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="govuk-header__logotype-crown"
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 132 97"
+            height="30"
+            width="36"
+          >
+            <path
+              fill="currentColor" fill-rule="evenodd"
+              d="M25 30.2c3.5 1.5 7.7-.2 9.1-3.7 1.5-3.6-.2-7.8-3.9-9.2-3.6-1.4-7.6.3-9.1 3.9-1.4 3.5.3 7.5 3.9 9zM9 39.5c3.6 1.5 7.8-.2 9.2-3.7 1.5-3.6-.2-7.8-3.9-9.1-3.6-1.5-7.6.2-9.1 3.8-1.4 3.5.3 7.5 3.8 9zM4.4 57.2c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.5-1.5-7.6.3-9.1 3.8-1.4 3.5.3 7.6 3.9 9.1zm38.3-21.4c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.6-1.5-7.6.3-9.1 3.8-1.3 3.6.4 7.7 3.9 9.1zm64.4-5.6c-3.6 1.5-7.8-.2-9.1-3.7-1.5-3.6.2-7.8 3.8-9.2 3.6-1.4 7.7.3 9.2 3.9 1.3 3.5-.4 7.5-3.9 9zm15.9 9.3c-3.6 1.5-7.7-.2-9.1-3.7-1.5-3.6.2-7.8 3.7-9.1 3.6-1.5 7.7.2 9.2 3.8 1.5 3.5-.3 7.5-3.8 9zm4.7 17.7c-3.6 1.5-7.8-.2-9.2-3.8-1.5-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.3 3.5-.4 7.6-3.9 9.1zM89.3 35.8c-3.6 1.5-7.8-.2-9.2-3.8-1.4-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.4 3.6-.3 7.7-3.9 9.1zM69.7 17.7l8.9 4.7V9.3l-8.9 2.8c-.2-.3-.5-.6-.9-.9L72.4 0H59.6l3.5 11.2c-.3.3-.6.5-.9.9l-8.8-2.8v13.1l8.8-4.7c.3.3.6.7.9.9l-5 15.4v.1c-.2.8-.4 1.6-.4 2.4 0 4.1 3.1 7.5 7 8.1h.2c.3 0 .7.1 1 .1.4 0 .7 0 1-.1h.2c4-.6 7.1-4.1 7.1-8.1 0-.8-.1-1.7-.4-2.4V34l-5.1-15.4c.4-.2.7-.6 1-.9zM66 92.8c16.9 0 32.8 1.1 47.1 3.2 4-16.9 8.9-26.7 14-33.5l-9.6-3.4c1 4.9 1.1 7.2 0 10.2-1.5-1.4-3-4.3-4.2-8.7L108.6 76c2.8-2 5-3.2 7.5-3.3-4.4 9.4-10 11.9-13.6 11.2-4.3-.8-6.3-4.6-5.6-7.9 1-4.7 5.7-5.9 8-.5 4.3-8.7-3-11.4-7.6-8.8 7.1-7.2 7.9-13.5 2.1-21.1-8 6.1-8.1 12.3-4.5 20.8-4.7-5.4-12.1-2.5-9.5 6.2 3.4-5.2 7.9-2 7.2 3.1-.6 4.3-6.4 7.8-13.5 7.2-10.3-.9-10.9-8-11.2-13.8 2.5-.5 7.1 1.8 11 7.3L80.2 60c-4.1 4.4-8 5.3-12.3 5.4 1.4-4.4 8-11.6 8-11.6H55.5s6.4 7.2 7.9 11.6c-4.2-.1-8-1-12.3-5.4l1.4 16.4c3.9-5.5 8.5-7.7 10.9-7.3-.3 5.8-.9 12.8-11.1 13.8-7.2.6-12.9-2.9-13.5-7.2-.7-5 3.8-8.3 7.1-3.1 2.7-8.7-4.6-11.6-9.4-6.2 3.7-8.5 3.6-14.7-4.6-20.8-5.8 7.6-5 13.9 2.2 21.1-4.7-2.6-11.9.1-7.7 8.8 2.3-5.5 7.1-4.2 8.1.5.7 3.3-1.3 7.1-5.7 7.9-3.5.7-9-1.8-13.5-11.2 2.5.1 4.7 1.3 7.5 3.3l-4.7-15.4c-1.2 4.4-2.7 7.2-4.3 8.7-1.1-3-.9-5.3 0-10.2l-9.5 3.4c5 6.9 9.9 16.7 14 33.5 14.8-2.1 30.8-3.2 47.7-3.2z"
+            ></path>
+            <image src="/assets/images/govuk-logotype-crown.png" xlink:href="" class="govuk-header__logotype-crown-fallback-image" width="36" height="32"></image>
+          </svg>
+          <span class="govuk-header__logotype-text">
+            GOV.UK
+          </span>
+        </span>
+        <span class="govuk-header__product-name">
+          MOJ Forms Tech Docs
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/moj-forms-tech-docs">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </a>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search">
+    <input type="hidden" name="as_sitesearch" value="https://ministryofjustice.github.io/moj-forms-tech-docs"/>
+    <label class="govuk-label search__label" for="search">
+      Search (via Google)
+    </label>
+    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#activatedmenu"><span>ActivatedMenu</span></a>
+    <ul>
+      <li>
+        <a href="#options"><span>Options</span></a>
+        <ul>
+          <li>
+            <a href="#activator"><span>activator</span></a>
+          </li>
+          <li>
+            <a href="#activator-classname"><span>activator_classname</span></a>
+          </li>
+          <li>
+            <a href="#activator-text"><span>activator_text</span></a>
+          </li>
+          <li>
+            <a href="#container-id"><span>container_id</span></a>
+          </li>
+          <li>
+            <a href="#container-classname"><span>container_classname</span></a>
+          </li>
+          <li>
+            <a href="#position"><span>position</span></a>
+          </li>
+          <li>
+            <a href="#prevent-default"><span>prevent_default</span></a>
+          </li>
+          <li>
+            <a href="#selection-event"><span>selection_event</span></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#getters-and-setters"><span>Getters and Setters</span></a>
+      </li>
+      <li>
+        <a href="#methods"><span>Methods</span></a>
+        <ul>
+          <li>
+            <a href="#open-position"><span>open([position])</span></a>
+          </li>
+          <li>
+            <a href="#close"><span>close()</span></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#events"><span>Events</span></a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="#activatedmenucontainer"><span>ActivatedMenuContainer</span></a>
+    <ul>
+      <li>
+        <a href="#params"><span>Params</span></a>
+      </li>
+      <li>
+        <a href="#properties"><span>Properties</span></a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="#activatedmenuactivator"><span>ActivatedMenuActivator</span></a>
+    <ul>
+      <li>
+        <a href="#activatedmenuactivator-params"><span>Params</span></a>
+      </li>
+      <li>
+        <a href="#activatedmenuactivator-properties"><span>Properties</span></a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+            <p>Activated Menu Component</p>
+<p>Category: <a href="../../editor.html">Editor</a> | <a href="../javascript.html">JavaScript</a> | <a href="../javascript.html#components">Components</a></p>
+
+<hr>
+<p>Wrapper around a <a href="https://jqueryui.com/menu/">jQueryUI menu widget</a> that allows more preferable interaction without having to write the core widget code from scratch (reason for basing on a widget).</p>
+<div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu(jQuery wrapped UL node [, configurable options ]);
+</code></pre></div><p><small>Code: <a href="https://github.com/ministryofjustice/fb-editor/blob/main/app/javascript/src/component_activated_menu.js">javascript/src/component_activated_menu.js</a></small>
+<br>
+<small>JS test: <a href="https://github.com/ministryofjustice/fb-editor/blob/main/test/component_activated_menu_test.js">test/component_activated_menu_test.js</a></small></p>
+
+<hr>
+<h1 id="activatedmenu">ActivatedMenu</h1><p>To add <strong><em>ActivatedMenu</em></strong> component functionality to your HTML you simply need to create an instance by passing, as a minimum, your target <code>&lt;ul&gt;</code> element.</p>
+<p><em>Code Examples:</em></p>
+<div class="highlight"><pre class="highlight plaintext"><code>var menu = new ActivatedMenu($("ul.menu"));
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>var menu = new ActivatedMenu($("ul.menu"), {
+  container_id: "special-menu-for-some-use"
+});
+</code></pre></div><p><small>For information relating to the underlying <a href="https://jqueryui.com/menu/">jQueryUI menu widget</a> also read the <a href="https://api.jqueryui.com/menu">menu widget api documentation</a></small></p>
+<p><br></p>
+<h2 id="options">Options</h2><p>To customise the <strong><em>ActivatedMenu</em></strong> output and/or functionality you can pass in a configuration object. The configurable options feature below.</p>
+<p><br></p>
+<h3 id="activator">activator</h3><p>Specify a particular <a href="https://api.jquery.com/jQuery/">jQuery object</a> to enhance with <a href="#activatedmenuactivator">ActivatedMenuActivator</a> functionality. If nothing is provided a <code>&lt;button&gt;</code> element will be created and inserted directly before the targeted menu element.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>jQuery node</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  activator: $("#target-activator")
+});
+</code></pre></div><p><br></p>
+<h3 id="activator-classname">activator_classname</h3><p>When an activator has not been specified in the configuration options, a <code>&lt;button&gt;</code> element is created. The <strong><em>activator_classname</em></strong> option can be used to inject a class (or classes) of your choosing to that created element.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>String</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  activator_classname: "menuActivator"
+});
+</code></pre></div><p><br></p>
+<h3 id="activator-text">activator_text</h3><p>When an activator has not been specified in the configuration options, a <code>&lt;button&gt;</code> element is created. The <strong><em>activator_text</em></strong> is used to apply content to that created element.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>String</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  activator_text: "Open menu"
+});
+</code></pre></div><p><br></p>
+<h3 id="container-id">container_id</h3><p>As part of the <strong><em>Activated Menu</em></strong> creation process and resulting component composition an <a href="#activatedmenucontainer">ActivatedMenuContainer</a> (sub) component is created. You can specify an <em>HTML ID attribute</em> value to be applied to this created element by using the configuration option <strong><em>container_id</em></strong>.</p>
+<p>Note: If no <em>ID</em> value is passed one is automatically generated and applied. This is done each time the component is created so cannot be referenced from within any applied CSS.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>String</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  container_id: "menu-container"
+});
+</code></pre></div><p><br></p>
+<h3 id="container-classname">container_classname</h3><p>As part of the <strong><em>Activated Menu</em></strong> creation process and resulting component composition an <a href="#activatedmenucontainer">ActivatedMenuContainer</a> (sub) component is created. You can specify an <em>HTML class attribute</em> value to be applied to this created element by using the configuration option <strong><em>container_classname</em></strong>. This might be required to help reference a particular menu from within any applied CSS.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>String</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  container_classname: "special-activated-menu"
+});
+</code></pre></div><p><br></p>
+<h3 id="position">position</h3><p>You can pass in your own position properties to pre-set the component with a specific positional outcome when opened. This can also be done on-the-fly by passing a position object directly to the <a href="#open-position">Open() method</a>, if preferred.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>Object</td>
+<td>see below</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+      my: "right top",
+      at: "left bottom",
+      of: $("#someDesiredElement")
+    });
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+      my: "right top"
+    });
+</code></pre></div><p><small>For more detailed information about <a href="https://jqueryui.com">jQueryUI</a> position objects visit the <a href="https://api.jqueryui.com/position/">jQueryUI documentation on position</a></small></p>
+<div class="highlight"><pre class="highlight plaintext"><code>// Default setting
+
+{
+  my: "left top",
+  at: "left bottom",
+  of: menu.activator.$node
+}
+</code></pre></div><p><br></p>
+<h3 id="prevent-default">prevent_default</h3><p>The <a href="https://jqueryui.com/menu/">jQueryUI menu</a> widget triggers selected items via a <code>menuselect</code> event attached to the initially passed <code>&lt;ul&gt;</code> node. Each descendant <code>&lt;li&gt;</code> element has the potential to contain one or more hyperlink (<code>&lt;a&gt;</code>) or <code>&lt;button&gt;</code> elements, depending on the markup. It can sometimes be desirable to silence the default event handlers for these descendant elements. You can try to do that by passing the <strong><em>prevent_default</em></strong> option.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>String</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  prevent_default: true
+});
+</code></pre></div><p><br></p>
+<h3 id="selection-event">selection_event</h3><p>Inside the <code>menuselect</code> event listener already in place on the initial <code>&lt;ul&gt;</code> element, the <strong><em>ActivatedMenu</em></strong> component will trigger a selection event on to the parent <code>$(document)</code> element. This can allow for other separate areas of functionality to listen for such events and act according to their own design without the <strong><em>ActivatedMenu</em></strong> needing to know about them, or them needing to be part of the inner working for any such <strong><em>ActivatedMenu</em></strong>. You simply pass an event label and setup a separate listener, wherever you need it.</p>
+<div class="table-container">
+        <table>
+          <tr>
+<th>Type</th>
+<th>Default</th>
+<th>Optional</th>
+</tr>
+<tr>
+<td>String</td>
+<td>undefined</td>
+<td>Yes</td>
+</tr>
+
+        </table>
+      </div><div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenu($("ul.menu"), {
+  selection_event: "label-to-identify-menu-selection-event"
+});
+
+$(document).on("label-to-identify-menu-selection-event", function(data) {
+  console.log("The menu with a selecion was: ", data.menu);
+});
+</code></pre></div><p>When the passed selection event is triggered, the <strong><em>ActivatedMenu</em></strong> functionality also makes available certain data that relates to the menu item being selected. Data takes this form:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>// Event data available
+
+{
+  activator: &lt;the item that was clicked&gt;,
+  menu: &lt;the original UL element&gt;,
+  component: &lt;the actual ActivatedMenu instance&gt;,
+  original: {
+    element: event.target, // Browser event element
+    event: e // Browser event object
+  }
+}
+</code></pre></div><p><br></p>
+<p><br></p>
+<h2 id="getters-and-setters">Getters and Setters</h2><p>Using <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> (<a href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_%E2%80%93_ECMAScript_2015">ES6</a>) we can get and set values by public <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects#defining_getters_and_setters">getters and setters</a>. This may or may not be intended for public use but there are limitations to privacy support when using such syntax in current <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a>. Any such interaction that is available and inteded for use will be detailed here.</p>
+
+<ul>
+<li>No getters or setters  available on this component.</li>
+</ul>
+<p><br></p>
+<h2 id="methods">Methods</h2><p>Public methods for component interaction</p>
+<h3 id="open-position">open([position])</h3><p>Opens the menu</p>
+
+<ul>
+<li><strong>position</strong><br>
+Object containing properties related to <a href="https://jquery.com/">jQuery</a> positioning.<br>
+These properties are configurable on menu creation so passing new values will override those set.</li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>// Uses the default settings.
+
+var menu = new ActivatedMenu($("#target-ul-element"));
+menu.open();
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>// Overrides the default settings when passed to the open() method.
+
+var menu = new ActivatedMenu($("#target-ul-element"));
+menu.open({
+  my: "left bottom"
+});
+</code></pre></div><p><small>For more detailed information read the <a href="https://api.jqueryui.com/position/">jQueryUI documentation on position</a>.</small></p>
+<p><br></p>
+<h3 id="close">close()</h3><p>Closes the menu</p>
+
+<ul>
+<li>This method does not accept any arguments.</li>
+</ul>
+<p><em>Code example:</em></p>
+<div class="highlight"><pre class="highlight plaintext"><code>var menu = new ActivatedMenu($("#target-ul-element"));
+menu.close();
+</code></pre></div><p><br></p>
+<h2 id="events">Events</h2><p>You can tap into the events triggered as part of the original <a href="https://jqueryui.com/menu/">jQueryUI menu widget</a> and learn more about that in the <a href="https://api.jqueryui.com/menu">menu widget api documentation</a> or, read what is available in the configurable <a href="#selection-event">selection_event</a> option of the <strong><em>ActivatedMenu</em></strong> component.</p>
+
+<hr>
+<p><small>Private Class</small></p>
+<h1 id="activatedmenucontainer">ActivatedMenuContainer</h1><p>Wrapper element to provide the boundary parent of any created <strong><em>ActivatedMenu</em></strong> instance. This class is internal to the process of creating an <em>Activated Menu Component</em> and is not made public for individual instantiation.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenuContainer( (ActivatedMenu) menu, (Object) config );
+</code></pre></div><h2 id="params">Params</h2>
+<ul>
+<li><p><strong>menu</strong> (ActivatedMenu instance)
+<br>The main instance wrapping the original <code>&lt;ul&gt;</code> menu element.</p></li>
+<li><p><strong>config</strong> (Object)
+<br>This object is the same configuration object that is constructed within an <strong><em>ActivatedMenu</em></strong> instance. Anything passed to the <strong><em>ActivatedMenu</em></strong> will be available within the <strong><em>ActivatedMenuContainer</em></strong> constructor but not necessarily used.</p></li>
+</ul>
+<h2 id="properties">Properties</h2>
+<ul>
+<li><p><strong>$node</strong> (jQuery object)
+<br>Returns the HTML element (wrapped in jQuery functionality) for the container element.</p></li>
+<li><p><strong>menu</strong> (ActivatedMenu instance)
+<br>Returns the connected ActivatedMenu instance.</p></li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>var container = new ActivatedMenuContainer(menu, config);
+
+// HTML container element
+container.$node;
+
+// Access the ActivatedMenuContainer instance
+container.$node.data("instance");
+
+// Access the parent ActivatedMenu instance
+container.menu;
+</code></pre></div>
+<hr>
+<p><small>Private Class</small></p>
+<h1 id="activatedmenuactivator">ActivatedMenuActivator</h1><p>Functionality to enhance a targeted HTML element or, one that is created by the parent <strong><em>ActivatedMenu</em></strong> instance.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>new ActivatedMenuActivator( (ActivatedMenu) menu, (Object) config );
+</code></pre></div><h2 id="activatedmenuactivator-params">Params</h2>
+<ul>
+<li><p><strong>menu</strong> (ActivatedMenu instance)
+<br>The main instance wrapping the original <code>&lt;ul&gt;</code> menu element.</p></li>
+<li><p><strong>config</strong> (Object)
+<br>This object is the same configuration object that is constructed within an <strong><em>ActivatedMenu</em></strong> instance. Anything passed to the <strong><em>ActivatedMenu</em></strong> will be available within the <strong><em>ActivatedMenuContainer</em></strong> constructor but not necessarily used.</p></li>
+</ul>
+<h2 id="activatedmenuactivator-properties">Properties</h2>
+<ul>
+<li><p><strong>$node</strong> (jQuery object)
+<br>Returns the HTML element (wrapped in jQuery functionality) for the container element.</p></li>
+<li><p><strong>menu</strong> (ActivatedMenu instance)
+<br>Returns the connected ActivatedMenu instance.</p></li>
+</ul>
+<div class="highlight"><pre class="highlight plaintext"><code>var activator = new ActivatedMenuActivator(menu, config);
+
+// HTML activator element
+activator.$node;
+
+// Access the ActivatedMenuActivator instance
+activator.$node.data("instance");
+
+// Access the parent ActivatedMenu instance
+activator.menu;
+</code></pre></div><p><br><br></p>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2022-06-10">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 10 March 2022.
+
+        It needs to be reviewed again on 10 June 2022
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 10 June 2022.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs/blob/main/source/documentation/services/editor/javascript/component-activated-menu.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs/issues/new?labels=bug&amp;title=Re:%20'Activated%20Menu%20Component'&amp;body=Problem%20with%20'Activated%20Menu%20Component'%20(https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/editor/javascript/component-activated-menu.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="../../../../javascripts/application.js"></script>
+  </body>
+</html>

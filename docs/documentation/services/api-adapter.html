@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>API and Adapter - MOJ Forms Tech Docs</title>
+
+    <link href="../../stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/api-adapter.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="ministryofjustice.github.io" />
+      <meta name="twitter:image" content="https://ministryofjustice.github.io/moj-forms-tech-docs/images/govuk-large.png" />
+      <meta name="twitter:title" content="API and Adapter - MOJ Forms Tech Docs" />
+      <meta name="twitter:url" content="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/api-adapter.html" />
+
+      <meta property="og:image" content="https://ministryofjustice.github.io/moj-forms-tech-docs/images/govuk-large.png" />
+      <meta property="og:site_name" content="MOJ Forms Tech Docs" />
+      <meta property="og:title" content="API and Adapter" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/api-adapter.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/moj-forms-tech-docs" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__logotype">
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="govuk-header__logotype-crown"
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 132 97"
+            height="30"
+            width="36"
+          >
+            <path
+              fill="currentColor" fill-rule="evenodd"
+              d="M25 30.2c3.5 1.5 7.7-.2 9.1-3.7 1.5-3.6-.2-7.8-3.9-9.2-3.6-1.4-7.6.3-9.1 3.9-1.4 3.5.3 7.5 3.9 9zM9 39.5c3.6 1.5 7.8-.2 9.2-3.7 1.5-3.6-.2-7.8-3.9-9.1-3.6-1.5-7.6.2-9.1 3.8-1.4 3.5.3 7.5 3.8 9zM4.4 57.2c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.5-1.5-7.6.3-9.1 3.8-1.4 3.5.3 7.6 3.9 9.1zm38.3-21.4c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.6-1.5-7.6.3-9.1 3.8-1.3 3.6.4 7.7 3.9 9.1zm64.4-5.6c-3.6 1.5-7.8-.2-9.1-3.7-1.5-3.6.2-7.8 3.8-9.2 3.6-1.4 7.7.3 9.2 3.9 1.3 3.5-.4 7.5-3.9 9zm15.9 9.3c-3.6 1.5-7.7-.2-9.1-3.7-1.5-3.6.2-7.8 3.7-9.1 3.6-1.5 7.7.2 9.2 3.8 1.5 3.5-.3 7.5-3.8 9zm4.7 17.7c-3.6 1.5-7.8-.2-9.2-3.8-1.5-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.3 3.5-.4 7.6-3.9 9.1zM89.3 35.8c-3.6 1.5-7.8-.2-9.2-3.8-1.4-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.4 3.6-.3 7.7-3.9 9.1zM69.7 17.7l8.9 4.7V9.3l-8.9 2.8c-.2-.3-.5-.6-.9-.9L72.4 0H59.6l3.5 11.2c-.3.3-.6.5-.9.9l-8.8-2.8v13.1l8.8-4.7c.3.3.6.7.9.9l-5 15.4v.1c-.2.8-.4 1.6-.4 2.4 0 4.1 3.1 7.5 7 8.1h.2c.3 0 .7.1 1 .1.4 0 .7 0 1-.1h.2c4-.6 7.1-4.1 7.1-8.1 0-.8-.1-1.7-.4-2.4V34l-5.1-15.4c.4-.2.7-.6 1-.9zM66 92.8c16.9 0 32.8 1.1 47.1 3.2 4-16.9 8.9-26.7 14-33.5l-9.6-3.4c1 4.9 1.1 7.2 0 10.2-1.5-1.4-3-4.3-4.2-8.7L108.6 76c2.8-2 5-3.2 7.5-3.3-4.4 9.4-10 11.9-13.6 11.2-4.3-.8-6.3-4.6-5.6-7.9 1-4.7 5.7-5.9 8-.5 4.3-8.7-3-11.4-7.6-8.8 7.1-7.2 7.9-13.5 2.1-21.1-8 6.1-8.1 12.3-4.5 20.8-4.7-5.4-12.1-2.5-9.5 6.2 3.4-5.2 7.9-2 7.2 3.1-.6 4.3-6.4 7.8-13.5 7.2-10.3-.9-10.9-8-11.2-13.8 2.5-.5 7.1 1.8 11 7.3L80.2 60c-4.1 4.4-8 5.3-12.3 5.4 1.4-4.4 8-11.6 8-11.6H55.5s6.4 7.2 7.9 11.6c-4.2-.1-8-1-12.3-5.4l1.4 16.4c3.9-5.5 8.5-7.7 10.9-7.3-.3 5.8-.9 12.8-11.1 13.8-7.2.6-12.9-2.9-13.5-7.2-.7-5 3.8-8.3 7.1-3.1 2.7-8.7-4.6-11.6-9.4-6.2 3.7-8.5 3.6-14.7-4.6-20.8-5.8 7.6-5 13.9 2.2 21.1-4.7-2.6-11.9.1-7.7 8.8 2.3-5.5 7.1-4.2 8.1.5.7 3.3-1.3 7.1-5.7 7.9-3.5.7-9-1.8-13.5-11.2 2.5.1 4.7 1.3 7.5 3.3l-4.7-15.4c-1.2 4.4-2.7 7.2-4.3 8.7-1.1-3-.9-5.3 0-10.2l-9.5 3.4c5 6.9 9.9 16.7 14 33.5 14.8-2.1 30.8-3.2 47.7-3.2z"
+            ></path>
+            <image src="/assets/images/govuk-logotype-crown.png" xlink:href="" class="govuk-header__logotype-crown-fallback-image" width="36" height="32"></image>
+          </svg>
+          <span class="govuk-header__logotype-text">
+            GOV.UK
+          </span>
+        </span>
+        <span class="govuk-header__product-name">
+          MOJ Forms Tech Docs
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+      <nav>
+        <ul id="navigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Top Level Navigation">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/moj-forms-tech-docs">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <a href="#toc" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </a>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents">
+              <div class="search" data-module="search">
+  <form action="https://www.google.co.uk/search" method="get" role="search">
+    <input type="hidden" name="as_sitesearch" value="https://ministryofjustice.github.io/moj-forms-tech-docs"/>
+    <label class="govuk-label search__label" for="search">
+      Search (via Google)
+    </label>
+    <input class="govuk-input govuk-!-margin-bottom-4" id="search" name="q" type="text" aria-controls="search-results" placeholder="Search">
+  </form>
+  <div id="search-results" class="search-results" aria-hidden="true" role="dialog" aria-labelledby="search-results-title">
+    <div class="search-results__inner">
+      <button class="search-results__close">Close<span class="search-results__close-label"> search results</span></button>
+      <h2 id="search-results-title" class="search-results__title" aria-live="polite">Results</h2>
+      <div class="search-results__content"></div>
+    </div>
+  </div>
+</div>
+
+              <a href="#" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></a>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading">
+                      <ul>
+  <li>
+    <a href="#api-and-adapter"><span>API and Adapter</span></a>
+    <ul>
+      <li>
+        <a href="#sending-data-to-an-api"><span>Sending data to an API</span></a>
+      </li>
+      <li>
+        <a href="#legacy"><span>Legacy</span></a>
+        <ul>
+          <li>
+            <a href="#config-vars"><span>Config vars</span></a>
+          </li>
+          <li>
+            <a href="#encryption-amp-decryption"><span>Encryption & Decryption</span></a>
+          </li>
+          <li>
+            <a href="#json-payload"><span>JSON Payload</span></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#hmcts-adapter-legacy"><span>HMCTS Adapter [Legacy]</span></a>
+        <ul>
+          <li>
+            <a href="#complaints"><span>Complaints</span></a>
+          </li>
+          <li>
+            <a href="#correspondence"><span>Correspondence</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+            <h1 id="api-and-adapter">API and Adapter</h1><h2 id="sending-data-to-an-api">Sending data to an API</h2><p>The form builder platform has the ability to send the data to an API (application programming interface) endpoint.
+The data is a JSON format and includes the question, answers and links to any uploaded documents.
+The JSON is encrypted by a key pair. There are 2 Architecture Decision Records outlining exactly how they work:
+( <a href="../adr/ADR-002-secure-json-output.html">ADR-002</a> and
+<a href="../adr/ADR-003-files-in-JSON-output.html">ADR-003</a> )</p>
+<h2 id="legacy">Legacy</h2><h3 id="config-vars">Config vars</h3><p>Your form needs to be configured in Publisher to enable the JSON output feature. You must set both:</p>
+
+<ol>
+<li><code>SERVICE_OUTPUT_JSON_ENDPOINT</code> which is the external endpoint you want JSON sent to.</li>
+<li><code>SERVICE_OUTPUT_JSON_KEY</code> which is the 16 byte shared secret used for encryption.</li>
+</ol>
+<h3 id="encryption-amp-decryption">Encryption &amp; Decryption</h3><p>The JSON output is sent as an encrypted payload, you will need to decrypt it to use it.
+Images are also attached as URLs and stored encrypted.</p>
+<h3 id="json-payload">JSON Payload</h3><div class="highlight"><pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nl">"serviceSlug"</span><span class="p">:</span><span class="s2">"my-form-name"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"submissionId"</span><span class="p">:</span><span class="s2">"3c50f43d-55a9-4ada-949d-b9bc2363966d"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"submissionAnswers"</span><span class="p">:{</span><span class="w">
+      </span><span class="nl">"first_name"</span><span class="p">:</span><span class="s2">"Luke"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"last_name"</span><span class="p">:</span><span class="s2">"Skywalker"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"email_address"</span><span class="p">:</span><span class="s2">"luke.skywalker@digital.justice.gov.uk"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"auto_name__1"</span><span class="p">:</span><span class="s2">"Not answered"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"auto_name__2"</span><span class="p">:</span><span class="s2">"Not answered"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"form_date"</span><span class="p">:</span><span class="s2">"1982-04-14"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="s2">"Best day ever"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"address_1"</span><span class="p">:</span><span class="s2">"The Moisture Farm"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"address_2"</span><span class="p">:</span><span class="s2">"Mos Eisley"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"address_3"</span><span class="p">:</span><span class="s2">"Tatooine"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"postcode"</span><span class="p">:</span><span class="s2">"SW1A 9AJ"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"checked_no"</span><span class="p">:</span><span class="s2">"yes"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="nl">"attachments"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="err">url:</span><span class="w"> </span><span class="err">'example.com/</span><span class="mi">1</span><span class="err">'</span><span class="p">,</span><span class="w">
+         </span><span class="err">encryption_key:</span><span class="w"> </span><span class="err">'bar</span><span class="mi">1</span><span class="err">'</span><span class="p">,</span><span class="w">
+         </span><span class="err">encryption_iv:</span><span class="w"> </span><span class="err">'baz</span><span class="mi">1</span><span class="err">'</span><span class="p">,</span><span class="w">
+         </span><span class="err">mimetype:</span><span class="w"> </span><span class="err">'application/pdf'</span><span class="p">,</span><span class="w">
+         </span><span class="err">filename:</span><span class="w"> </span><span class="err">'form</span><span class="mi">1</span><span class="err">.pdf'</span><span class="w">
+      </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="err">url:</span><span class="w"> </span><span class="err">'example.com/</span><span class="mi">2</span><span class="err">'</span><span class="p">,</span><span class="w">
+         </span><span class="err">encryption_key:</span><span class="w"> </span><span class="err">'bar</span><span class="mi">2</span><span class="err">'</span><span class="p">,</span><span class="w">
+         </span><span class="err">encryption_iv:</span><span class="w"> </span><span class="err">'baz</span><span class="mi">2</span><span class="err">'</span><span class="p">,</span><span class="w">
+         </span><span class="err">mimetype:</span><span class="w"> </span><span class="err">'application/pdf'</span><span class="p">,</span><span class="w">
+         </span><span class="err">filename:</span><span class="w"> </span><span class="err">'form</span><span class="mi">2</span><span class="err">.pdf'</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><p>The key in the <code>submissionAnswers</code> hash is the <code>Input_name</code> that is set on your form
+field either in the editor or in the JSON.</p>
+<h4 id="encrypted-body">Encrypted Body</h4><p>The JSON payload is encrypted with <a href="https://openid.net/specs/draft-jones-json-web-encryption-02.html">JSON Web Encryption</a>.
+You can decrypt the payload using the shared secret key that you set as the
+<code>SERVICE_OUTPUT_JSON_KEY</code>. For an example of this see the
+<a href="#hmcts-adapter-legacy">HMCTS Complaints Adapter</a></p>
+<h4 id="encrypted-files">Encrypted Files</h4><p><strong>Attachment payload</strong></p>
+<p>Attachments are sent in the JSON payload as an <code>attachments</code> array. Each attachment
+object has the following data:</p>
+
+<ul>
+<li><code>url</code> which is the URL to the encrypted file data. This expires after 15 minutes.</li>
+<li><code>encryption_key</code> which is the key needed to decrypt the file.</li>
+<li><code>encryption_iv</code> which is the initialisation vector needed to decrypt the file.</li>
+<li><code>mimetype</code> which is the mimetype of the file.</li>
+<li><code>filename</code> which is the user generated name of the file.</li>
+</ul>
+<p><strong>Decrypting Files</strong></p>
+<p>Files are encrypted using the <code>AES-256-CBC</code> protocol. You need both the <code>encryption_key</code> and
+<code>encryption_iv</code> to decrypt the file. These values are unique per file.</p>
+<p><strong>Links Expire</strong></p>
+<p>Please note that the URLs to the encrypted files expire 15 minutes after being
+generated. You cannot re-request new URLs so you will need to retrieve the file
+within this timeframe.</p>
+<p><strong>Creating the SERVICE_OUTPUT_JSON_KEY</strong></p>
+<p><strong><em>Ruby</em></strong></p>
+<div class="highlight"><pre class="highlight plaintext"><code>irb
+require 'securerandom'
+puts SecureRandom.hex(64)
+</code></pre></div><p>Take 16 characters from the outputted string.</p>
+<h2 id="hmcts-adapter-legacy">HMCTS Adapter [Legacy]</h2><p>Handles submissions for two forms on behalf of HMCTS. It maps submission payloads to the required keys
+before sending them on to the OPTICS case management system.</p>
+<p>Repository: <a href="https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter">hmcts-complaints-formbuilder-adapter</a></p>
+<p>Despite the name it accepts submissions for both complaints and correspondence form types.</p>
+<p>The two namespaces associated with it are:</p>
+
+<ul>
+<li>hmcts-complaints-formbuilder-adapter-production</li>
+<li>hmcts-complaints-formbuilder-adapter-staging</li>
+</ul>
+<p>Both forms require <code>SERVICE_OUTPUT_JSON_ENDPOINT</code> and <code>SERVICE_OUTPUT_JSON_KEY</code> to be set in their configuration before publishing.</p>
+<p><a href="hmcts-adapter-in-the-platform.png" target="_blank" rel="noopener noreferrer"><img src="hmcts-adapter-in-the-platform.png" title="Diagram of the formbuilder platform showing the links to the API Adapter." alt="alt text" /></a></p>
+<h3 id="complaints">Complaints</h3><p>Form repository: <a href="https://github.com/ministryofjustice/fb-hmcts-complaints">fb-hmcts-complaints</a></p>
+<p>It is called <code>complain-about-a-court-or-tribunal</code> in the
+<a href="https://fb-publisher-live.apps.live.cloud-platform.service.justice.gov.uk/services/complain-about-a-court-or-tribunal">Publisher</a>.</p>
+<p>The API endpoint is <code>/v1/complaint</code>.</p>
+<p>The first. It works. Just let it be.</p>
+<h3 id="correspondence">Correspondence</h3><p>Form repository: <a href="https://github.com/ucd-hmcts/money-claim-queries">money-claim-queries</a></p>
+<p>It is called <code>Money claim queries</code> in the <a href="https://fb-publisher-live.apps.live.cloud-platform.service.justice.gov.uk/services/money-claim-queries">Publisher</a>.</p>
+<p>The API endpoint is <code>/v1/correspondence</code>.</p>
+<p>This has significant business logic in order to map the correct properties that OPTICS is expecting.
+<a href="https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/correspondence.rb">The code</a> is
+very much the documentation here so there is no need to repeat it.</p>
+<p>The form caters for two different types of users (the person filling out the form). In terms of nomenclature the <code>Applicant</code>
+is always the person filling out the form.</p>
+<h4 id="representing">Representing</h4><p>The <code>Applicant</code> in these instances are also known as a <code>Representative</code>. OPTICS also has the idea of an <code>Intermediary</code>
+but currently there is nothing in the form that maps this in the payload.</p>
+<p>They will be filling out the form on behalf of a <code>Client</code> or <code>Subject</code>.</p>
+<p>OPTICS will log this user as an <code>Agent</code>.</p>
+<h4 id="self-representing">Self Representing</h4><p>The <code>Applicant</code> is filling out the form for themselves.</p>
+<p>OPTICS will log this user as <code>Main</code>.</p>
+<h4 id="other-considerations">Other considerations</h4><p>There is one unused field, <code>CaseContactCustom18.Subject</code>, which was meant the <code>Intermediary</code> mentioned above but
+in the end it was decided not to be used. We have left it in there as OPTICS still allows the property in the payload despite it not being filled.</p>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2021-09-25">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 25 June 2021.
+
+        It needs to be reviewed again on 25 September 2021
+.
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 25 September 2021.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs/blob/main/source/documentation/services/api-adapter.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs/issues/new?labels=bug&amp;title=Re:%20'API%20and%20Adapter'&amp;body=Problem%20with%20'API%20and%20Adapter'%20(https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/api-adapter.html)">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/moj-forms-tech-docs">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="../../javascripts/application.js"></script>
+  </body>
+</html>
