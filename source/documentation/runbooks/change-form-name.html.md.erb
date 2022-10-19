@@ -1,0 +1,24 @@
+---
+title: Change the Form Name
+category: runbooks
+last_reviewed_on: 2022-10-18
+review_in: 3 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+This is to support a user who requests to update their form name. This is only possible for forms published in test.
+
+1. Identify the form and which environment it has been deployed to: test or live. If it's live, push back as we're unable to change the name.
+2. Look for the pods running the service with the following command:
+`kubectl get pods -n formbuilder-services-live-dev`
+
+3. Unpublish the form from the admin dashboard using the 'Unpublish' button.
+4. Using the command from step 2, check the pods that correspond to the service are no longer running.
+5. Using the admin dashboard, update the form metadata to change the `service_name` value to the desired value.
+6. Check the name has changed by inspecting the Metadata API Service table. This can be done by logging onto a Metadata API pod:
+    1. Start a rails console:
+    `bundle exec rails c`
+    2. Find the ‘service_id’ for the service modified:
+    `Service.find(‘service_id’)`
+    3. Check the value associated with the `name` key. This should now be the updated form name.
+7. Let the form owner know that the name has changed and they have to re-publish the form, which will generate a new url.
