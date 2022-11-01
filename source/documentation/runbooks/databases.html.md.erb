@@ -1,0 +1,33 @@
+---
+title: Databases
+category: runbooks
+last_reviewed_on: 2020-11-01
+review_in: 3 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+We need to update the database versions or instance type, follow cloud platforms guiance.
+
+[Cloud Platform Documentation](https://user-guide.cloud-platform.service.justice.gov.uk/#databases) which includes accessing and updating.
+
+For the User Datastore and Submitter, the data held is only useful while being used.
+The User Datastore stores the end user data while completing the form and the submitter until the data has been submitted.
+Therefore,  we can add a new database and then point traffic to it. Keeping the old databases inc ase the need to rollback for a couple of days.
+
+> The save and return feature will change the use of the User Datastore.
+
+### Database List
+
+| Name | Namespace | Description |
+| ---- | --------- | ----------- |
+| Editor | formbuilder-saas-[live/test] | MOJ Forms, holds all the data for a form (service) |
+| Metadata API | Formbuilder-saas[live/test] | MOJ Forms, holds all the metadata for a form (service). Every save in the editor saves a new copy. |
+| User Datastore | formbuilder-platform-[env] | Platform, used by the deployed forms to store data during the user journey. |
+| Submitter | formbuilder-platform-[env] | Platform, holds the data for process the submission. |
+| Publisher | formbuilder-publisher-[live/test] | Legacy, hold the publishing data for legacy forms |
+
+[env] is a combination of [test/live] and [dev/production] - see [Platform Hosting](../services/hosting.html#let-39-s-get-complicated) for more information.
+
+
+### Helpful links
+[Managing RDS snapshots - backups and restores](https://github.com/ministryofjustice/cloud-platform-terraform-rds-instance#4-managing-rds-snapshots---backups-and-restores)
