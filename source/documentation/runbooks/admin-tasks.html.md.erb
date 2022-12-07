@@ -48,10 +48,28 @@ Add the team members digital email address to the correct list in the [config](h
 ## Renaming a form
 This is quite involved and a Tech task - raise a support request ticket on the backlog.
 
-Process to add
+#### Forms that are ONLY published in test
+
+1. Unpublish form from test
+2. Change the `service_name` in the metadata
+3. Republish the form (with the new URL)
+
+#### Forms that are published in Production
+
+1. Warn the user that this will change the URL
+2. Duplicate the form with the new service name (see below)
+3. Copy over settings and publish
+4. Unpublish and remove old form
+
+> Note: There is a backlog ticket to separate the slug from the service name.
 
 ## Duplicating a form
 
-Process to add
-
-
+1. Create a new form with the new name you want
+2. In the metadata find and copy `service_id` and `service_name` and save somewhere
+3. Open the orignal form and copy all the latest metadata
+4. Back to the new form, replace the metadata with the original metadata **DO NOT SAVE** yet
+5. Replace the `service_id` with the new `service_id`
+6. Replace the `service_name` with the new `service_name`
+7. Save the metadata
+8. Check to make sure antyhthing works
