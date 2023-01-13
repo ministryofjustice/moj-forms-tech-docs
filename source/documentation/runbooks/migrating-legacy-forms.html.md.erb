@@ -28,6 +28,8 @@ There is no programmatic way to migrate the JSON metadata from the old format to
 
 6. Publish the form - kubernetes will replace the old pod with a new pod of the same name containing the new form. You can confirm this by running `kubectl describe <service-name>` in the namespace you published to. The pod will list the docker image it is using, if the image name contains `fb-runner-node` it is the legacy form, or `fb-runner` for a successful deployment of the editor form.
 
+7. Visit the pingdom/solarwinds console. Remove the uptime check that corresponds to service name (which was created for the old service) and then add a new uptime check for the service via the editor admin console. The old check would still work as the url should be the same, but creating a new one via the admin console also creates a database entry that we use to keep inventory of our monitoring services.
+
 ## Rollback
 
 You can return to the legacy publisher and publish the legacy form, this will deploy the old form over the new in a new pod in the same way.
