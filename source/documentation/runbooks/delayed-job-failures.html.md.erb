@@ -1,7 +1,7 @@
 ---
 title: Delayed Job Failures
 category: runbooks
-last_reviewed_on: 2021-10-15
+last_reviewed_on: 2022-11-23
 review_in: 3 months
 ---
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
@@ -111,14 +111,16 @@ submission.update(payload: EncryptionService.new.encrypt(submission.decrypted_pa
 There are 3 rake tasks that can be run in order to replay Delayed Jobs. These will need to be run from outside the Rails console, but still on the Submitter container, in the normal way. One replays submissions without any attachments. So for a submission with the ID '12345':
 
 ~~~~~~~~
-bundle exec rake replay_submission:process[12345]
+bundle exec rake replay_submission:process['12345']
 ~~~~~~~~
 
-Another is for replaying submissions which have attachments. The filestore only validates JWT's that were created 60 seconds or less ago. So to replay any submissions with attachments after that we need to override the leeway using the rake task. So to override with a 8000 second leeway:
+Another is for replaying submissions which have attachments. The filestore only validates JWT's that were created 60 seconds or less ago. So to replay any submissions with attachments after that we need to override the leeway using the rake task. So to override with a 8000 seconds leeway/timeout:
 
 ~~~~~~~~
-bundle exec rake replay_submission:with_attachments[12345,8000]
+bundle exec rake replay_submission:with_attachments['12345',8000]
 ~~~~~~~~
+
+If the rake task fails, try increasing the leeway/timeout.
 
 All being well you will no longer see that Delayed Job in the queue any longer. Great success!
 
