@@ -41,15 +41,25 @@ Below the above rule you'll also find the `Slack Notification on User Signup` ru
 
 ### How to add a domain to the list
 
-In order to add a domain to the list, we have to add the corresponding string to the constant ALLOWED_DOMAINS in the configuration file:
+In order to add a domain to the list, we have to add the corresponding string to the constant
+
 ```
-config/initializers/allowed_domains.rb
+ALLOWED_DOMAINS
 ```
+
+in the configuration file: [config/initializers/allowed_domains.rb](https://github.com/ministryofjustice/fb-editor/blob/main/config/initializers/allowed_domains.rb)
+
+
 Currently it has the 4 domains :
+
 - 'justice.gov.uk',
+
 - 'digital.justice.gov.uk',
+
 - 'cica.gov.uk',
+
 - 'judicialappointments.gov.uk'
+
 
 The allow list is being used for authentication in the user session, but also by from address and send to address.
 
