@@ -1,0 +1,37 @@
+---
+title: Editor's Delayed Job Failures
+category: runbooks
+last_reviewed_on: 2023-01-30
+review_in: 3 months
+---
+
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+It happens the job could not be processed because the corresponding PublishService id wasn't found.
+
+1. First identify the environment, as rule of thumb what is in the alert channel is live environment while alerts in the low severity channel affect test environment.
+
+2. Then connect to each editor worker pods and identify if it is the defected pod by checking if there are any delayed job:
+
+    `Delayed::Job.count`
+
+3. Identify the issue by checking the error:
+
+    `Delayed:Job.last.last_error`
+
+    If it complains with error such as
+
+    `Couldn't find PublishService with 'id'= xxx`
+
+4. We can then look into the PublishService DB with
+
+    `PublishService.all`
+
+5. and check there are no id xxx
+
+    `PublishService.find(id=xxx)`
+
+6. If there are no PublishService with the corresponding id, we can then delete the delayed job
+
+    `Delayed::Job.delete(id=xxx)`
