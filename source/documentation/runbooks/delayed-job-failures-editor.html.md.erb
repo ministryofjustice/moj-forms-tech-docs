@@ -10,7 +10,7 @@ review_in: 3 months
 
 It happens the job could not be processed because the corresponding PublishService id wasn't found.
 
-1. First identify the environment, as rule of thumb what is in the alert channel is live environment while alerts in the loaw severity channel affect test environment.
+1. First identify the environment, as rule of thumb what is in the alert channel is live environment while alerts in the low severity channel affect test environment.
 
 2. Then connect to each editor worker pods and identify if it is the defected pod by checking if there are any delayed job:
 
@@ -24,7 +24,7 @@ It happens the job could not be processed because the corresponding PublishServi
 
     `Couldn't find PublishService with 'id'= xxx`
 
-4. Then look into the PublishService DB with
+4. We can then look into the PublishService DB with
 
     `PublishService.all`
 
@@ -32,6 +32,6 @@ It happens the job could not be processed because the corresponding PublishServi
 
     `PublishService.find(id=xxx)`
 
-6. We can then delete the delayed job
+6. If there are no PublishService with the corresponding id, we can then delete the delayed job
 
     `Delayed::Job.delete(id=xxx)`
