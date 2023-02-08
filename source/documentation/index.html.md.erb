@@ -50,7 +50,7 @@ To understand why we are recording decisions and how we are doing it, please see
 
 <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
     <% if page.data.category == "adr" %>
-        <%= page.data.statusicon %> [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) (<%= page.data.status %>)
+        [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) <%= page.data.statusicon %>  (<%= page.data.status %>)
     <% end %>
 <% end %>
 
