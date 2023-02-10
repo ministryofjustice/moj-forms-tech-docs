@@ -94,18 +94,45 @@ Once you are happy that it is ok to replay the failed job you will need to re-en
 
 For example if the Delayed Job you need to replay is the last one:
 
-~~~~~~~~
-submission_id = Delayed::Job.last.handler
-~~~~~~~~
+First find the submission_id of the last Delayed Job, the following will provide the handler.
 
 ~~~~~~~~
-submission = Submission.find_by_id(submission_id)
+Delayed::Job.last.handler
 ~~~~~~~~
 
-The payload is encrypted. Unfortunately you will need to decrypt it before you can re-encrypt it again. At this point if you need to make any changes to the payload because it is invalid this would be time.
+You should see a key value pair in the handler that looks something like:
+
+`submission_id: 0c1bf45b-1e13-4cc4-ab0a-5bba20eb1b0f\n `
+
+Save the submission_id, not including the `/n`:
+
+`submission_id = "0c1bf45b-1e13-4cc4-ab0a-5bba20eb1b0f"`
+
+Find the submission and save this:
+
+~~~~~~~~
+submission = Submission.find(submission_id)
+~~~~~~~~
+
+The payload is encrypted. Unfortunately you will need to decrypt it before you can re-encrypt it again. At this point if you need to make any changes to the payload because it is invalid this would be the time.
+
+Before running the command below, find out if the submission is from the Legacy Formbuilder or MoJ Forms (v2).
+You can find this out by running:
+
+~~~~~~~~
+submission.v2?
+~~~~~~~~
+
+If the submission is on **Legacy Formbuilder**, you can use the following command:
 
 ~~~~~~~~
 submission.update(payload: EncryptionService.new.encrypt(submission.decrypted_payload))
+~~~~~~~~
+
+If the submission is on **MoJ Forms**, you can use the following command:
+
+~~~~~~~~
+submission.update(payload: SubmissionEncryption.new.encrypt(submission.decrypted_submission))
 ~~~~~~~~
 
 There are 3 rake tasks that can be run in order to replay Delayed Jobs. These will need to be run from outside the Rails console, but still on the Submitter container, in the normal way. One replays submissions without any attachments. So for a submission with the ID '12345':
@@ -121,6 +148,7 @@ bundle exec rake replay_submission:with_attachments['12345',8000]
 ~~~~~~~~
 
 If the rake task fails, try increasing the leeway/timeout.
+The leeway needs to take into account the time of the submission, a leeway of 87000 will be enough to cover a 24hr window.
 
 All being well you will no longer see that Delayed Job in the queue any longer. Great success!
 
