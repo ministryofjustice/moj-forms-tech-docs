@@ -75,7 +75,7 @@ This could be due to a form owner interacting with a form that was made prior to
 This is not a serious issue, we may need to ask the form owner to re-publish a form to get the latest changes.
 
 ### Net Read Timeout
-This usually occurs on the HMCTS complaints adapter. Generally it is a communication error with Optics, it is best to keep an eye out for any ‘Failed Delay Jobs’ alerts as this will point to the job not being processed.
+This usually occurs on the HMCTS complaints adapter. Generally it is a communication error with Optics, it is best to keep an eye out for any ‘Failed Delay Jobs’ alerts as this will point to the job not being processed. We can also check if there any delayed jobs on the api pods of the ```hmcts-complaints-formbuilder-adapter-production``` namespace by running ```Delayed::Job.count``` in a rails console.
 
 ### Type Error
 If this is for the GET `/upload-upload-summary` endpoint, this is a known error and from the legacy Runner. No need to do anything about this.
