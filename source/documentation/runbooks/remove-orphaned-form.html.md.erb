@@ -1,0 +1,43 @@
+---
+title: Removed an Ophaned Deployed Form
+category: runbooks
+last_reviewed_on: 2023-03-23
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+
+## Removed Ophaned Deployed Form
+
+SOmetime when making a change to a form, it isn't unpublihsed first. And could leave the pods running in the namespace.
+
+These step tidies up the form.
+
+1. Find form
+
+    `kubectl -n formbuilder-services-<env><env> get all`
+
+    Displays all the data on the namespace, use `grep` to filter the list.
+
+2. delete Pods
+
+    `kubectl -n formbuilder-services-<env>-<env> delete pod <pod-name>`
+
+3. delete Deployment
+
+    `kubectl -n formbuilder-services-<env>-<env> delete deployment <service>`
+
+4. delete service
+
+    `kubectl -n formbuilder-services-<env>-<env> delete service <service>`
+
+5. delete autoscalling
+
+    `kubectl -n formbuilder-services-<env>-<env> delete hpa <service>`
+
+6. delete ingress
+
+    `kubectl -n formbuilder-services-<env>-<env> delete ingress <service>`
+
+
