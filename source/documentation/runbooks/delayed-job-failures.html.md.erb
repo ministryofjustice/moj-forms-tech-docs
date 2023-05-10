@@ -88,7 +88,49 @@ kubectl rollout restart deployments -n formbuilder-platform-test-dev fb-user-fil
 
 It is at least worth rolling the filestore pods. It may also be worth rolling the submitter pods too. If that still doesn't solve the problem then it might need a manual reply and/or further investigation.
 
-### Replaying failed jobs
+### Removing a problem attachment
+Sometimes attachments prevent a submission from being processed, most commonly this is due to an attachment with a mime type that is not recognised by our platform.
+
+Unfortunately, we will need to remove the problem attachment to replay it, and inform the form owner of this.
+
+Before removing the attachment, ensure you have the following information:
+
+- Some way to identify the submission (Submission ID or Case Number)
+- File name for the failed attachment
+- The form/service that was used to submit the form
+
+Once we have this information, we can remove the attachment from the submission.
+
+Note the following examples assume the submission is from the legacy platform, please use `decrypted_submission` if the submission was form the MoJ Forms platform.
+
+Save the decrypted submission to another variable:
+
+~~~~~~~~
+updated_submission = Submission.find(submission_id).decrypted_payload
+~~~~~~~~
+
+Find the problematic attachment in the 'attachments' key:
+
+~~~~~~~~
+updated_submission['attachments']
+~~~~~~~~
+
+Remove the attachment accordingly.
+
+You can double check the attachments:
+
+~~~~~~~~
+updated_submission['attachments']
+~~~~~~~~
+
+ <div data-proofer-ignore>Once you are happy that you have removed the problem attachment, you will need to [update and re-encrypt the submission](http://localhost:4567/documentation/runbooks/delayed-job-failures.html#updating-and-re-encrypting-the-submission)</div>
+
+ <div data-proofer-ignore>And then you can [replay the job](http://localhost:4567/documentation/runbooks/delayed-job-failures.html#replaying-failed-jobs)</div>
+
+Once the job has been replayed successfully, we will need to inform the form owners so they can contact the end user about their attachment.
+
+
+### Updating and Re-encrypting the submission
 
 Once you are happy that it is ok to replay the failed job you will need to re-encrypt the payload of the Submission related to the Delayed Job.
 
@@ -134,6 +176,9 @@ If the submission is on **MoJ Forms**, you can use the following command:
 ~~~~~~~~
 submission.update(payload: SubmissionEncryption.new.encrypt(submission.decrypted_submission))
 ~~~~~~~~
+
+
+### Replaying failed jobs
 
 There are 3 rake tasks that can be run in order to replay Delayed Jobs. These will need to be run from outside the Rails console, but still on the Submitter container, in the normal way. One replays submissions without any attachments. So for a submission with the ID '12345':
 
