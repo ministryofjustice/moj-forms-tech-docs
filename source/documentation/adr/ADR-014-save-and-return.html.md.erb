@@ -79,7 +79,7 @@ Each 'saved progress record' is then given a generated UUID, which is enough to 
 This record is stored in the fb-user-datastore database in a new model purpose built for this flow. The email content is generated and passed to the fb-submitter as an email action specific to this flow but sent in the same manner as our other emails.
 
 On clicking the emailed link and resuming the form, the following flow happens from the user perspective:
- - If the UUID matches no record, because it may have been securely deleted as it is greater than 60 days old they are given a page that informs them their saved progress cannot be foun/resumed
+ - If the UUID matches no record, because it may have been securely deleted as it is greater than 60 days old they are given a page that informs them their saved progress cannot be found/resumed
  - If the link has already been used to resume progress, determined by a value we store against the record when it is used, they are presented a page informing them this link has been used.
  - If the secret answer was wrongly entered three times, the record will have been flagged as such and the user is redirected to a page informing them this record cannot be used.
 
@@ -100,7 +100,7 @@ The editor has a new settings page, which is a checkbox yes/no flag for save and
 
 ### Consequences
 * We're storing just enough information to be able to resume the browser session as if we were the same user, effectively allowing access to the saved progress on the form
-* Any constraints on current form filling are preservedm for instance a user could time out their session after resuming and lose progress\
+* Any constraints on current form filling are preserved, for instance a user could time out their session after resuming and lose progress.
 * In order to save any progress on the current page, we save answers given but without validation (so a user could stop halfway through a long textarea page for instance) - this means we potentially store unvalidated data. There is a natural mitigation in that on resuming, the user needs to make that page pass validation to proceed.
 
 ### Constraints
