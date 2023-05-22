@@ -56,6 +56,41 @@ If the namespace is in fact not there, then we have a problem and will need to l
 ### Kube Pod Not Ready
 There are always 2 pods for every form, as such this alert is generally nothing to worry about. This should resolve itself once the pod is up and running.
 
+#### Testable Editors
+Sometime we will see a 'Kube Pod Not Ready' error for a testable editor pod.
+When an editor branch has a prefix of `testable` every push on that branch creates a web and worker pod.
+If a testable editor branch is merged into main, the deployment pipeline will trigger a deletion of the testable branch and the associated pods.
+
+However, sometimes testable branches may not need to be merged in and are deleted without being merged, which leaves us with testable editor pods that may trigger alerts.
+
+If a testable editor pod is causing alerts and the testable branch is stale or has been deleted, we will need to manually remove the deployment resource.
+
+To check what deployment resources are running:
+
+~~~~~~~~
+kubectl get deployments -n <namespace>
+~~~~~~~~
+
+For each testable editor branch, there will be an associated web and worker deployment, for example:
+
+~~~~~~~~
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+testable-my-branch-web-test       2/2     2            2           5d
+testable-my-branch-workers-test   2/2     2            2           5d
+~~~~~~~~
+
+Once we are happy that the testable editor is no longer being used, we can remove both the web and worker deployment resources.
+
+~~~~~~~~
+kubectl delete deployments -n <namespace> <deployment>
+~~~~~~~~
+
+For example:
+
+~~~~~~~~
+kubectl delete deployments -n formbuilder-saas-test testable-my-branch-web-test
+~~~~~~~~
+
 ## Sentry related alerts
 All Sentry alerts are found on the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/).
 Please ensure the alert is resolved once you have completed your investigation, otherwise we will not be alerted for the unresolved error in future.
