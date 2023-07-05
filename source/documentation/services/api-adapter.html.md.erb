@@ -214,3 +214,12 @@ When entering a case from the online form, use 'Aberystwyth Magistrates' as the 
 If you are unable to see the case in UAT, it may be an issue with the Optics API key and secret.
 
 An option is to request a new Optics API key and secret from the HMCTS team, and rotate these in the deploy repo.
+
+
+### Submission and Attachments Queues
+
+The complaint form has a submission and a attachment queue. Feedback, Comments and Correspondence form have just one queue for submission. Those form get the data from the runner and maps it correctly with a presenter and create a case in OPTICS.
+
+The complaint job also has to present the data in the right payload format. In addition, it has to get the attachments and decrypt them. Once this is done it can send the case to OPTICS. This process is described in the diagramm below:
+
+![alt text](hmcts-adapter-queues.png "HMCTS Adapter Submission and Attachments Queues Interaction With OPTICS Diagram.")
