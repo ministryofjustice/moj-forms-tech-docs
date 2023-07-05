@@ -223,3 +223,12 @@ The complaint form has a submission and a attachment queue. Feedback, Comments a
 The complaint job also has to present the data in the right payload format. In addition, it has to get the attachments and decrypt them. Once this is done it can send the case to OPTICS. This process is described in the diagramm below:
 
 ![alt text](hmcts-adapter-queues.png "HMCTS Adapter Submission and Attachments Queues Interaction With OPTICS Diagram.")
+
+## HMCTS Adapter [v2]
+
+In order to migrate HMCTS legacy forms created with FormBuilder to their new forms using MoJ Forms, the adapter has to be updated.
+
+There are 3 forms being migrated : complaints, feedback and comments.
+They use v2 API endpoints, respectively `/v2/complaint`, `/v2/feedback`, `/v2/comment`.
+
+The mapping had to change because the field name for v2 services have changed. However just the names of the inputs have changed, the processing to produce the outputs of the adpter is the same. The behaviour and methods described for legacy adapter remain applicable for v2.
