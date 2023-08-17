@@ -37,7 +37,7 @@ More information can be found in the [platforms](/#moj-forms-platform) section.
 ### End User data
 The data is transported over https and encrypted at rest using the session cookie generated when the user starts the form so it is stored encrypted per-user + per-form. This Sequential data is encrypted at rest in an RDS hosted in AWS, and user data is deleted after 28 days automatically.
 Documents are checked on upload that they meet the type and size validation and streamed to a malware checker, only then it is stored encrypted in a S3 bucket. Only the internal services can add and get files from the filestore. 
-
+We can save partial form progress which is stored in the same way as other user data, plus a record we use to resume progress (a record of the user, form and session token needed to resume progress) which is also encrypted at rest using a separate key. Once users resume progress (using a one time secret answer) these records have sensitive items (keys, answers etc) deleted immediately, and the record itself is deleted after 60 days.
 ### Submissions
 Once the end user has completed they submitted the data. This takes the data and processes it as determined in the settings. Either produced in a pdf or csv attached to an email or send encrypted data to an API endpoint. 
 
