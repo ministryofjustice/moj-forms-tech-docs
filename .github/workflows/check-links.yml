@@ -2,6 +2,9 @@ name: Check for broken links
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "more-updates"
   pull_request:
     paths:
       - "source/**"
