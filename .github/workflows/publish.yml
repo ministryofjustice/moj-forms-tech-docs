@@ -63,5 +63,4 @@ jobs:
         cd github-pages
         tar -xvf artifact.tar
         npm install linkinator
-        npx linkinator . --recurse --markdown \
-        #  --skip https://github.com/ministryofjustice/some-private-repo \
+        npx linkinator . --recurse --markdown --skip '\-deploy$'
