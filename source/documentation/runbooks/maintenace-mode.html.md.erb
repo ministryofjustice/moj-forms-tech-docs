@@ -1,0 +1,41 @@
+---
+title: Maintainance Mode
+category: runbooks
+last_reviewed_on: 2023-02-8
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+## Context
+There are times when we need to take a for or all the forms offline. This is mainly during platform changes which causes downtime.
+
+## MOJ Forms
+### Steps
+#### Single Form
+1. Log into MOJ Forms
+2. Admin
+3. Services - and find the service - inline edit
+4. Update text and swap radio to Enabled
+5. Save
+
+To revert back out of maintenace mode, click the radio back to Disabled and click save.
+
+#### All forms in an Environment
+1. See [fb-maintenance-page](https://github.com/ministryofjustice/fb-maintenance-page) - this will put all forms both legacy and moj forms into maintaince mode.
+
+## Legacy Formbuilder
+### Steps
+#### Single Form
+1. Log into Formbulder Publisher
+2. Find the form
+3. Configuration tab and Live
+4. Add
+    Name: `MAINTENANCE_MODE` and Value: `true`
+5. Deployments tab
+6. Copy the Last Commit string
+7. Publish
+8. Add "Commit SHA, branch or tag (optional)" add the copied SHA.
+9. Publish
+
+Repeat for each form thats needs maintence or see [fb-maintenance-page](https://github.com/ministryofjustice/fb-maintenance-page) to put all forms in maintenance.
+
+To take out of maintence mode, remove the config pair and republish (remember to use the sha as above 6 - 8).

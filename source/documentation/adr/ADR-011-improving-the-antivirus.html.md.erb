@@ -2,9 +2,9 @@
 title: Improving the Anti-virus
 category: adr
 reference: ADR-011
-status: Accepted
-statusicon: ✅
-date: 2021-12-06
+status: Superseded
+statusicon: ⌛️
+date: 2022-03-03
 statuses:
     -   🤔 Proposed
     -   ✅ Accepted
@@ -29,6 +29,7 @@ document is getting a real time message that the file has been uploaded successf
 problem (malware found) within it.
 
 The current flow for a file in the User Filestore:
+
 1. File is uploaded and given arbitrary name
 2. Saved to disc in `tmp/quarantine` with the User Filestore
 3. The file size is checked
@@ -47,7 +48,7 @@ when recycled kubernetes will create a new pod and when ready kill the running p
 expected behaviour. If the pod is being used and a file is being streamed and the pod is killed
 then we get the error, as it seems streaming to the pod is not detectable.
 
-Another performance issue has arisen, Clam AV will restrict traffic if calls to update the
+Another performance issue has arisen, Clam AV will restrict traffic if calls to update the full
 virus definitions come from the same IP address, this causes problems with the acceptance tests
 overnight as the process locks the scanning so the tests fail.
 
@@ -72,7 +73,7 @@ Also considered GDS Notify, [https://github.com/alphagov/notifications-antivirus
 their documentation it does incorporate a queue.
 6. Build something
 This is the best route, as the current method meets our needs except scalability.
-Three options include: 
+Three options include:
     1. Adding a controller application which will orchestrate documents to independently
 running ClamAV pods for scanning and report back the response (virus found or not).
 The application will need to manage which pods are being used so it can direct traffic correctly.
@@ -86,7 +87,9 @@ this removes streaming to another service and will be able to scale width ways.
 
 Options 6.1 and 6.3 will require us to set up a mirror of the clamav definitions and therefore
 prevent slowing down or temporarily blocked for obtaining the definitions.
+
 Options for setting up a mirror:
+
 A. Reuse another mirror on the estate, on searching github, we do not have another mirror running
 within MOJ.
 
@@ -96,40 +99,16 @@ instances of the File Userstore from that.
 C. Use the method clamav suggestion in their documentation - [https://github.com/Cisco-Talos/cvdupdate](https://github.com/Cisco-Talos/cvdupdate).
 
 ## Decision
+After more research, an option has presented itself since the original fb-av was built.
 
-Option 3 of Build something is recommended Moving clamav to be run from the user filestore.
-Using a hybrid of option B and C for mirroring the database creating a mirror using ClamAVs
-solution and saving the definitions to a read only s3 bucket for use to the rest of MOJ.
-
-Location of the clamav mirror. Adding the platform apps would make sense, but as these are
-2x2 deployments it would require four running and doing the same updates individually.
-We would require ideally 2, for test and prod but one would be sufficient.
-
-For development and testing we could utilise formbuilder-base-adapter-test namespace,
-with either creating a new over arching namespace(s) for these sorts of applications or
-renaming and repurposing the base adapter.
-
-![alt text](/images/adr011-moj-forms-data-flow-new-av.png "Diagram of user-filestore withint he platform.")
-
-The proposed new flow for a file in the User Filestore:
-1. File is uploaded and given arbitrary name
-2. Saved to disc in `tmp/quarantine` with the User Filestore
-3. The file size is checked
-4. The file type is checked
-5. File scanned in situ
-6. When size, type and results are correct the file is encrypted and sent to the S3 bucket
-7. File in `quarantine` is deleted
-
-Monitoring and alerts will need to be added to make sure the definitions are updated in the mirror and
-the user filestore and when a virus is detected from a scan.
+* Clamav now offer a [docker image](https://hub.docker.com/r/clamav/clamav) which contains the definitions
+* Adding a second replica pod
 
 ### Consequences
-* Virus checking will not be interrupted while pods are recycled
-* Multiple uploaded files can be checked at once
-* Virus definition updates can be made multiple times a day
-* ClamAV definitions available to other MOJ teams
-* Monitoring
+* Using the clamav image does not require downloading the entire database when building the fb-av
+image. This has removed the need for a mirror or copying the database files from somewhere else
+* Having a replica virus checking will not be interrupted while pods are recycled
+* Deploying the pods isn't halted by definition update via clamav
 
 ### Constraints
-* Extra service to support and maintain
-* Complicated getting all the services to update and the correct time
+* Still need to add monitoring and load test number of files can be streamed to a single fb-av pod

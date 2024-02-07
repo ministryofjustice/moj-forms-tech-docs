@@ -1,0 +1,83 @@
+---
+title: Admin Tasks
+category: runbooks
+last_reviewed_on: 2023-07-05
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+
+## Adding a Team Member to be an Admin
+
+Add the team members digital email address to the correct list in the [config](https://github.com/ministryofjustice/fb-editor/blob/main/config/initializers/moj_forms_team.rb), raise a PR etc.
+
+ - MOJ_FORMS_DEVS - members of the tech team.
+ - MOJ_FORMS_ADMIN - members of the wider team who need admin access
+ - MOJ_FORMS_TEAM - members of the whole team who do **not** need Admin access
+
+## Transferring ownership of a form
+
+1. Go to the environment where the form lives - the URL should indicate whether it’s in the live or test environment
+2. Admin > Services - search bar doesn’t work but list is in alphabetical order
+3. Select form > form details
+4. Search Metadata - we’re changing the created by value
+5. Search for “created_by” value which uses user ID
+6. Open another tab to find the user ID
+7. If the user has a @digital.justice and @justice account, check which account to use
+8. Copy and check last few digits for reference
+9. Admin > Services > Metadata > Select edit button
+10. Replace the ‘created_by’ user id with the one that you have just copied and hit save
+11. Notification in #form-builder-alert slack channel
+12. Add details via comment for slack so the team knows it was a planned change
+
+> Tip: might be helpful to copy full metadata into a googledoc temporarily so you can revert back to original meta data if needed.
+
+## Unpublishing a form
+
+1. Check where the uptime check exists, Admin > Uptime Checks if it’s Form Builder form it’s likely to not be in the Admin dashboard and may be managed by Cloud Platform.
+ * If it’s an older form a dev will need to be involved to create a pull request to Cloud Platform to remove the check.
+ * If it’s visible in the Publish services then select the delete button
+2. Add a comment in the #form-builder-alerts channel to the Pingdom alert so the wider team are aware of the changes you’re making.
+3. Admin > Services > Select Form in alphabetical order
+4. Select Unpublish button for both live and test environments if applicable
+5. Copy Service ID - top right-hand corner
+6. Admin > Publish Services search with Service ID to check status of form has changed to unpublished
+7. Update #form-builder-alerts channel for notification and add comment on the changes made
+
+## Renaming a form
+This is quite involved and a Tech task - raise a support request ticket on the backlog.
+
+#### Forms that are ONLY published in test
+
+1. Unpublish form from test
+2. Change the `service_name` in the metadata
+3. Republish the form (with the new URL)
+
+#### Forms that are published in Production
+
+1. Warn the user that this will change the URL
+2. Duplicate the form with the new service name (see below)
+3. Copy over settings and publish
+4. Unpublish and remove old form
+
+> Note: There is a backlog ticket to separate the slug from the service name.
+
+## Duplicating a form
+
+1. Create a new form with the new name you want
+2. In the metadata find and copy `service_id` and `service_name` and save somewhere
+3. Open the orignal form and copy all the latest metadata
+4. Back to the new form, replace the metadata with the original metadata **DO NOT SAVE** yet
+5. Replace the `service_id` with the new `service_id`
+6. Replace the `service_name` with the new `service_name`
+7. Save the metadata
+8. Check to make sure antyhthing works
+
+## Setting API endpoint and url
+
+1. In the Admin section, find the form in Services List
+2. Edit the form to display his version and metadata
+3. Click on the button API settings
+4. Set SERVICE_OUTPUT_JSON_ENDPOINT and SERVICE_OUTPUT_JSON_KEY for test or live environment
+5. Save

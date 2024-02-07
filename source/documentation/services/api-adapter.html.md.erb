@@ -1,7 +1,7 @@
 ---
 title: API and Adapter
 category: platform
-last_reviewed_on: 2021-06-25
+last_reviewed_on: 2023-07-05
 review_in: 3 months
 ---
 
@@ -178,11 +178,59 @@ in the end it was decided not to be used. We have left it in there as OPTICS sti
 
 ### Comments
 
-Form repository: [Comments form](https://github.com/ministryofjustice/Comments-form)
+Form repository: [hmcts-comments-form](https://github.com/ministryofjustice/hmcts-comments-form)
 
-It is called `comments-form` in the
-[Publisher](https://fb-publisher-live.apps.live.cloud-platform.service.justice.gov.uk/services/comments-form).
+It is called `Comments Form` in the [Publisher](https://fb-publisher-live.apps.live.cloud-platform.service.justice.gov.uk/services/comments-form).
 
-The API endpoint is `/v1/comment`.
+The API endpoint is `/v1/comments`.
 
-This is a simple form that takes the user's comments and the location in which the comment relates to. [The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/comment.rb) provides more information on the mappings.
+The adapter has to map the correct properties that OPTICS is expecting.
+[The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/comment.rb) is
+very much the documentation here so there is no need to repeat it.
+
+### Feedback
+
+Form repository: [hmcts-user-feedback-form](https://github.com/ministryofjustice/hmcts-user-feedback-form)
+
+It is called `User Feedback` in the [Publisher](https://fb-publisher-live.apps.live.cloud-platform.service.justice.gov.uk/services/user-feedback).
+
+The API endpoint is `/v1/feedback`.
+
+The adapter has to map the correct properties that OPTICS is expecting.
+[The code](https://github.com/ministryofjustice/hmcts-complaints-formbuilder-adapter/blob/master/app/lib/presenter/feedback.rb) is
+very much the documentation here so there is no need to repeat it.
+
+
+### Testing Adapter Changes
+Changes to the adapater can be tested in the staging environment using the [Optics UAT platform](https://uat.icasework.com/login?db=hmcts)
+
+To get access to the UAT platform, an account needs to be created using your 'justice.gov.uk' account.
+A request to create an account can be made to the HMCTS team.
+
+Once access is gained, you can complete an online form that has been published to the test environment and your completed submission should be visible in the UAT platform.
+When entering a case from the online form, use 'Aberystwyth Magistrates' as the location.
+
+#### Troubleshooting
+If you are unable to see the case in UAT, it may be an issue with the Optics API key and secret.
+
+An option is to request a new Optics API key and secret from the HMCTS team, and rotate these in the deploy repo.
+
+
+### Submission and Attachments Queues
+
+The complaint form has a submission and a attachment queue. Feedback, Comments and Correspondence form have just one queue for submission. Those form get the data from the runner and maps it correctly with a presenter and create a case in OPTICS.
+
+The complaint job also has to present the data in the right payload format. In addition, it has to get the attachments and decrypt them. Once this is done it can send the case to OPTICS. This process is described in the diagramm below:
+
+![alt text](hmcts-adapter-queues.png "HMCTS Adapter Submission and Attachments Queues Interaction With OPTICS Diagram.")
+
+## HMCTS Adapter [v2]
+
+In order to migrate HMCTS legacy forms created with FormBuilder to their new forms using MoJ Forms, the adapter has to be updated.
+
+There are 3 forms being migrated : complaints, feedback and comments.
+They use v2 API endpoints, respectively `/v2/complaint`, `/v2/feedback`, `/v2/comment`.
+
+The mapping had to change because the field name for v2 services have changed. However just the names of the inputs have changed, the processing to produce the outputs of the adpter is the same. The behaviour and methods described for legacy adapter remain applicable for v2.
+
+There is also the enquiry endpoint `/v2/enquiry` used by the MOJ - Online enquiry form - eng and cy forms.

@@ -1,7 +1,7 @@
 ---
 title: Alerts Quick Guide
 category: runbooks
-last_reviewed_on: 2021-10-15
+last_reviewed_on: 2023-01-30
 review_in: 3 months
 ---
 
@@ -11,10 +11,16 @@ Most of the information can be found in this [Runbook](../#runbooks)
 
 This is a quick guide about the common alerts you may come across in the [#form-builder-alerts](https://mojdt.slack.com/archives/CH4FJB8E4) channel.
 
+Alerts in this channel are high severity and affect live environment. Whereas alerts in the low severity channel concerns the test environment.
+
 ## Application Related Alerts
 
 ### Failed Delayed Jobs
-This is something that needs to be investigated. A walk through of how to investigate these alerts are found in this [documentation](../#runbooks)
+This is something that needs to be investigated. This issue can occur for submitter or the editor.
+
+A walk through of how to investigate for the submitter is found in this [documentation](../#runbooks).
+
+For the editor, the guide can be found [here](../#runbooks).
 
 ### Client Error Response
 These usually resolve within 5 minutes of firing.
@@ -50,6 +56,41 @@ If the namespace is in fact not there, then we have a problem and will need to l
 ### Kube Pod Not Ready
 There are always 2 pods for every form, as such this alert is generally nothing to worry about. This should resolve itself once the pod is up and running.
 
+#### Testable Editors
+Sometime we will see a 'Kube Pod Not Ready' error for a testable editor pod.
+When an editor branch has a prefix of `testable` every push on that branch creates a web and worker pod.
+If a testable editor branch is merged into main, the deployment pipeline will trigger a deletion of the testable branch and the associated pods.
+
+However, sometimes testable branches may not need to be merged in and are deleted without being merged, which leaves us with testable editor pods that may trigger alerts.
+
+If a testable editor pod is causing alerts and the testable branch is stale or has been deleted, we will need to manually remove the deployment resource.
+
+To check what deployment resources are running:
+
+~~~~~~~~
+kubectl get deployments -n <namespace>
+~~~~~~~~
+
+For each testable editor branch, there will be an associated web and worker deployment, for example:
+
+~~~~~~~~
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+testable-my-branch-web-test       2/2     2            2           5d
+testable-my-branch-workers-test   2/2     2            2           5d
+~~~~~~~~
+
+Once we are happy that the testable editor is no longer being used, we can remove both the web and worker deployment resources.
+
+~~~~~~~~
+kubectl delete deployments -n <namespace> <deployment>
+~~~~~~~~
+
+For example:
+
+~~~~~~~~
+kubectl delete deployments -n formbuilder-saas-test testable-my-branch-web-test
+~~~~~~~~
+
 ## Sentry related alerts
 All Sentry alerts are found on the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/).
 Please ensure the alert is resolved once you have completed your investigation, otherwise we will not be alerted for the unresolved error in future.
@@ -69,7 +110,7 @@ This could be due to a form owner interacting with a form that was made prior to
 This is not a serious issue, we may need to ask the form owner to re-publish a form to get the latest changes.
 
 ### Net Read Timeout
-This usually occurs on the HMCTS complaints adapter. Generally it is a communication error with Optics, it is best to keep an eye out for any ‘Failed Delay Jobs’ alerts as this will point to the job not being processed.
+This usually occurs on the HMCTS complaints adapter. Generally it is a communication error with Optics, it is best to keep an eye out for any ‘Failed Delay Jobs’ alerts as this will point to the job not being processed. We can also check if there any delayed jobs on the api pods of the ```hmcts-complaints-formbuilder-adapter-production``` namespace by running ```Delayed::Job.count``` in a rails console.
 
 ### Type Error
 If this is for the GET `/upload-upload-summary` endpoint, this is a known error and from the legacy Runner. No need to do anything about this.
