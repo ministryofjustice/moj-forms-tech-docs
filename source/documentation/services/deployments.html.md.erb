@@ -84,7 +84,7 @@ If for some reason this is not working or the Developer needs to run it independ
 
 ### Manual Deployments
 
-It is also possible to manually deploy out a specific branch to the test environment. This method will overwrite the Editor at `https://fb-editor-test.apps.live-1.cloud-platform.service.justice.gov.uk/`.
+It is also possible to manually deploy out a specific branch to the test environment. This method will overwrite the Editor at `https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/`.
 
 On the branch you are working on just make some changes to the [circle config](https://github.com/ministryofjustice/fb-editor/blob/main/.circleci/config.yml#L227) workflows to add the name of your branch so it triggers CircleCI to deploy it out. For example, given a branch named `my-amazing-branch`:
 
