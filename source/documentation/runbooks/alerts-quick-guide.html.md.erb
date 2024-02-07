@@ -114,3 +114,8 @@ This usually occurs on the HMCTS complaints adapter. Generally it is a communica
 
 ### Type Error
 If this is for the GET `/upload-upload-summary` endpoint, this is a known error and from the legacy Runner. No need to do anything about this.
+
+### There is a Sentry alert - how do I find out which form is causing the error?
+When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
+
+We can search for this service ID in the [Admin feature](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/services/editor-admin-feature.html#editor-admin-feature) of the Editor. Once you have identified the service in the Admin dashboard you will be able to pinpoint the form and user that relate to the issue. If required, you can copy the form metadata to debug further.
