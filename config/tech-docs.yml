@@ -4,7 +4,7 @@ host: https://ministryofjustice.github.io/moj-forms-tech-docs
 # Header-related options
 show_govuk_logo: true
 service_name: MOJ Forms Tech Docs
-service_link: /moj-forms-tech-docs
+service_link: '#moj-forms-tech-docs'
 
 # Links to show on right-hand-side of header
 header_links:
