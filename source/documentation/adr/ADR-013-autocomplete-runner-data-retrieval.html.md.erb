@@ -1,0 +1,60 @@
+---
+title: Autocomplete Runner Data Retrieval
+category: adr
+reference: ADR-013
+status: Accepted
+statusicon: ✅
+date: 2022-05-24
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Runner Data Retrieval
+
+## Context
+[Github Repo for fb-runner](https://github.com/ministryofjustice/fb-runner)
+
+The Runner currently resides in the services namespace, which at the moment does not have a data storage mechanism. We will need to agree on a way to have access to the autocomplete data and ensure the Runner has these options available in the app.
+
+
+## Options
+### 1. Request data from the metadata API and database
+
+The autocomplete options would already be available in this database, we could have the Runner call make a request to the Metadata API and fetch data from here. However, this would mean the Runner will need to make a request outside of its namespace. We would like to keep the separation of concerns and as a result would not want the Runner to communicate with the metadata API.
+
+### 2. Request data from the User Datastore
+
+The Runner already posts data to the User Datastore, the user datastore is where the user's submitted data is stored.
+Storing autocomplete options here, would inherently change the responsibility of the user datastore. We would also need to think about how we would reconcile the data in the metadata database (which stores the autocomplete options uploaded from the Editor), and the data in the user datastore.
+
+### 3. Package the options in a file when a form is published
+
+At present, when a form is published in the Editor, all metadata is available in the Runner. We could do something similar for the autocomplete options where we save the options to a file that is published and available in the runner on startup.
+
+![alt text](/images/0013-autocomplete-runner-data-retrieval.png "Diagram of Runner data retrieval.")
+
+## Decision
+
+Option 3, package the options in a file when a form is published.
+
+### Consequences
+* We would have one source of data available when the Runner starts up
+* We would not need to introduce API calls into the Runner
+* We would utilise an already existing mechanism in how the Runner receives form data
+
+### Constraints
+* A form would need to be re-published, if there were any changes in the autocomplete options uploaded by the form editor.
+
+

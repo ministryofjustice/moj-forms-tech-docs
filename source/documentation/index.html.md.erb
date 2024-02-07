@@ -21,6 +21,12 @@ The whole platform can be broken down into smaller parts.
 <% end %>
 </ul>
 
+## [How does MOJ Forms handle security?](/documentation/how-we-handle-security.html)
+High level overview on what is in place to cover security concerns.
+
+## [Github Repositories](/documentation/git-repos.html)
+List of the github repositories for the MOJ Forms platform. Most are public, but some of these will be private.
+
 ## Runbooks
 Procedures and operations that the MoJ Forms Tech Team carry out, these
 can be used for reference also.
@@ -46,7 +52,7 @@ To understand why we are recording decisions and how we are doing it, please see
 
 <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
     <% if page.data.category == "adr" %>
-        <%= page.data.statusicon %> [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) (<%= page.data.status %>)
+        [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) <%= page.data.statusicon %>  (<%= page.data.status %>)
     <% end %>
 <% end %>
 

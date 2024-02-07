@@ -1,0 +1,27 @@
+---
+title: Reviewing Kibana Logs
+category: runbooks
+last_reviewed_on: 2023-03-14
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+The Formbuilder platform exports all Kubernetes logs to Kibana, but it can be difficult to filter out the noise and find exactly what you need.
+
+Start with this <div data-proofer-ignore>[pregenerated search](https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/goto/1ae2f0e0ed627fca79561d62c0c822fc)</div>
+
+This query filters out a number of common info logs such as metrics and healthcheck calls using `log is not`. 
+
+The input bar at the top left lets you change the namespace, which in the pregenerated query will be `formbuilder-platform-live-production`. We keep logs in kibana from all environments so this can be used to support test debugging if need be.
+
+The first filter is the pod and is filtered on pod name, you should edit this filter to the pod you're interested in. You can add more pod filters if you want to cross reference logs from multiple pods.
+
+The next step is to set your time range, use the drop down in the top right to set a date range that will include the logs you're interested in, then add a new filter:
+
+```
+@timestamp is between <timestamp> and <timestamp>
+```
+
+Use the logs to copy a timestamp and modify it, as you will need to enter a full date time. You can keep narrowing the time range you're interested in by editing the hour/minute until you have a small number of logs to look through.
+
+You can also add filters on `log` for things like `log is 500` `log is error` etc to help narrow down searches if you're looking for specific errors, then set your timestamp filter around the error and remove the error filter to see what else was logged at the time. This is helpful as we INFO log many things such as which service the request being processed corresponds to etc.

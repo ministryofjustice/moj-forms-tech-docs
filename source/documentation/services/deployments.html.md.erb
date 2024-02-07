@@ -7,7 +7,22 @@ review_in: 3 months
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
+## Deployment configuration
 
+The main deployment scripts used by all the repos:
+
+- [fb-builder](https://github.com/ministryofjustice/fb-builder)
+- [fb-deploy](https://github.com/ministryofjustice/fb-deploy)
+
+### fb-builder
+This is a base image for building the other applications and has all the 3rd party software included. 
+It has recently been updated to be store in Dockerhub instead of AWS ECR.
+
+It is pushed to docker hub on merging into main using CircleCI using the formbuilder developer account.
+
+### fb-deploy
+This is a bash script that is triggered during the pipeline which builds and deploys the applications into cloud platform. 
+It covers *almost* all the applications in the platform.
 
 ## Editor
 

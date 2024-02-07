@@ -7,13 +7,13 @@ review_in: 3 months
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 
-Locally the [MoJ Forms Editor](https://github.com/ministryofjustice/fb-editor) uses the devloper callback that comes with Auth0 in order to present the user with a faux login screen. However in production it will actually show the Universal Login page that is configured in the [moj-forms tenant](https://manage.auth0.com/dashboard/eu/moj-forms/).
+Locally the [MoJ Forms Editor](https://github.com/ministryofjustice/fb-editor) uses the developer callback that comes with Auth0 in order to present the user with a faux login screen. However in production it will actually show the Universal Login page that is configured in the [moj-forms tenant](https://manage.auth0.com/dashboard/eu/moj-forms/).
 
 There are two connections configured currently, Google and Microsoft. The former is set up using a Social connection and the latter is configured using Enterprise Azure AD.
 
 Currently the only user data we keep is their name and email address, both of which are encrypted before being saved in the DB.
 
-The Universal Login has been configured within the Auth0 dashboard. Any changes should be done there directly. The username and password field are required only in editor-test as they are used by the fb-acceptance-tests user.
+The Universal Login has been configured within the Auth0 dashboard. Any changes should be done there directly. The username and password fields are required only in editor-test as they are used by the fb-acceptance-tests user.
 
 There are two editor apps, one for Live and one for Test. Aside from the obvious differences between callback URLs, the Test app also has the username and password fields active in order for the acceptance tests to be able to log in.
 
@@ -24,6 +24,8 @@ The Azure client secret will expire on the 5th April 2023. At this time it will 
 Currently if the same user logs in using the different connections there is no link between them so they will not see forms that they created when logged in with a different connection.
 
 ## Domain specific allowlisting
+
+### Rules
 
 Even though the Editor is hard coded to not allow the signup using email addresses that do not end in `@digital.justice.gov.uk` or `@justice.gov.uk` Auth0 also needs to cater for these. This is to prevent the times when a user is logged into several different accounts in the same browser.
 
@@ -36,6 +38,18 @@ Currently it is just a hardcoded array: `['justice.gov.uk', 'digital.justice.gov
 Any changes to that array can be tested directly in the interface. Be aware that this currently affects both Test and Live environments at the same time, until we separate them out into different tenants in the future. It is also in real time so has the potential to break login for users in Live.
 
 Below the above rule you'll also find the `Slack Notification on User Signup` rule which sends a message to the `#form-builder-deployments` channel whenever a new user signs up. It requires the `SLACK_HOOK_URL` to be set in order for it to work.
+
+### How to add a domain to the list
+
+In order to add a domain to the list, we have to add the corresponding string to the constant
+
+```
+ALLOWED_DOMAINS
+```
+
+in the configuration file: [config/initializers/allowed_domains.rb](https://github.com/ministryofjustice/fb-editor/blob/main/config/initializers/allowed_domains.rb)
+
+The allow list is being used for authentication in the user session, but also by from address and send to address.
 
 ## Debugging
 

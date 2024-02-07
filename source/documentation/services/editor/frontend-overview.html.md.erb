@@ -1,0 +1,93 @@
+---
+title: Editor - Frontend Overview
+category: platform-editor
+last_reviewed_on: 2022-03-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+The main bulk of customised Frontend code has been focussed on the [fb-editor](https://github.com/ministryofjustice/fb-editor) project. Supporting views for the [fb-runner](https://github.com/ministryofjustice/fb-runner) are primarily based on standard GDS templates with minimal, if any, tweaks to support [fb-editor](https://github.com/ministryofjustice/fb-editor) requirements.
+
+<br>
+## File structure
+
+The file frontend file structure follows the standard organisation for other Rails based (Webpack setup) files structures. There are too many files to list them all here, but the following outline and example files should give an idea of how things are laid out, and where to start looking.
+
+```
+app/
+
+  assets/
+    images/
+    stylesheets/
+
+  javascript/
+    channels/
+    images/
+    packs/
+      application.js
+      govuk.js
+
+    src/
+      index.js
+      component_dialog.js
+      controller_default.js
+      ...
+
+    styles/
+      application.scss
+      _index.scss
+      _component_dialog.scss
+      ...
+
+  views/
+    layouts/
+      application.html.erb
+      ...
+
+    partials/
+      _header.html.erb
+      ...
+
+    services/
+      index.html.erb
+
+    ...
+
+test/
+
+  setup.js
+  component_dialog_test.js
+  ...
+
+```
+
+
+## HTML
+
+HTML files can be found in the `app/view` folder.
+
+- [GitHub Files \(.html.erb\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/view)
+
+Further information and specific topics on [Editor HTML](frontend-html.html)
+
+
+## CSS
+
+Stylesheet files can be found in the `app/javascript/styles` folder.
+
+- [GitHub Files \(.sass\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/styles)
+
+Further information and specific topics on [Editor CSS](frontend-css.html)
+
+
+## JavaScript
+
+JavaScript files can be found in the `app/javascript/src` folder.
+
+- [GitHub Files \(.js\)](https://github.com/ministryofjustice/fb-editor/tree/main/app/javascript/src)
+- [JS Test files](https://github.com/ministryofjustice/fb-editor/tree/main/test)
+
+Further information and specific topics on [Editor JavaScript](frontend-javascript.html)
+
+<br><br>

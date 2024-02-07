@@ -1,0 +1,369 @@
+---
+title: Activated Menu Component
+category: platform-editor-javascript
+last_reviewed_on: 2022-03-10
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %> <%= current_page.data.title %><% end %>
+
+Category: [Editor](../../editor.html) | [JavaScript](../javascript.html) | [Components](../javascript.html#components)
+
+* * *
+
+Wrapper around a [jQueryUI menu widget](https://jqueryui.com/menu/) that allows more preferable interaction without having to write the core widget code from scratch (reason for basing on a widget).
+
+```
+new ActivatedMenu(jQuery wrapped UL node [, configurable options ]);
+```
+
+<small>Code: [javascript/src/component_activated_menu.js](https://github.com/ministryofjustice/fb-editor/blob/main/app/javascript/src/component_activated_menu.js)</small>
+<br>
+<small>JS test: [test/component_activated_menu_test.js](https://github.com/ministryofjustice/fb-editor/blob/main/test/component_activated_menu_test.js)</small>
+
+* * *
+
+
+# ActivatedMenu
+
+To add ***ActivatedMenu*** component functionality to your HTML you simply need to create an instance by passing, as a minimum, your target `<ul>` element.
+
+*Code Examples:*
+
+```
+var menu = new ActivatedMenu($("ul.menu"));
+```
+
+```
+var menu = new ActivatedMenu($("ul.menu"), {
+  container_id: "special-menu-for-some-use"
+});
+```
+
+<small>For information relating to the underlying [jQueryUI menu widget](https://jqueryui.com/menu/) also read the [menu widget api documentation](https://api.jqueryui.com/menu)</small>
+
+
+<br>
+## Options
+To customise the ***ActivatedMenu*** output and/or functionality you can pass in a configuration object. The configurable options feature below.
+
+
+<br>
+### activator
+
+Specify a particular [jQuery object](https://api.jquery.com/jQuery/) to enhance with [ActivatedMenuActivator](#activatedmenuactivator) functionality. If nothing is provided a `<button>` element will be created and inserted directly before the targeted menu element.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|jQuery node |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  activator: $("#target-activator")
+});
+```
+
+
+<br>
+### activator\_classname
+
+When an activator has not been specified in the configuration options, a `<button>` element is created. The ***activator\_classname*** option can be used to inject a class (or classes) of your choosing to that created element.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|String |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  activator_classname: "menuActivator"
+});
+```
+
+
+<br>
+### activator\_text
+
+When an activator has not been specified in the configuration options, a `<button>` element is created. The ***activator\_text*** is used to apply content to that created element.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|String |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  activator_text: "Open menu"
+});
+```
+
+
+<br>
+### container\_id
+
+As part of the ***Activated Menu*** creation process and resulting component composition an [ActivatedMenuContainer](#activatedmenucontainer) (sub) component is created. You can specify an _HTML ID attribute_ value to be applied to this created element by using the configuration option ***container\_id***.
+
+Note: If no _ID_ value is passed one is automatically generated and applied. This is done each time the component is created so cannot be referenced from within any applied CSS.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|String |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  container_id: "menu-container"
+});
+```
+
+
+<br>
+### container\_classname
+
+As part of the ***Activated Menu*** creation process and resulting component composition an [ActivatedMenuContainer](#activatedmenucontainer) (sub) component is created. You can specify an _HTML class attribute_ value to be applied to this created element by using the configuration option ***container\_classname***. This might be required to help reference a particular menu from within any applied CSS.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|String |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  container_classname: "special-activated-menu"
+});
+```
+
+
+<br>
+### position
+
+You can pass in your own position properties to pre-set the component with a specific positional outcome when opened. This can also be done on-the-fly by passing a position object directly to the [Open() method](#open-position), if preferred.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|Object |see below |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+      my: "right top",
+      at: "left bottom",
+      of: $("#someDesiredElement")
+    });
+```
+
+```
+new ActivatedMenu($("ul.menu"), {
+      my: "right top"
+    });
+```
+
+<small>For more detailed information about [jQueryUI](https://jqueryui.com) position objects visit the [jQueryUI documentation on position](https://api.jqueryui.com/position/)</small>
+
+```
+// Default setting
+
+{
+  my: "left top",
+  at: "left bottom",
+  of: menu.activator.$node
+}
+```
+
+
+<br>
+### prevent\_default
+
+The [jQueryUI menu](https://jqueryui.com/menu/) widget triggers selected items via a `menuselect` event attached to the initially passed `<ul>` node. Each descendant `<li>` element has the potential to contain one or more hyperlink (`<a>`) or `<button>` elements, depending on the markup. It can sometimes be desirable to silence the default event handlers for these descendant elements. You can try to do that by passing the ***prevent\_default*** option.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|String |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  prevent_default: true
+});
+```
+
+
+<br>
+### selection\_event
+
+Inside the `menuselect` event listener already in place on the initial `<ul>` element, the ***ActivatedMenu*** component will trigger a selection event on to the parent `$(document)` element. This can allow for other separate areas of functionality to listen for such events and act according to their own design without the ***ActivatedMenu*** needing to know about them, or them needing to be part of the inner working for any such ***ActivatedMenu***. You simply pass an event label and setup a separate listener, wherever you need it.
+
+|Type |Default  |Optional |
+--- | --- | ---|
+|String |undefined |Yes |
+
+```
+new ActivatedMenu($("ul.menu"), {
+  selection_event: "label-to-identify-menu-selection-event"
+});
+
+$(document).on("label-to-identify-menu-selection-event", function(data) {
+  console.log("The menu with a selecion was: ", data.menu);
+});
+```
+
+When the passed selection event is triggered, the ***ActivatedMenu*** functionality also makes available certain data that relates to the menu item being selected. Data takes this form:
+
+```
+// Event data available
+
+{
+  activator: <the item that was clicked>,
+  menu: <the original UL element>,
+  component: <the actual ActivatedMenu instance>,
+  original: {
+    element: event.target, // Browser event element
+    event: e // Browser event object
+  }
+}
+```
+<br>
+
+
+<br>
+## Getters and Setters
+
+Using [JavaScript](https://en.wikipedia.org/wiki/JavaScript) \([ES6](https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_%E2%80%93_ECMAScript_2015)\) we can get and set values by public [getters and setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects#defining_getters_and_setters). This may or may not be intended for public use but there are limitations to privacy support when using such syntax in current [JavaScript](https://en.wikipedia.org/wiki/JavaScript). Any such interaction that is available and inteded for use will be detailed here.
+
+* No getters or setters  available on this component.
+
+
+<br>
+## Methods
+Public methods for component interaction
+
+
+### open([position])
+Opens the menu
+
+* **position**<br>
+  Object containing properties related to [jQuery](https://jquery.com/) positioning.<br>
+  These properties are configurable on menu creation so passing new values will override those set.
+
+```
+// Uses the default settings.
+
+var menu = new ActivatedMenu($("#target-ul-element"));
+menu.open();
+```
+
+```
+// Overrides the default settings when passed to the open() method.
+
+var menu = new ActivatedMenu($("#target-ul-element"));
+menu.open({
+  my: "left bottom"
+});
+```
+
+<small>For more detailed information read the [jQueryUI documentation on position](https://api.jqueryui.com/position/).</small>
+
+
+<br>
+### close()
+Closes the menu
+
+* This method does not accept any arguments.
+
+*Code example:*
+
+```
+var menu = new ActivatedMenu($("#target-ul-element"));
+menu.close();
+```
+
+<br>
+## Events
+
+You can tap into the events triggered as part of the original [jQueryUI menu widget](https://jqueryui.com/menu/) and learn more about that in the [menu widget api documentation](https://api.jqueryui.com/menu) or, read what is available in the configurable [selection\_event](#selection-event) option of the ***ActivatedMenu*** component.
+
+
+* * *
+
+
+<small>Private Class</small>
+# ActivatedMenuContainer
+
+Wrapper element to provide the boundary parent of any created ***ActivatedMenu*** instance. This class is internal to the process of creating an *Activated Menu Component* and is not made public for individual instantiation.
+
+```
+new ActivatedMenuContainer( (ActivatedMenu) menu, (Object) config );
+```
+
+## Params
+
+* **menu** (ActivatedMenu instance)
+  <br>The main instance wrapping the original `<ul>` menu element.
+
+* **config** (Object)
+  <br>This object is the same configuration object that is constructed within an ***ActivatedMenu*** instance. Anything passed to the ***ActivatedMenu*** will be available within the ***ActivatedMenuContainer*** constructor but not necessarily used.
+
+
+## Properties
+
+* **$node** (jQuery object)
+  <br>Returns the HTML element (wrapped in jQuery functionality) for the container element.
+
+* **menu** (ActivatedMenu instance)
+  <br>Returns the connected ActivatedMenu instance.
+
+
+```
+var container = new ActivatedMenuContainer(menu, config);
+
+// HTML container element
+container.$node;
+
+// Access the ActivatedMenuContainer instance
+container.$node.data("instance");
+
+// Access the parent ActivatedMenu instance
+container.menu;
+```
+
+
+* * *
+
+
+<small>Private Class</small>
+# ActivatedMenuActivator
+
+Functionality to enhance a targeted HTML element or, one that is created by the parent ***ActivatedMenu*** instance.
+
+```
+new ActivatedMenuActivator( (ActivatedMenu) menu, (Object) config );
+```
+
+## Params
+
+* **menu** (ActivatedMenu instance)
+  <br>The main instance wrapping the original `<ul>` menu element.
+
+* **config** (Object)
+  <br>This object is the same configuration object that is constructed within an ***ActivatedMenu*** instance. Anything passed to the ***ActivatedMenu*** will be available within the ***ActivatedMenuContainer*** constructor but not necessarily used.
+
+
+## Properties
+
+* **$node** (jQuery object)
+  <br>Returns the HTML element (wrapped in jQuery functionality) for the container element.
+
+* **menu** (ActivatedMenu instance)
+  <br>Returns the connected ActivatedMenu instance.
+
+```
+var activator = new ActivatedMenuActivator(menu, config);
+
+// HTML activator element
+activator.$node;
+
+// Access the ActivatedMenuActivator instance
+activator.$node.data("instance");
+
+// Access the parent ActivatedMenu instance
+activator.menu;
+```
+
+
+
+
+<br><br>

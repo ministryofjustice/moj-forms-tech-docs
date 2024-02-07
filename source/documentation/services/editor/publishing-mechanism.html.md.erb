@@ -1,0 +1,68 @@
+---
+title: Editor - Publishing
+category: platform-editor
+last_reviewed_on: 2023-06-19
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+The MOJ Forms publish mechanism is built into the Editor application and is made up of a few components:
+
+- PublishServiceJob
+- PublishService
+- Publisher
+- ServiceProvisioner
+- Adapters
+
+## Publish Service Job
+This is the job that is created when the publishing mechanism is initiated.
+The job is placed in a queue to be processed.
+
+The PublishServiceJob uses the all the components mentioned above.
+
+If a PublishServiceJob has been unsuccessful, it will result in a Delayed Job in the Editor queue. More information on [Editor Delayed Jobs](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/delayed-job-failures-editor.html#editor-39-s-delayed-job-failures)
+
+## Publish Service
+This is a model and is used to find the record in the database.
+
+## Service Provisioner
+This uses a rich object to handle all the neccessary configurations for creating a new kubernetes deployment. The Service Provisioner is used by the Adapters to create the templates with the correct config.
+The templates can be found in `config/publisher/cloud_platform`.
+
+## Publisher
+This orchestrates the publishing mechanism by steps. The publisher will update the publish service status in the database while calling the adapter to handle the publish logic.
+
+## Adapters
+The default adapter is for CloudPlatform which needs to respond to the following methods:
+
+- pre_publishing
+- publishing
+- post_publishing
+- completed
+
+These steps can be found in the `app/services/publisher/adapters/cloud_platform.rb` class.
+
+### Pre-Publishing
+In this stage, the adapter prepares the Service Metadata files and the Kubernetes Configuration files to be uploaded into the pods. These files are created using the ServiceProvisioner.
+
+The Service Metadata files, which include the autocomplete items and the service metadata, are created and uploaded to S3.
+
+Before the Kubernetes configuration files are created, the adapter creates a config directory in which these files will live. The config directory is derived from the service id and service slug.
+
+#### Accessing the Kubernetes Configuration files
+To access the Kubernetes config files we need to log onto an Editor worker pod. We can then find the files in:
+```
+/tmp/publisher/<service_id>-<service_slug>
+```
+
+Please note, these config directories are only created once in one worker. If the config directory is not present in one worker, it will most likely be present in another worker.
+
+### Publishing
+Once the config directory and config files are available on the worker, this step will apply the config.
+
+### Post-publishing
+Once all the files have been successfully applied, we restart the deployment for the particular service. This ensures all runner pods are running the most up to date version of the service.
+
+### Completed
+If the service has been published to live for the first time, the team will receive a notification in the #form-builder-alerts Slack channel.

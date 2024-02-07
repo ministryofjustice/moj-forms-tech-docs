@@ -1,0 +1,110 @@
+---
+title: Save And Return
+category: adr
+reference: ADR-014
+status: Accepted
+statusicon: ✅
+date: 2023-05-12
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Save And Return
+
+## Context
+One of the most requested features from both form owners and end users is the ability to save a form in pregress and return to it later. This ADR will document the requirements this feature needs to satisfy and how and why we have implemented it to do so.
+
+## Requirements
+### 1. User can save their progress part way through completing a form
+
+We need to save all answers submitted so far, plus any incomplete progress on the current page.
+
+### 2. User data stored must be accessible, and only by the user that stored it
+
+Users must be able to access and return to their in progress submission, and there must be some way of verifying the identity of the returning user. 
+
+### 3. User data and identifiable data required to return to the form must be stored securely
+
+### 4. We need to be able to configure and change the secret questions presented to the user without invalidating already saved form progress 
+
+### 5. Form owners must be able to configure if the save and return functionality is enabled for their form
+
+### 6. On resuming progress, users must see any answers they have already entered then be returned to the point they left off
+
+### 7. If the form has been republished since the progress was saved, we must resume from the beginning and preserve any answers to questions that still can be matched
+
+## Implementation
+
+Going over implementation rather than options, but will discuss the choices we made as we go.
+
+In order to save progress, we need to understand how user answers to forms are recorded. Each page in the form is a html form, and on submit the answers to this page are posted an api (fb-user-datastore) which wraps a PGSQL database.
+
+We can't predict what questions and answers will be present in any given form as all are fully customisable and answers may even differ within a single form as forms can have multiple branch flows.
+
+We build up a hash of { page: { question: answer } } etc each time the user submits a page form and moves on to the next page. These answers are stored in the database and this hash grows as the user fills in the form, and the answers are fully encrypted at rest using a key generated per user session in the browser.
+
+This means answers are inaccessible except for the current user in the current browser session, and are securely deleted after a period of time.
+
+In order to save and resume progress, we opted not to copy or interrupt this process, which will become a defining limitation in our implementation but means that we can utilise some of the advantages this model provides:
+ - we don't have to decrypt/copy/re-encrypt any user data that we wouldn't already encrypt and store
+ - we don't have to modify the complex flow of determining which page to present from the service metadata, and recording user answers
+ - we do not need to write any code specifically to re-load the user data, if we're effectively resuming the browser session and utilising the existing mechanism to retrieve and decrypt.
+
+We opted to send a unique link to users via email in order to provide a resume entry point. This does potentially open up the threat of users unintentionally sending their resume link to the wrong email address, so we also implement a secret answer system and a confirmation step to prompt the user to ensure the email destination is correct.
+
+In order to save progress, users fill in a form and we record the following information:
+ - email destination (user provided) (stored encrypted at rest using platform key)
+ - secret question (we have three configurable questions and store the text so we can ask the user to answer without it being tied to the configured questions)
+ - secret answer (user provided) (stored encrypted at rest using platform key)
+ - resume point (we store the page they are resuming from, which is generated from the service)
+ - service name/id (stored so we can match saved progress to a specific service and prevent accidental resume of the wrong service)
+ - service version (stored at the point of saving progress, so we can determine if the user is resuming a form that has changed since)
+ - session id (from the browser, used to match to the answer set already submitted) (stored encrypted at rest using platform key)
+ - session token (JWT tied to the session - its only purpose is as an encryption key for the answer set) (stored encrypted at rest using platform key)
+
+Each 'saved progress record' is then given a generated UUID, which is enough to uniquely identify an in-progress form, and a link to resume using this saved progress record is generated and emailed to the email address provided by the user.
+
+This record is stored in the fb-user-datastore database in a new model purpose built for this flow. The email content is generated and passed to the fb-submitter as an email action specific to this flow but sent in the same manner as our other emails.
+
+On clicking the emailed link and resuming the form, the following flow happens from the user perspective:
+ - If the UUID matches no record, because it may have been securely deleted as it is greater than 60 days old they are given a page that informs them their saved progress cannot be found/resumed
+ - If the link has already been used to resume progress, determined by a value we store against the record when it is used, they are presented a page informing them this link has been used.
+ - If the secret answer was wrongly entered three times, the record will have been flagged as such and the user is redirected to a page informing them this record cannot be used.
+
+ - If the record is found and active, the user is prompted to answer their secret question.
+ - If the answer is wrong, the user is informed how many attempts remain via validation error message.
+ - If the answer is correct, the current service version is checked against the record. 
+    - If the versions match, the user is shown a new version of the check answers page which shows the answers entered in the previous session.
+    - If the version do not match, the user is informed the form may have changed, and they are returned to the start of the form. Any answers to questions that remain unchanged will still be available as the user re-progresses through the new form.
+
+The resume mechanism is done by taking the session id and token recorded, decrypting them and replacing the new browser session with these values. Then when the page attempts to load user data it will find an answer set tied to that session id, and successfully decrypt the answers.
+
+Once a form is resumed, or is attempted unsuccessfully three times, or (as done by a daily automated job) is over 28 days old it is 'invalidated'. We store a value with the record stating it is invalid, and the values we store encrypted using our key are deleted. The record is kept until it is 60 days old so we can inform the user of its invalid status if need be, but do not want to archive the records forever.
+
+The controller that handles all front end requests to manage this flow is part of the fb-metadata-presenter.
+
+The editor has a new settings page, which is a checkbox yes/no flag for save and return which is applied as a ServiceConfiguration item with the key SAVE_AND_RETURN to each form published. If the configuration is not present then the form will not allow the user to save progress or display and save progress content.
+
+
+### Consequences
+* We're storing just enough information to be able to resume the browser session as if we were the same user, effectively allowing access to the saved progress on the form
+* Any constraints on current form filling are preserved, for instance a user could time out their session after resuming and lose progress.
+* In order to save any progress on the current page, we save answers given but without validation (so a user could stop halfway through a long textarea page for instance) - this means we potentially store unvalidated data. There is a natural mitigation in that on resuming, the user needs to make that page pass validation to proceed.
+
+### Constraints
+* A form needs to be published from the editor in order to activate save and return functionality
+* We do not store user data encryption keys in a way that is developer accessible, and the session data is inaccessible to the browser. This means if the user forgets their secret answer we _can not_ recover their saved progress.
+* We cannot verify email destinations, we have mitigations in place to protect user data access
+* We encrypt secret answers at rest but users are not required to make them secure ie. a password policy, so users could use easily guessed answers etc.
