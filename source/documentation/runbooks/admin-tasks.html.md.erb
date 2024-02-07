@@ -67,12 +67,24 @@ This is quite involved and a Tech task - raise a support request ticket on the b
 
 1. Create a new form with the new name you want
 2. In the metadata find and copy `service_id` and `service_name` and save somewhere
-3. Open the orignal form and copy all the latest metadata
+3. Open the original form and copy all the latest metadata
 4. Back to the new form, replace the metadata with the original metadata **DO NOT SAVE** yet
 5. Replace the `service_id` with the new `service_id`
 6. Replace the `service_name` with the new `service_name`
 7. Save the metadata
-8. Check to make sure antyhthing works
+8. Check to make sure everything works
+
+## Setting a form locale to welsh (cy)
+
+> This assumes there is already an existing form, either newly created or duplicated.
+
+1. Find the form in the editor admin and edit it
+2. Replace in its metadata `"locale": "en"` with `"locale": "cy"`, no need to save yet
+3. Search and replace in the metadata all instances of `(optional)` with `(dewisol)`
+4. Save the metadata and return to the editor to check the form shows welsh copy
+5. From this point onwards the form owner will need to translate all questions, hints, etc.
+6. Form owner will also need to translate any editable templates like emails or footer pages
+7. Once all is done form needs to be republished
 
 ## Setting API endpoint and url
 
