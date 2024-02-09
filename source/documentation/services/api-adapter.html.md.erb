@@ -106,10 +106,10 @@ within this timeframe.
 ```
 irb
 require 'securerandom'
-puts SecureRandom.hex(64)
+puts SecureRandom.hex(8)
 ```
 
-Take 16 characters from the outputted string.
+This will generate a string of the correct size (16 bytes) - you can verify with string.bytesize in irb
 
 ## HMCTS Adapter [Legacy]
 
