@@ -1,4 +1,4 @@
-IMAGE := ministryofjustice/tech-docs-github-pages-publisher:v3.0.2
+IMAGE := ministryofjustice/tech-docs-github-pages-publisher:v4.0.0
 
 # Use this to run a local instance of the documentation site, while editing
 .PHONY: preview
@@ -7,4 +7,4 @@ preview:
 		-v $$(pwd)/config:/app/config \
 		-v $$(pwd)/source:/app/source \
 		-p 4567:4567 \
-		-it $(IMAGE) /scripts/preview.sh
+		-it $(IMAGE) /usr/local/bin/preview
