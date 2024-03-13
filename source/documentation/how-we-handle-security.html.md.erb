@@ -32,7 +32,11 @@ The main services which lets MOJ Forms work are:
 ### Service Token Cache
 This service is used to confirm each application is communicating with the application within the platform. This fulfils one of the principles to make sure we do not reply to the hosting for security between the services. For example, the runner and the user datastore will request a token and only if they match will they communicate.
 
-More information can be found in the [platforms](/#moj-forms-platform) section.
+The deployed token caches use service accounts to look at configmaps kubernetes resources in their corresponding service namespaces, ie platform-test-dev has a rolebinding in saas-test and services-test-dev allowing that service account to get configmaps.
+
+The cache then holds the public key in redis for 5 minutes, keyed to that user/session id and service id, to prevent making an expensive kubernetes read too often.
+
+Downstream services like the user datastore and filestore can request that public key and use it to verify the JWT included in each request is valid for that service. New public keys are generated per service per publish.
 
 ### End User data
 The data is transported over https and encrypted at rest using the session cookie generated when the user starts the form so it is stored encrypted per-user + per-form. This Sequential data is encrypted at rest in an RDS hosted in AWS, and user data is deleted after 28 days automatically.
