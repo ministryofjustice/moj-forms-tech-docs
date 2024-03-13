@@ -66,3 +66,15 @@ Once all the files have been successfully applied, we restart the deployment for
 
 ### Completed
 If the service has been published to live for the first time, the team will receive a notification in the #form-builder-alerts Slack channel.
+
+## Publisher Worker Kubernetes Configuration
+
+Publisher worker pods have a service account attached to them that needs to be able to apply charts in multiple other namespaces, and also assume the correct IAM role that will allow access to S3 buckets for writing the metadata.
+
+In the cloud-platform-environments terraform we use the following setup -
+
+ - Generate an IRSA account that has access to the desired S3 bucket (irsa-account) in the services-* namespace
+ - Generate a service account in the saas-* namespace for the editor worker
+ - Generate a secret in the saas-* namespace containing the iam-role from irsa-account
+ - Attach the value from the secret to the worker service account
+ - Apply a role binding giving permission to the editor worker service account in the services-* namespace to modify necessary resources to deploy forms
