@@ -66,3 +66,16 @@ Once all the files have been successfully applied, we restart the deployment for
 
 ### Completed
 If the service has been published to live for the first time, the team will receive a notification in the #form-builder-alerts Slack channel.
+
+## Publisher Worker Kubernetes Configuration
+
+Publisher worker pods have a service account attached to them that needs to be able to apply charts in multiple other namespaces, and also assume the correct IAM role that will allow access to S3 buckets for writing the metadata, and also assume a different IAM role to acces ECR to upload the deployed runner image.
+
+In the [cloud-platform-environments terraform](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/formbuilder-saas-test/resources/editors-workers-service-account.tf) we use the following setup -
+
+ - Generate a [secret containing the bucket references](https://github.com/ministryofjustice/cloud-platform-environments/blob/6b4277db8be38824a72962bf61879b4a027a1dac/namespaces/live.cloud-platform.service.justice.gov.uk/formbuilder-saas-test/resources/editors-workers-service-account.tf#L5) from the services namespaces in the saas namespace 
+ - Create the [S3 bucket in the services namespace](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/formbuilder-services-test-dev/resources/runner.tf) and attach the arn (bucket reference) to the secret in the saas namespace
+ - Generate the [editor-worker service account](https://github.com/ministryofjustice/cloud-platform-environments/blob/6b4277db8be38824a72962bf61879b4a027a1dac/namespaces/live.cloud-platform.service.justice.gov.uk/formbuilder-saas-test/resources/editors-workers-service-account.tf#L52), which also has access to ECR to push images, note the attached IAM role and its annotations
+ - Generate a secret in the saas-* namespace containing the token from the service account (a token is not auto generated) so the token can be used at run time (configured by our pipeline secrets management)
+ - Attach the service account to the editor worker pod (in the editor repo in the deployment.yaml)
+ - Apply a [role binding](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/formbuilder-services-test-dev/01-rbac.yaml) giving permission to the editor worker service account in the services-* namespace to modify necessary kubernetes resources to deploy forms 
