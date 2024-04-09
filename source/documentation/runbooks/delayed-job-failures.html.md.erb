@@ -101,12 +101,10 @@ Before removing the attachment, ensure you have the following information:
 
 Once we have this information, we can remove the attachment from the submission.
 
-Note the following examples assume the submission is from the legacy platform, please use `decrypted_submission` if the submission was form the MoJ Forms platform.
-
 Save the decrypted submission to another variable:
 
 ~~~~~~~~
-updated_submission = Submission.find(submission_id).decrypted_payload
+updated_submission = Submission.find(submission_id).decrypted_submission
 ~~~~~~~~
 
 Find the problematic attachment in the 'attachments' key:
@@ -157,21 +155,6 @@ submission = Submission.find(submission_id)
 ~~~~~~~~
 
 The payload is encrypted. Unfortunately you will need to decrypt it before you can re-encrypt it again. At this point if you need to make any changes to the payload because it is invalid this would be the time.
-
-Before running the command below, find out if the submission is from the Legacy Formbuilder or MoJ Forms (v2).
-You can find this out by running:
-
-~~~~~~~~
-submission.v2?
-~~~~~~~~
-
-If the submission is on **Legacy Formbuilder**, you can use the following command:
-
-~~~~~~~~
-submission.update(payload: EncryptionService.new.encrypt(submission.decrypted_payload))
-~~~~~~~~
-
-If the submission is on **MoJ Forms**, you can use the following command:
 
 ~~~~~~~~
 submission.update(payload: SubmissionEncryption.new.encrypt(submission.decrypted_submission))
