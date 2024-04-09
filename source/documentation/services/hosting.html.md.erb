@@ -88,43 +88,6 @@ This section explain how all the services are coupled together.
 #### fb-metadata-api-{platformEnv}
 [to update]
 
-### formbuilder-publisher-{platformEnv} namespace (legacy)
-[to update]
-
-#### fb-publisher-web-{platformEnv} pod
-- Rails
-- *public-facing website for editing service data*
-- In-bound
-  - access controlled by `Auth0`
-  - credentials stored in `fb-publisher-app-secrets-{platformEnv}`
-- Out-bound
-  - read/write to `publisher-rds-instance` to update services
-  - write to `publisher-elasticache` (via resque)
-
-#### fb-publisher-workers-{platformEnv} pod
-- Resque
-- *internal queue/job manager for deploying services*
-- Out-bound
-  - read `publisher-rds-instance`
-  - read/write to `publisher-elasticache`
-  - write service token secrets to `formbuilder-services-{platformEnv}-{deploymentEnv}` namespaces
-  - create deployments in `formbuilder-services-{platformEnv}-{deploymentEnv}` namespaces
-
-#### publisher-rds-instance module
-- Postgres
-- *Services data*
-- In-bound
-  - `url` with username/password from `rds-instance-formbuilder-publisher-{platformEnv}`
-  - access only allowed to `fb-publisher-web` and `fb-publisher-workers`
-
-#### publisher-elasticache module
-- Redis
-- *Service deployment jobs*
-- In-bound
-  - `primary_endpoint_address` and `auth_token` from `elasticache-formbuilder-publisher-{platformEnv}`
-  - access only allowed to `fb-publisher-web` and `fb-publisher-workers`
-
-
 ### formbuilder-platform-{platformEnv}-{deploymentEnv} namespace
 
 #### fb-service-token-cache-{platformEnv}-{deploymentEnv} pod

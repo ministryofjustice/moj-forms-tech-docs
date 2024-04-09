@@ -78,33 +78,7 @@ The resulting token must be passed as a header called `x-access-token`
 
 ### Acceptance tests
 
-Acceptance tests for both the new Runner and the Legacy Runner can be found in the [fb-acceptance-tests](https://github.com/ministryofjustice/fb-acceptance-tests) repo. All the forms that are tested against live in the `formbuilder-services-test-dev` namespace.
-
-The Legacy Runner makes use of several forms each broken down to test an individual component. They can be found in the <div data-proofer-ignore>[test Publisher](https://fb-publisher-test.apps.live.cloud-platform.service.justice.gov.uk/services?utf8=%E2%9C%93&query=acceptance)</div>.
-
-There are quite a few forms:
-
-- Acceptance tests Autocomplete
-- Acceptance tests Checkboxes
-- Acceptance tests Conditional steps
-- Acceptance tests Conditional with upload
-- Acceptance tests Date
-- Acceptance tests Email component form
-- Acceptance tests Email output
-- Acceptance tests Exit page
-- Acceptance tests Fieldset
-- Acceptance tests JSON output
-- Acceptance tests Maintenance mode
-- Acceptance tests Number
-- Acceptance tests Radios
-- Acceptance tests Select
-- Acceptance tests Text
-- Acceptance tests Textarea
-- Acceptance tests Upload
-
-All of the above forms are tested if there are ever any changes deployed to the [fb-runner-node](https://github.com/ministryofjustice/fb-runner-node). Once the containers are deployed and restarted the [deployment pipline](https://app.circleci.com/pipelines/github/ministryofjustice/fb-runner-node) will trigger.
-
-The new Runner forms work very differently. There are only two:
+Acceptance tests can be found in the [fb-acceptance-tests](https://github.com/ministryofjustice/fb-acceptance-tests) repo. All the forms that are tested against live in the `formbuilder-services-test-dev` namespace.
 
 - New Runner Acceptance Tests:
       https://new-runner-acceptance-tests.dev.test.form.service.justice.gov.uk
@@ -112,12 +86,14 @@ The new Runner forms work very differently. There are only two:
 - Acceptance Tests Branching Fixture 10:
       https://acceptance-tests-branching-fixture-10.dev.test.form.service.justice.gov.uk
 
-We do not have any RBAC in place yet for shared permission to the forms to you will have to visit each service URL directly in the Editor:
+Full list of acceptance forms can be obtained from [this env file](https://github.com/ministryofjustice/fb-acceptance-tests/blob/main/integration/tests.env.ci).
+
+We do not have any RBAC in place yet for shared permission to the forms so you will have to visit each service URL directly in the Editor:
 
 - [New Runner Acceptance Tests in the Editor](https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/services/cd75ad76-1d4b-4ce5-8a9e-035262cd2683/edit)
 - [Acceptance Tests Branching Fixture 10 in the Editor](https://fb-editor-test.apps.live.cloud-platform.service.justice.gov.uk/services/e68dca75-20b8-468e-9436-e97791a914c5/edit)
 
-Both of the above forms are tested whenever the [fb-runner](https://github.com/ministryofjustice/fb-runner) is deployed. Once the containers are deployed and restarted the [deployment pipline](https://app.circleci.com/pipelines/github/ministryofjustice/fb-runner) will trigger.
+All of the above forms are tested whenever the [fb-runner](https://github.com/ministryofjustice/fb-runner) is deployed. Once the containers are deployed and restarted the [deployment pipline](https://app.circleci.com/pipelines/github/ministryofjustice/fb-runner) will trigger.
 
 Any forms that test submission will submit to fb-acceptance-tests@digital.justice.gov.uk. Details of how to access this account can be found in the shared LastPass. The acceptance tests will check the contents of the submission PDF to make sure it was correctly generated.
 
@@ -126,5 +102,4 @@ Any forms that test submission will submit to fb-acceptance-tests@digital.justic
 
 ###Repositories
 - [fb-runner](https://github.com/ministryofjustice/fb-runner)
-- [Legacy Runner](https://github.com/ministryofjustice/fb-runner-node)
 
