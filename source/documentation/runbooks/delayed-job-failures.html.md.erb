@@ -215,3 +215,17 @@ bundle exec rake replay_hmcts_adapter_submission:process[12345]
 ~~~~~~~~
 
 This re-submits each Submission as a brand new Job to the HMCTS Adapter. In which case you should also delete the old ones on the Delayed::Job queue of the Adapter. The `list_failed_submission_id` also prints out the Job ID so you can use that to run: `Delayed::Job.delete(job_id)` from inside the Rails console. Carefully, of course!
+
+### Replaying successful submissions
+
+Submission records are kept for 28 days, and until it is deleted a successful submission can be re-processed. It has been done for teams claiming to have received some but not all of a submissions emails.
+
+It is important to note that email providers will drop duplicate emails - so replaying a successful submission will not result in receiving the emails again (including confirmation emails).
+
+Follow the steps to find and decrypt the submission, then modify the 'email' actions - you'll need to send the submission to a different operational email for the form owner, and to be on the safe side it's worth removing any confirmation email actions.
+
+You should also consider if the JSON API or MS List actions are present and if they should be removed or if a duplicate POST to the API is desired. Then follow the steps to re-encrypt and update the Submission record.
+
+Once this is done, you can create a new submission job in the rails console using `V2::ProcessSubmissionJob.perform_later(submission_id:, request_id:)` where the submission id is the one to be re-sent, and request id is anything (it is used to identify the request in sentry, so just use `SecureRandom.uuid`).
+
+This job will immediately fail as the JWT will have long since expired, but you can then follow the steps to replay a failed job with a _very long_ JWT skew offset.
