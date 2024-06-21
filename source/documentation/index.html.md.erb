@@ -40,6 +40,18 @@ can be used for reference also.
 <% end %>
 </ul>
 
+## FAQs
+Frequently asked questions - if the answer you're looking for isn't here, try #ask-formbuilder on slack
+<ul>
+  <% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
+    <% if page.data.category == "faqs" %>
+        <li>
+            [<%= page.data.title %>](<%= page.url %>)
+        </li>
+    <% end %>
+<% end %>
+</ul>
+
 ## [How We Work](/documentation/how-we-work.html)
 Documentation on how the technical team works and the process for doing awesome work.
 
