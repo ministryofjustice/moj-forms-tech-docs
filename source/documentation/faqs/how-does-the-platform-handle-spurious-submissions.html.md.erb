@@ -1,0 +1,31 @@
+---
+title: How Does The Platform Handle Spurious Submissions and Secure Forms?
+category: faqs
+last_reviewed_on: 2024-06-20
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+### Spurious submissions
+
+The runner (deployed form) checks that the given user answers match a valid traversal through your form, ie if you form has 10 questions with multiple branching routes where only 6 will be answered, it will check that the supplied 6 answers could be a valid form.
+The code for this can be viewed [here](https://github.com/ministryofjustice/fb-metadata-presenter/blob/main/app/models/metadata_presenter/traversed_pages.rb). This prevents real users sending incomplete forms or manually entering page urls to bypass some questions.
+
+The submission is then sent to the submitter API, which will [validate the schema](https://github.com/ministryofjustice/fb-submitter/blob/main/app/controllers/filters/validate_schema.rb) - this is relatively naive in that it really validates that there are answers present, but prevents bots and web crawlers hitting the submit route from sending empty submissions.
+
+It is possible to write scripts that fill in forms with junk data, in fact our acceptance tests programatically fill in forms and inspect submissions. There is an inherent risk in publishing a form available on the internet and each submission received should still be validated as part of the operational process.
+
+### Malicious input
+
+All user entered values are passed through [Rails sanitize](https://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html) to prevent injecting scripts or tags. We use ActiveRecord to handle preventing injection into our own databases and strong parameters to discard malicious form data.
+
+User uploaded files are held in temporary quarantine and scanned with [CLAMAV](https://www.clamav.net/), virus definitions are updated daily.
+
+### DDoS
+
+Forms are given their own cloud resources on publish as part of the cloud platform Kubernetes cloud. Forms have multiple 'pods' which can increase resources dynamically based on load and ensure redundancy.Each set of pods has its own network ingress which is protected using the modsec web application firewall, which includes throttling and DDoS protection. This means -
+
+- Individual forms can handle spikes in traffic
+- DDoS level spikes should be throttled by the firewall
+- If a given form is receiving malicious/excessive traffic, other forms on the platform should not be affected
+- We have robust alerting and monitoring, as well as office hours active support so in the event a DDoS attack was able to bring a form down, we would be able to respond.
