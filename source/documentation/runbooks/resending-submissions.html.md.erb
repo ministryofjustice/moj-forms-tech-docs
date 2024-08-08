@@ -1,0 +1,35 @@
+---
+title: Resending Submissions
+category: runbooks
+last_reviewed_on: 2024-8-8
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+## Context
+There are times when we may want to resend successful submissions, for instance if they were lost through user error or the destination inbox was full etc.
+
+### How to use the rake task
+
+There is a rake task to resend successful submissions for a given form, between given dates, to a new destiation email address.
+
+```rake replay_submission:successful_batch[date_from, date_to, service_slug, new_destination]```
+
+Date from and to will need to be strings that can be parsed using DateTime, the easiest way to generate them is to use irb and use DateTime and to_s.
+
+The service slug will be necessary to find the submissions, you can check what it should be using the service configurations.
+
+The destination email is necessary because resending submissions to the same email address will result in the destination email server discarding them as duplicates.
+
+Attachments will be sent if present
+
+Confirmation email actions will be removed from the submission before resending, to avoid duplication
+
+JSON and ms list actions won't be replayed, the utility is capable of doing so but at the time of writing the rake task defaults to skipping them. If you want to resend to JSON or ms list only, you'll want to consider adding a rake task to do that.
+
+### Other considerations
+
+The utility will create a new job for each submission found in the date range, depending on how many submissions you expect this to be it may be worth breaking up into smaller date ranges to avoid processing large numbers all at once, but given it uses the delayed job queue it can handle quite a lot at once and will just work its way through them.
+
+We only keep submissions for 28 days, so any missed submissions odler than that are not recoverable.
+
+The retry uses a JWT skew overide of 28 days, so no submissions should need to be replayed, but occasionally some of those missed submissions with attachments will get 404 responses when downloading the attachments, you can replay failed jobs from the batch as normal using the runbook.
