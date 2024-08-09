@@ -1,0 +1,59 @@
+---
+title: Monitoring and Testing MS List Submission
+category: adr
+reference: ADR-015
+status: Accepted
+statusicon: ✅
+date: 2024-08-08
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Monitoring and Testing MS List Integration
+
+## Context
+One of the most requested features from form owners is to have an alternative form submission option, culminating in an integration with the MS Graph API.
+
+Because we cannot have long term licences for sharepoint/teams, or long term acceptance test accounts in the dev tenancy, it's difficult for us to have long lived high confidence acceptance tests that run on each deploy that verify the integration is still behaving as expected.
+
+We do have automated testing around the integration and monitoring, this document aims to document what we are able to monitor.
+
+### Constraints
+* Forms with this feature enabled send submissions to the MS Graph API
+* The graph API in some cases quietly discards answers within submissions, but will return a failure status code if we try to write to a column that does not exist
+* We cannot control or predict changes to the Graph API
+* We cannot have a long term dev environment sharepoint site/acceptance test account
+* If we could, developer access to manage and maintain that sharepoint site is difficult to maintain
+* We'd need to clear out submissions from test sharepoint sites either manually after each test run or via a data retention policy
+
+### Automated tests
+* We have automated tests checking we send payloads to the graph API routes as expected
+* We have an acceptance test pointed at devl.justice.gov.uk that sends to a list when also sending an email etc and verifies the answers in the list are correct
+* We get the list item by looking for the last entry in all list items, because getting all and filtering has a max of 10 results, so we get just the latest list item and the get all its columns
+* We verify this last item has the right reference number which means multiple overlapping AT runs can pollute
+* Data retention on list items deletes them after one day
+* Data retention on uploaded files is TBC
+
+### Monitoring and Alerting
+* We receive logs in kibana - but not much is actually logged in terms of debug info to avoid logging personal info
+* Any non success status code from the graph api is forwarded to sentry
+* Sentry errors alert in slack
+
+### Potential issues
+* We should be prevented from releasing a code change that interrupts ms list submissions, thanks to the AT flow
+* If the graph api changes, we won't know until ATs fail
+* If users are regeneerating their lists we won't know
+* If graph api returns error codes in any deployed form we will be alerted
+* But if the graph api accepts the payload and quietly does not behave as expected we won't be alerted

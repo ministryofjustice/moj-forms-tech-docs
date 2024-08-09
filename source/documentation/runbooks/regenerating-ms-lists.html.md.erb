@@ -1,0 +1,53 @@
+---
+title: Regenerating MS Lists
+category: runbooks
+last_reviewed_on: 2024-8-8
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+## Context
+The MS List integration creates lists in the destination sharepoint site. When making changes to the submission behaviour, we may need to make a change that requires lists to be regenerated to continue receiving submissions.
+
+
+### Important considerations
+
+We are able to republish forms at the last published version via the admin. If we are creating a new list, we will need to republish the form to pick up the new list ID to send to.
+
+We are unable to make this changeover seamlessly, so will need to co-ordinate with form owners and potentially put forms into maintenance mode if the form owners cannot receive forms via email in the meantime.
+
+Users may have unpublished changes to their form that aren't ready to go to live. Confirm they have not updated the form settings in a way that is not ready to go live (for instance, changes to email output content). If they have these, they will need to finish updating and republish themselves.
+
+We'll need to put forms into maintenance mode where necessary, then deploy the updates to the submitter, then regenerate the lists and republish the forms. Once a test submission is then sent through, the form can be brought out of maintenance mode. This will be easiest if co-ordinated with form owners so they can test.
+
+As outlined below, it's a longer and more manual process if the form owner has unpublished changes to their form that are not ready for live. As we will need to give notice ahead of such a deployment for co-ordinating downtime, it's worth exploring if form owners are happy to publish or discard any changes ahead of time.
+
+### Knowing which forms are using the list integration
+
+In the admin/overviews section, generate a report for each environment. The report will contain a column 'Collect information in MS List'. Realistically, in the live-dev environment we can inform users and provide instructions for regenerating their list, but in live-production we will do what we can to avoid disruption to receiving submissions.
+
+This report can also highlight forms that receive via list but not also email for redundancy, so will _need_ downtime to avoid interruption.
+
+Confirm with form owners if they have unpublished changes, and if they need to have the form put into maintenance mode.
+
+### Regenerating the list when no unpublished changes are present
+
+If the form has no unpublished changes, this is straightforward - make a change to the form such as adding a new page. Save the form, then undo whatever change you made and save the form.
+
+This will create a new version of the form.
+
+Go to the publish page - for each environment, you should see the warning that explains a new version of the MS list will be created. Publish the form in the desired enviroments.
+
+### Regenerating the list when unpublished changes are present
+
+In the admin page for the service in question, you can see all previous versions, and see which version is currently published to each environment.
+
+Take a copy of the latest version, and the version published.
+
+Make a change to the form via the editor and save - this will create a new version. Take a note of the version id, and change the version id in your copy of the version to be published.
+
+Paste in the version to be published with the updated version number - this should now be a new version of the form and is technically the 'latest' but will be identical to the last published version.
+
+Publishing via the app should now also create a new list with the new version id.
+
+You can then restore the user's unpublished changes by creating a new version and copying in the form metadata from the 'latest' version they have changed but not published.
+
