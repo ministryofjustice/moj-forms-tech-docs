@@ -105,3 +105,11 @@ Pushing up your branch will then trigger CircleCi to deploy it out to the test e
 This approach works for pretty much any app should it be required. The recommendation would be that you would add the above changes to a temporary commit that you would remove from your branch before raising the final PR for review.
 
 Make sure to notify the other developers that you are deploying your branch.
+
+## Update
+Branch name needs to within 47 characters for k8s deployment (which has a limit of 63).
+The Slack message does not currently work. 
+To get the testable editor URL run:
+```shell
+kubectl -n formbuilder-saas-test get ingress
+```
