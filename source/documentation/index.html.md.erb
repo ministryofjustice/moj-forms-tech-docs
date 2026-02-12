@@ -62,10 +62,8 @@ Our process for managing incidents
 #### Architecture Decision Records
 To understand why we are recording decisions and how we are doing it, please see ADR-001.
 
-<% sitemap.resources.select { |page| page.path =~ /html$/ }.each do |page| %>
-    <% if page.data.category == "adr" %>
-        [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) <%= page.data.statusicon %>  (<%= page.data.status %>)
-    <% end %>
+<% sitemap.resources .select { |page| page.path =~ /html$/ } .select { |page| page.data.category == "adr" } .sort_by { |page| page.data.reference.to_s.downcase } .each do |page| %> 
+    [<%= page.data.reference %> - <%= page.data.title %>](<%= page.url %>) <%= page.data.statusicon %>  (<%= page.data.status %>)
 <% end %>
 
 Statuses:
