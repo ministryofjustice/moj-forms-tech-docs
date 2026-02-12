@@ -1,0 +1,28 @@
+---
+title: Update GOV.Notify API Key
+category: runbooks
+last_reviewed_on: 2026-02-12
+review_in: 3 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+Purpose: This runbook describes the steps to update the GOV.Notify API key used in the Editor. 
+
+### Steps 1. GOV.UK Notify
+- Create a [Notify Account](https://www.notifications.service.gov.uk/sign-in) if you do not have one
+- [Request to join](https://www.notifications.service.gov.uk/your-services) the MOJ Forms service
+- Create new API key
+- Save in the MOJ Form team's 1Password (for safe keeping)
+
+
+### Step 2.  Update the Editor
+ - Access the [editor-deploy](https://github.com/ministryofjustice/fb-editor-deploy) internal repository 
+ - The secrets are encrypted using git-crypt, so ensure you have access and have unlocked the repository
+ - Update the API key in the relevant configuration file (either test or prod).
+ - The key needs to be encoded with base64 before being added to the file, you can do this with the following command:
+
+```echo -n "your-api-key" | base64 -b 0```
+
+ - Commit, lock and push
+ - Run the Editor pipeline to pick up the new api key
+ 
