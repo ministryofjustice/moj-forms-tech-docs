@@ -1,0 +1,41 @@
+---
+title: Using Gov.Notify in the Editor
+category: adr
+reference: ADR-016
+status: Accepted
+statusicon: ✅
+date: 2026-02-11
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Context 
+During 2023, a new feature in the Editor needed to send emails. 
+The team, at the time, decided to test using [GOV.UK Notify](https://www.notifications.service.gov.uk/). 
+This is different from the rest of the platform, the submitter, which uses AWS SES. 
+
+##Consequences 
+* Provides 2 email methods to manage. This added complexity is manageable and need documenting in the Tech Docs.
+
+* This cannot be rolled out to use in the rest of the platform. 
+
+The submitter will attach documents to the email. 
+GOV.UK Notify does not send documents attached, instead it stores the attachment and insert a link in the email body.
+
+This will change our security posture having data and documents saved outside of our platform and change to the GDPR status. 
+However, this decision should be reviewed as a future piece of work (using GOV.UK Notify for the submitter), fully exploring the risks and changes needed to MOJ Forms status as an asset for GDPR. 
+
+##Retrospective Decision  
+Using GOV.UK Notify meets the needs for sending emails from the editor, not the submitter 
