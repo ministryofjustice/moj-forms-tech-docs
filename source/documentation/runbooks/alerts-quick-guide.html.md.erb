@@ -112,6 +112,11 @@ This is not a serious issue, we may need to ask the form owner to re-publish a f
 ### Net Read Timeout
 This usually occurs on the HMCTS complaints adapter. Generally it is a communication error with Optics, it is best to keep an eye out for any ‘Failed Delay Jobs’ alerts as this will point to the job not being processed. We can also check if there any delayed jobs on the api pods of the ```hmcts-complaints-formbuilder-adapter-production``` namespace by running ```Delayed::Job.count``` in a rails console.
 
+### JSON::Schema::ValidationError
+First seen in 2023, and happens when the Editor sends metadata to the API that does not conform to the schema. This is a similar issue to the Faraday::Unprocessable Entity Error but with the submitter, however this is a more specific error that points to the exact issue with the metadata (null value in the schema). 
+We can not replicate this error to provide a fix. However, it does not happen frequently.
+Okay to Resolve and check for a delayed submission alert.
+
 ### There is a Sentry alert - how do I find out which form is causing the error?
 When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
 
