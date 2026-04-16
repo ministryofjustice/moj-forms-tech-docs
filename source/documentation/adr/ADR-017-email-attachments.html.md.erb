@@ -1,0 +1,99 @@
+---
+title: Email Attachements
+category: adr
+reference: ADR-017
+status: Proposed
+statusicon: 🤔
+date: 2026-04-16
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Context
+Many users have asked that we increase the file size limit on uploaded document and removing the multiple attachment emails routine for sending the least amount of emails with attachemnts.
+
+Reviewing the limits in AWS SES (Amazon Web Services – Simple Email Service)
+
+> AWS SES v1 – 10mb limit <br>
+> AWS SES v2 – 40mb limit (new redesign in 2020)
+
+__We are using v1.__
+
+[ADR for multiple attachment emails](ADR-006-reduce-number-of-emails-per-submission.html)
+
+### Constraints and Best Practice
+
+__MIME encoding (the 33% rule)__: Emails are base64 encoded for attachments, this normally increases the file size by around 33%.
+
+> A 30mb pdf file will exceed the 40mb limit after it has been encoded.
+
+__Headers and HMTL__: Like the current system we have allowed 30% (3mb) of the overall message to be the headers and content of the email.
+
+__Recipient Limits__: Just because we can, doesn’t mean we should.<br>
+Each receiving email servers (like gmail, outlook, or corporate servers) will cap the email size being received and reject those over the capped size.
+> MOJ has a real-world safe limit: <25 MB unless using OneDrive links.
+
+__Best practice__: Files that are over 10 to 15mb should be stored (using AWS S3 in our case) and providing a secure link (with a set expiry) in the email instead of attaching the document.<br>
+> This is the method that gov.notify uses for all attachments, regardless of size.
+
+### The Uploaded Document Flow
+
+The current flow is:
+
+- File is uploaded and given arbitrary name
+- Saved to disc in tmp/quarantine with the UserFilestore
+- The file size is checked
+- The file type is checked
+- Streamed to fb-av
+- When size, type and results are correct the file is encrypted and sent to the S3 bucket
+- File in quarantine is deleted
+
+
+There is an [ADR on the Anti-virus solution](ADR-011-improving-the-antivirus.html), which has some issues on the streaming of files. The smaller the file, the quicker the scan. Larger files give the impression that the file upload page has frozen/ crashed.
+
+This could be mitigated by improving the user feedback on the page that something is happening.
+
+### Changing from v1 to v2
+
+This was a complete redesign which may cause unknown problems if we just swap the SDK (Software Development Kit).
+
+### Submissions
+
+There will be an increased connection from the submitter to userFilestore for getting the attachments to bundle into the payload to send to AWS SES. This is the main reason for delayed jobs (6 - 12 a year), when a connection issue arises between the 2 services. Increasing the file size will increase the risk that timeouts, and delayed jobs will happen more frequently.
+
+Changing the current method of submission will impact other teams with automated workflows.
+
+## Options
+
+1. Do nothing
+
+2. Use v2 and configure to maximum sizes
+    - make the forms more unstable for uploading documents
+    - accept the risk of more frequent delayed jobs
+    - increase the risk of email not being delivered
+
+3. Use v2 and configure to MOJ capped limits (with 33% rule + >3mb headroom - around 13mb)
+    - give more user feedback in the file upload page for the extra time it takes to process the upload
+    - accept the risk of more frequent delayed jobs
+
+4. Use v2 (or remain v1) and configure to 30mb sizes
+    - Give more user feedback in the file upload page for the extra time it takes to process the upload
+    - Add files over 7mb to a S3 bucket and provide download links other attach as current
+
+5. Remain v1 and configure to 30mb sizes
+    - Give more user feedback in the file upload page for the extra time it takss to process the upload
+    - Add all files to a S3 bucket and provide download links
+
+Discounting option 2, provide a the option that best fits the requirement for the data.
