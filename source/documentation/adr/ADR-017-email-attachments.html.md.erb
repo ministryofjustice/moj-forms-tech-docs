@@ -22,78 +22,96 @@ Date: <%= current_page.data.date %>
 <%= current_page.data.statusicon %> <%= current_page.data.status %>
 
 ## Context
-Many users have asked that we increase the file size limit on uploaded document and removing the multiple attachment emails routine for sending the least amount of emails with attachemnts.
+Users have asked that we increase the file size limit on uploaded documents and remove the
+multiple‑attachment email routine, in order to reduce the number of emails sent with attachments.
 
-Reviewing the limits in AWS SES (Amazon Web Services – Simple Email Service)
+After reviewing the limits in AWS SES (Amazon Web Services – Simple Email Service):
 
-> AWS SES v1 – 10mb limit <br>
-> AWS SES v2 – 40mb limit (new redesign in 2020)
+ - AWS SES v1 – 10 MB limit
+ - AWS SES v2 – 40 MB limit (new redesign in 2020)
 
-__We are using v1.__
+We are currently using __v1__.
 
-[ADR for multiple attachment emails](ADR-006-reduce-number-of-emails-per-submission.html)
+[ADR for multiple attachment emails ](ADR-006-reduce-number-of-emails-per-submission.html)
 
 ### Constraints and Best Practice
+__MIME encoding (the 33% rule)__:<br>
+Emails are Base64‑encoded for attachments, which typically increases file size by around 33%.
+A 30 MB PDF file will exceed the 40 MB limit once encoded.
 
-__MIME encoding (the 33% rule)__: Emails are base64 encoded for attachments, this normally increases the file size by around 33%.
+__Headers and HTML__:<br>
+As with the current system, we have allowed 30% (3 MB) of the overall message size for headers and the email content.
 
-> A 30mb pdf file will exceed the 40mb limit after it has been encoded.
+__Recipient limits__:<br>
+Just because we can send larger emails does not mean we should. Each receiving email server (e.g.
+Gmail, Outlook, or corporate servers) applies its own size cap and will reject emails that exceed it.<br>
+MOJ has a real‑world safe limit of < 25 MB, unless using OneDrive links.
 
-__Headers and HMTL__: Like the current system we have allowed 30% (3mb) of the overall message to be the headers and content of the email.
-
-__Recipient Limits__: Just because we can, doesn’t mean we should.<br>
-Each receiving email servers (like gmail, outlook, or corporate servers) will cap the email size being received and reject those over the capped size.
-> MOJ has a real-world safe limit: <25 MB unless using OneDrive links.
-
-__Best practice__: Files that are over 10 to 15mb should be stored (using AWS S3 in our case) and providing a secure link (with a set expiry) in the email instead of attaching the document.<br>
-> This is the method that gov.notify uses for all attachments, regardless of size.
+__Best practice__:<br>
+For files larger than 10–15 MB, use online storage (i.e. AWS S3) and provide a secure link with a
+fixed expiry in the email instead of attaching the document.<br>
+This is the approach used by gov.notify for all attachments.
 
 ### The Uploaded Document Flow
-
 The current flow is:
 
-- File is uploaded and given arbitrary name
-- Saved to disc in tmp/quarantine with the UserFilestore
-- The file size is checked
-- The file type is checked
-- Streamed to fb-av
-- When size, type and results are correct the file is encrypted and sent to the S3 bucket
-- File in quarantine is deleted
+ - File is uploaded and given an arbitrary name
+ - Saved to disk in tmp/quarantine via UserFilestore
+ - File size is checked
+ - File type is checked
+ - File is streamed to fb-av
+ - When size, type, and scan results are valid, the file is encrypted and sent to the S3 bucket
+ - The file in quarantine is deleted
 
+There is an [ADR-011-improving-the-antivirus](ADR-011-improving-the-antivirus.html),
+which highlights issues with file streaming.
+[Smaller files scan more quickly](#timings), while larger files can give the impression that the upload page has frozen or crashed.
 
-There is an [ADR on the Anti-virus solution](ADR-011-improving-the-antivirus.html), which has some issues on the streaming of files. The smaller the file, the quicker the scan. Larger files give the impression that the file upload page has frozen/ crashed.
-
-This could be mitigated by improving the user feedback on the page that something is happening.
 
 ### Changing from v1 to v2
-
-This was a complete redesign which may cause unknown problems if we just swap the SDK (Software Development Kit).
+This was a complete redesign and may introduce unknown issues if we simply switch the SDK (Software Development Kit).
 
 ### Submissions
+There will be increased connectivity between the submitter and UserFilestore in order to retrieve attachments
+and bundle them into the payload sent to AWS SES.
 
-There will be an increased connection from the submitter to userFilestore for getting the attachments to bundle into the payload to send to AWS SES. This is the main reason for delayed jobs (6 - 12 a year), when a connection issue arises between the 2 services. Increasing the file size will increase the risk that timeouts, and delayed jobs will happen more frequently.
+This is the primary cause of delayed jobs (approximately 6–12 per year) when connection issues occur between
+the two services. Increasing the allowed file size will raise the likelihood of timeouts and may cause delayed
+jobs to occur more frequently.
 
-Changing the current method of submission will impact other teams with automated workflows.
+Changing the current submission method will also impact other teams that rely on automated workflows.
 
-## Options
+### Testing on the Current System
+Test files were uploaded using a test form deployed in the test-dev environment.
+
+| File                 | Exact size (bytes) | Megabytes (MB)| Human Readable | Result | Reason                       |
+| :------------------- | -----------------: | ------------: | -------------: | :---:  | :--------------------------- |
+| pdf_testfile_1-0.pdf | 1049072            | 1.0005        | 1.0 MB         | Pass   |                              |
+| pdf_testfile_6-9.pdf | 7,236,080          | 6.9009        | 6.9 MB         | Pass   |                              |
+| pdf_testfile_7-0.pdf | 7,340,528          | 7.0005        | 7.0 MB         | Fail   | The file size over the limit |
+
+#### Timings
+| File                 | Exact size (bytes) | Megabytes (MB) | Upload time   |
+| :------------------- | -----------------: | ------------: | -------------: |
+| pdf_testfile_1-0.pdf | 1049072            | 1.0005        | 2 seconds      |
+| pdf_testfile_6-9.pdf | 7,236,080          | 6.9009        | 10 seconds     |
+
+During upload, the screen remains static, with the upload button changing from green to yellow.
+
+## Options
 
 1. Do nothing
+2. Use v2 and configure maximum sizes<br>
+ - accept the risk of increased instability and more frequent delayed jobs
+3. Use v2 and configure to MoJ capped limits<br>
+ - improve upload feedback
+ - accept increased risk of delayed jobs
+4. Use v2 (or remain on v1) and configure a maximum limit<br>
+ - improve upload feedback
+ - store files over 7 MB in S3 and provide download links
+5. Remain on v1 and configure to a maximum limit<br>
+ - improve upload feedback
+ - store __all__ files in S3 and provide download links
+6. Allow form owners to select from the options above (except option 2 and 3)
 
-2. Use v2 and configure to maximum sizes
-    - make the forms more unstable for uploading documents
-    - accept the risk of more frequent delayed jobs
-    - increase the risk of email not being delivered
-
-3. Use v2 and configure to MOJ capped limits (with 33% rule + >3mb headroom - around 13mb)
-    - give more user feedback in the file upload page for the extra time it takes to process the upload
-    - accept the risk of more frequent delayed jobs
-
-4. Use v2 (or remain v1) and configure to 30mb sizes
-    - Give more user feedback in the file upload page for the extra time it takes to process the upload
-    - Add files over 7mb to a S3 bucket and provide download links other attach as current
-
-5. Remain v1 and configure to 30mb sizes
-    - Give more user feedback in the file upload page for the extra time it takss to process the upload
-    - Add all files to a S3 bucket and provide download links
-
-Discounting option 2, provide a the option that best fits the requirement for the data.
+Option 6 provides the most flexibility for both current and future users.
