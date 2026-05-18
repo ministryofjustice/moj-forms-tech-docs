@@ -1,0 +1,107 @@
+---
+title: git-crypt
+category: runbooks
+last_reviewed_on: 2026-05-14
+review_in: 3 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+git-crypt is a transparent encryption layer sitting between the working directory and git object database.
+It allows a reposisitory to contain both public and enccrypted files,
+meaning senistive data is not stored as plain text in a reposisitory.
+
+## How we use git-crypt
+
+MOJ Forms contains many services that will be deployed into 4 different environments.
+Each environment will have different values and secrets injected into the deployment script so that the service is correctly configured.
+For example, test.dev will use different keys to live.production.
+
+The deployment script clones the deploy repo for the service and git-crypt unlocks the secrets and values,
+then uses them to deploy into Cloud Platform.
+
+
+## Using git-crypt
+Always follow this process:
+
+1. new branch
+2. unlock
+3. change
+4. add
+5. commit
+6. lock
+7. push
+
+## Adding a new Developer
+To enable a MOJ Forms developer to update a secret or value in the '-deploy' repo locally,
+their gpg public key needs adding to git-crypt in the repo.
+
+``` bash
+gpg --list-keys
+```
+
+The output will have pub witht a long string, that will be the public id.
+example: `DEMO7F8297F8297F8297F8297F8297F8297F8297`
+
+You will need to trust their key ultimately before git-crypt will allow you to add them as a collaborator.
+
+```bash
+gpg --edit-key DEMO701787B97465C7E503E9976DB76C0F8DE955
+```
+
+Then type `trust`.
+The options you will be presented with are:
+
+```
+1 = I don't know or won't say
+2 = I do NOT trust
+3 = I trust marginally
+4 = I trust fully
+5 = I trust ultimately
+m = back to the main menu
+```
+
+Choose `5` and follow the prompts.
+
+Assuming your repo is `unlocked`, you'll then be able to add that user to your git-crypt repo:
+`git-crypt add-gpg-user DEMO701787B97465C7E503E9976DB76C0F8DE955`
+
+git-crypt adds the users public key and then automatically adds a commit to the repo in the background.
+
+## Removing a new Developer
+Remove their .gpg file from .git-crypt/keys/default/0 and commit the removal to git.
+
+Run the [re-encryption script](https://github.com/ministryofjustice/fb-base-adapter-deploy/blob/master/git-crypt-rekey.sh):
+
+```bash
+./git-crypt-rekey.sh
+```
+
+This will generate a new git-crypt key and then re-encrypt the secrets.
+This does not change the history of previously encrypted secrets.
+The safest thing to do as well as this is to rotate all your secrets.
+
+Add and commit any changes the script generated.
+
+Don't forget to __lock__ the secrets before pushing!
+
+```bash
+git-crypt lock
+```
+
+## Errors
+
+### "git-crypt" smudge failed
+
+This happen when the repo is incorrectly unlocked/ locked during a change.
+
+Process to fix:
+
+- checkout new branch
+- unlock with key `git-crypt unlock ~/path/to/git_crypt.key`
+- purge the gpg keys `git rm -rf .git-crypt/keys/`
+- add your gpg key back `git-crypt add-gpg-user my_key`
+- git add `git add .git-crypt/keys/`
+- git commit
+- test locking and unlocking (with and without the git-crypt key)
+- lock `git-crypt lock`
+- git push
