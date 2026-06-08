@@ -1,0 +1,58 @@
+---
+title: Checking Resources in AWS Console
+category: runbooks
+last_reviewed_on: 2024-06-08
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+## Summary
+Cloud platform has readonly access to the AWS Console to view the resourses provisioned.
+
+[Full Guidance](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/accessing-the-cloud-console.html)
+
+To find the resource needed, the resource name needs obtaining.
+
+## Steps
+1. Get the name from the secret is kubernetes
+2. Log in to the console
+3. Find the resourse
+
+## Example
+We are looking for the database for the metadata presenter in the test environment.
+
+1. Get the database indentifier (aws name) which can be found found in the kubernetes secrets
+
+```bash
+kubectl -n formbuilder-saas-test get secrets
+```
+
+Locate the secret for `rds-instance-formbuilder-metadata-api-test`
+
+```bash
+kubectl -n formbuilder-saas-test get secrets rds-instance-formbuilder-metadata-api-test -o json
+```
+
+The name is within the url, it will need Base64 decoding
+
+```bash
+echo cG9zdGdyZXM6Ly9yYW5kb25sZXR0ZXJzbnVtYmVyczpyYW5kb25sZXR0ZXJzbnVtYmVyc0BjbG91ZC1wbGF0Zm9ybS1yYW5kb25sZXR0ZXJzbnVtYmVycy5yYW5kb25sZXR0ZXJzbnVtYmVycy5ldS13ZXN0LTIucmRzLmFtYXpvbmF3cy5jb206NTQzMi9yYW5kb25sZXR0ZXJzbnVtYmVycwo= | base64 -d
+```
+
+Output:
+`postgres://randomlettersnumbers:randomlettersnumbers@cloud-platform-randomlettersnumbers.randomlettersnumbers.eu-west-2.rds.amazonaws.com:5432/randomlettersnumbers`
+
+Extract the db indentifier **cloud-platform-randomlettersnumbers** portion of the url.
+
+- Open the [AWS Console](https://justice-cloud-platform.eu.auth0.com/samlp/mQev56oEa7mrRCKAZRxSnDSoYt6Y7r5m?connection=github)
+
+- Navigate to Aurora and RDS
+
+- Databases
+
+- In the search, paste the db indentifier and search.
+
+- Click into the found database.
+
+> Same process from the other resorces.
