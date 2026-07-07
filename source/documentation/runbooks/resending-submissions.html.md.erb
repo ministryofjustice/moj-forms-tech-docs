@@ -1,12 +1,22 @@
 ---
-title: Resending Submissions
+title: Resending Submissions [Update]
 category: runbooks
-last_reviewed_on: 2024-8-8
+last_reviewed_on: 2026-7-6
 review_in: 6 months
 ---
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
 ## Context
-There are times when we may want to resend successful submissions, for instance if they were lost through user error or the destination inbox was full etc.
+There are times when we may want to resend successful submissions,
+for instance if they were lost through user error or the destination inbox was full etc.
+
+Note: Processed submissions are held encrypted in the submission database for 28 days.
+
+Options available to resend:
+
+- Rake task to a new desitation, this is a bulk resend of all successful submissions via email for a the one service between a date range and a new email address.
+
+- Manual, time consuming. Need to find the correct submission from all the submisisons in the live-production database.
+
 
 ### How to use the rake task
 
@@ -26,10 +36,43 @@ Confirmation email actions will be removed from the submission before resending,
 
 JSON and ms list actions won't be replayed, the utility is capable of doing so but at the time of writing the rake task defaults to skipping them. If you want to resend to JSON or ms list only, you'll want to consider adding a rake task to do that.
 
-### Other considerations
+#### Other considerations
 
 The utility will create a new job for each submission found in the date range, depending on how many submissions you expect this to be it may be worth breaking up into smaller date ranges to avoid processing large numbers all at once, but given it uses the delayed job queue it can handle quite a lot at once and will just work its way through them.
 
 We only keep submissions for 28 days, so any missed submissions odler than that are not recoverable.
 
 The retry uses a JWT skew overide of 28 days, so no submissions should need to be replayed, but occasionally some of those missed submissions with attachments will get 404 responses when downloading the attachments, you can replay failed jobs from the batch as normal using the runbook.
+
+### Maunally Resending
+Gain access to a submitter-api pod
+
+Use the rails console
+
+```bundle exec rails c```
+
+Check [delayed submissions](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/delayed-job-failures.html) first
+
+It may be missing as it is delayed.
+
+Find the processed Submissions
+
+Grab all the submissions for the form at around the time stamp
+
+```submissions = Submission.where(service_slug: 'name_of_the _form').where("created_at > '2026-06-30 12:00:00 UTC' and created_at < '2026-06-30 17:00:00 UTC' ").order(created_at: :asc)```
+
+> Note: BST is 1 hour behind UTC
+
+Output data
+
+```submissions.map{|s| s.decrypted_submission["meta"]```
+
+You can pinpoint different fields in the form expanding the metadata i.e. list of Reference numbers
+
+```submissions.map{|s| s.decrypted_submission["meta"]["reference_number"] if s.decrypted_submission["meta"]}.compact.to_json```
+
+Find the submission_id, note the submission_id and follow [replay submission runbook](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/delayed-job-failures.html).
+
+> Note: Dont forget to skew if there are attachment payloads
+
+> Note: The task will replay everything – even the email back to the user, api , and list posts
