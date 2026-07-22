@@ -20,14 +20,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ministryofjustice/tech-docs-github-pages-publisher:v3.0.2
+      image: ghcr.io/ministryofjustice/tech-docs-github-pages-publisher@sha256:8b00235edfa4d1248e3cdd08c022d5f398c7f4abb3315b6078f1e876214a171e # v6.2.0
     permissions:
       contents: read
     steps:
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Compile Markdown to HTML and create artifact
-      run: /scripts/deploy.sh
+      run: /usr/local/bin/package
     - name: Upload artifact to be published
       uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
       with:
