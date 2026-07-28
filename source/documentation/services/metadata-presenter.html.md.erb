@@ -1,0 +1,25 @@
+---
+title: Metadata Presenter
+category: platform
+last_reviewed_on: 2026-07-22
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+The [fb-metadata-presenter](https://github.com/ministryofjustice/fb-metadata-presenter) is a Rails engine, published as the `metadata_presenter` gem, that is responsible for rendering the MoJ Form Builder metadata into GOV.UK Design System components.
+
+It is mounted into both `fb-editor` and `fb-runner`, so the same code renders a form whether it is previewed in the Editor or filled in by an end user in the Runner. Each host app supplies the surrounding behaviour: saving and loading data, whether pages are editable, and feature flags like reference numbers, payment links, save and return, and confirmation emails, so both apps share one consistent presentation layer.
+
+## Making changes to fb-metadata-presenter
+
+1. Make your changes in `fb-metadata_presenter` then push to GitHub.
+2. Specify the new branch in `fb-editor` and `fb-runner`. Run `bundle` to update `Gemfile.lock` (this is commented in the `Gemfile`).
+3. Test locally with `make setup`. If the tests pass, push the changes to GitHub.
+4. To test in staging, in the `.circleci/config.yml` file for both `fb-runner` and `fb-editor`, replace `main` with the new branch to be tested:
+    - `fb-runner`: [`workflow.test_and_build.jobs.build_and_push_image_test`](https://github.com/ministryofjustice/fb-runner/blob/main/.circleci/config.yml#L278)
+    - `fb-editor`: [`workflows.test_and_build.jobs.build_web_image`](https://github.com/ministryofjustice/fb-editor/blob/main/.circleci/config.yml#L437)
+5. Bump `metadata_presenter` to a new minor [version](https://github.com/ministryofjustice/fb-metadata-presenter/blob/main/lib/metadata_presenter/version.rb) and update [`CHANGELOG.md`](https://github.com/ministryofjustice/fb-metadata-presenter/blob/main/CHANGELOG.md).
+6. Merge the `fb-metadata-presenter` branch.
+7. Once all tests pass and regression looks ok, undo/revert the last commit changes in `fb-editor` and `fb-runner` to the new `metadata_presenter` version.
+8. Re-deploy `fb-editor` and `fb-runner` with the new `metadata_presenter` version which should now be availabe on [RubyGems](https://rubygems.org/gems/metadata_presenter).
