@@ -117,7 +117,7 @@ First seen in 2023, and happens when the Editor sends metadata to the API that d
 We can not replicate this error to provide a fix. However, it does not happen frequently.
 Okay to Resolve and check for a delayed submission alert.
 
-### Aws::SESV2::Errors::BadRequestException - Unbalanced quoted string
+### Aws::SESV2::Errors:: BadRequestException - Unbalanced quoted string
 This occurs when sending an email via Amazon SES in `app/services/adapters/amazon_ses_adapter.rb`. The `from_email_address` is built from the service name (`opts[:from].split('<')[0]`) which, when it contains an unbalanced quotation mark, produces an invalid `from` header such as `Some "Service<no-reply@example.com>` and SES rejects it with `Unbalanced quoted string`.
 
 The root cause is a service name containing an unbalanced quote. The fix is to ensure the service name portion is properly quoted/escaped before being used in the `from_email_address`.
