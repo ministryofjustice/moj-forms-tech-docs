@@ -13,7 +13,7 @@ It is mounted into both `fb-editor` and `fb-runner`, so the same code renders a 
 
 ## Making changes to fb-metadata-presenter
 
-1. Make your changes in `fb-metadata_presenter` then push to GitHub.
+1. Make your changes in `fb-metadata-presenter` then push to GitHub.
 2. Specify the new branch in `fb-editor` and `fb-runner`. Run `bundle` to update `Gemfile.lock` (this is commented in the `Gemfile`).
 3. Test locally with `make setup`. If the tests pass, push the changes to GitHub.
 4. To test in staging, in the `.circleci/config.yml` file for both `fb-runner` and `fb-editor`, replace `main` with the new branch to be tested:
@@ -21,5 +21,5 @@ It is mounted into both `fb-editor` and `fb-runner`, so the same code renders a 
     - `fb-editor`: [`workflows.test_and_build.jobs.build_web_image`](https://github.com/ministryofjustice/fb-editor/blob/main/.circleci/config.yml#L437)
 5. Bump `metadata_presenter` to a new minor [version](https://github.com/ministryofjustice/fb-metadata-presenter/blob/main/lib/metadata_presenter/version.rb) and update [`CHANGELOG.md`](https://github.com/ministryofjustice/fb-metadata-presenter/blob/main/CHANGELOG.md).
 6. Merge the `fb-metadata-presenter` branch.
-7. Once all tests pass and regression looks ok, undo/revert the last commit changes in `fb-editor` and `fb-runner` to the new `metadata_presenter` version.
-8. Re-deploy `fb-editor` and `fb-runner` with the new `metadata_presenter` version which should now be availabe on [RubyGems](https://rubygems.org/gems/metadata_presenter).
+7. Once all tests pass and regression looks ok, you can safely close these test PR's.
+8. Re-deploy `fb-editor` and `fb-runner` with the new `metadata_presenter` version which should now be available on [RubyGems](https://rubygems.org/gems/metadata_presenter).
