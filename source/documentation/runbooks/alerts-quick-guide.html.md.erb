@@ -125,7 +125,7 @@ The root cause is a service name containing an unbalanced quote. The fix is to e
 ### Faraday::ForbiddenError
 This is raised by `V2::ProcessSubmissionJob` while it downloads a submission's uploaded attachments in `app/services/download_attachments.rb` (around the `connection.get('', {}, headers)` call). The submitter fetches each uploaded file from the user filestore and authenticates that request with the headers built in `DownloadAttachments#headers`. A `403 Forbidden` means the filestore rejected that request.
 
-Due to the age of the error when investigation > 28 days, the exact cause is not clear, but there are a few likely causes:
+Due to the age of the error when investigating (>28 days), the exact cause is not clear, but there are a few likely causes:
 
 - **Expired / out-of-skew access token** - the JWT access token saved with the submission is generated at submission time. If the job runs (or is retried) long after the submission was created, the token's `iat` can fall outside the allowed skew window (`MAX_IAT_SKEW_SECONDS`) and the filestore returns a 403.
 - The uploaded file has already been removed from the user filestore, so the request is no longer authorised.
