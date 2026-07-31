@@ -122,6 +122,16 @@ This occurs when sending an email via Amazon SES in `app/services/adapters/amazo
 
 The root cause is a service name containing an unbalanced quote. The fix is to ensure the service name portion is properly quoted/escaped before being used in the `from_email_address`.
 
+### Faraday::ForbiddenError
+This is raised by `V2::ProcessSubmissionJob` while it downloads a submission's uploaded attachments in `app/services/download_attachments.rb` (around the `connection.get('', {}, headers)` call). The submitter fetches each uploaded file from the user filestore and authenticates that request with the headers built in `DownloadAttachments#headers`. A `403 Forbidden` means the filestore rejected that request.
+
+Due to the age of the error when investigation > 28 days, the exact cause is not clear, but there are a few likely causes:
+
+- **Expired / out-of-skew access token** - the JWT access token saved with the submission is generated at submission time. If the job runs (or is retried) long after the submission was created, the token's `iat` can fall outside the allowed skew window (`MAX_IAT_SKEW_SECONDS`) and the filestore returns a 403.
+- The uploaded file has already been removed from the user filestore, so the request is no longer authorised.
+
+If it was a normal run, a stale token past the 90 second skew window might be the cause. If it was a replay, the token skew has been overridden to 28 days.
+
 ### There is a Sentry alert - how do I find out which form is causing the error?
 When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
 
