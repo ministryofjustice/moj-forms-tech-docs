@@ -122,6 +122,27 @@ This occurs when sending an email via Amazon SES in `app/services/adapters/amazo
 
 The root cause is a service name containing an unbalanced quote. The fix is to ensure the service name portion is properly quoted/escaped before being used in the `from_email_address`.
 
+### Adapters::PdfApi::ClientRequestError
+
+This is also seen in the pdf-generator as `PDFKit::ImproperWkhtmltopdfExitStatus (Command failed exitstatus=1)`.
+
+This happens when someone submits a form that emails a PDF copy of their answers.
+
+The submitter asks the pdf-generator to turn the answers into a PDF. The pdf-generator uses a tool called wkhtmltopdf to build the PDF. Sometimes that tool fails on a particular submission, so the pdf-generator returns an error and the submitter reports it too.
+
+You may see it in two places:
+
+- In the submitter: `Adapters::PdfApi::ClientRequestError - ... returned response status of: 500`
+- In the pdf-generator: `PDFKit::ImproperWkhtmltopdfExitStatus - Command failed (exitstatus=1)`
+
+Both are the same problem. The cause is something in that one submission's answers that the PDF tool can't handle. It only affects that submission.
+
+- Both error reports share the same submission ID. Use it to confirm they come from the same submission.
+- Use the service ID from the error to find the form in the Editor Admin feature (see "how do I find out which form is causing the error?"). This tells you which form and user were affected.
+- The full details of the tool's failure are only in the pdf-generator error report, so check there.
+
+Note the affected submission may not have received its PDF.
+
 ### Faraday::ForbiddenError
 This is raised by `V2::ProcessSubmissionJob` while it downloads a submission's uploaded attachments in `app/services/download_attachments.rb` (around the `connection.get('', {}, headers)` call). The submitter fetches each uploaded file from the user filestore and authenticates that request with the headers built in `DownloadAttachments#headers`. A `403 Forbidden` means the filestore rejected that request.
 
