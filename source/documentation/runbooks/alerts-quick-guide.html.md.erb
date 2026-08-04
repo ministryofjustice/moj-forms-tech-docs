@@ -132,6 +132,22 @@ Due to the age of the error when investigating (>28 days), the exact cause is no
 
 If it was a normal run, a stale token past the 90 second skew window might be the cause. If it was a replay, the token skew has been overridden to 28 days.
 
+### Adapters::JweWebhookDestination:: ClientRequestError -> Prawn::Errors::UnknownFont
+This appears as a `422` from `Adapters::JweWebhookDestination#send_webhook` when `V2::ProcessSubmissionJob` posts to `https://track-a-query.service.justice.gov.uk/api/rpi`. The `422` is the symptom. `Api::RpiController#create` on track-a-query catches an exception and returns `head :unprocessable_entity`.
+
+The real error in track-a-query is `Prawn::Errors::UnknownFont`, raised in `RequestPersonalInformation::FileBuilder#zip_pdf` while generating the submission's PDF. To handle arbitrary submitted characters, the PDF uses a fallback font, "LastResort", but only a `normal` style is registered:
+
+```ruby
+pdf.font_families.update(
+  "LastResort" => { normal: LAST_RESORT_FONT_FILE },
+)
+pdf.fallback_fonts(%w[LastResort])
+```
+
+If the submitted content (`rpi.to_markdown(target)`) needs italics, Prawn looks for an italic "LastResort" that doesn't exist, and raises instead of generating the PDF.
+
+A potential fix would be to add the italic font by including `italic: LAST_RESORT_FONT_FILE`.
+
 ### There is a Sentry alert - how do I find out which form is causing the error?
 When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
 
