@@ -169,6 +169,13 @@ If the submitted content (`rpi.to_markdown(target)`) needs italics, Prawn looks 
 
 A potential fix would be to add the italic font by including `italic: LAST_RESORT_FONT_FILE`.
 
+### TypeError: Cannot read properties of undefined (reading 'position')
+Occurs in fb-editor `applyPageFlowConnectorPaths` (`app/javascript/src/controller_services.js`) when drawing connector arrows in the **detached flows** section of the flow diagram.
+
+The page is trying to draw an arrow to its "next" page, but that page isn't in the diagram section being drawn, so the lookup returns nothing and the code fails reading `.position`.
+
+This is already caught and reported via `view.sentry.send(err)`, so it does not break the page, it just skips drawing that one arrow leaving a detached branch with a missing line.
+
 ### There is a Sentry alert - how do I find out which form is causing the error?
 When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
 
