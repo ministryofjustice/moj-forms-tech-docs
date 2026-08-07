@@ -176,6 +176,16 @@ The page is trying to draw an arrow to its "next" page, but that page isn't in t
 
 This is already caught and reported via `view.sentry.send(err)`, so it does not break the page, it just skips drawing that one arrow leaving a detached branch with a missing line.
 
+### Error: cannot call methods on dialog prior to initialization; attempted to call method 'open'
+
+This is raised in fb-editor at `app/javascript/src/component_dialog_api_request.js` when `open()` is called on a dialog that no longer exists.
+
+Dialogs in the Editor are ephemeral, a new `DialogApiRequest` is created each time an action is triggered, and the dialog is destroyed and removed from the DOM when it closes.
+
+The activator (the link or button that opens the dialog, for example "Delete page..." in the page menu) is not destroyed with it. When the same activator is used again, the click listener added for the previous dialog is still attached and calls `open()` on that now-destroyed dialog, which throws this error.
+
+The user does not see a problem and the new dialog still opens correctly, but the stale call is reported to Sentry. It only occurs from the second time onwards when the activator is used.
+
 ### There is a Sentry alert - how do I find out which form is causing the error?
 When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
 
