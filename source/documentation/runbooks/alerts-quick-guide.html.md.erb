@@ -186,6 +186,28 @@ This is already caught and reported via `view.sentry.send(err)`, so it does not 
 
 Affects the form owner in the Editor only, and is cosmetic (one missing arrow). Okay to resolve.
 
+### TypeError: Cannot read properties of undefined (reading '$node')
+Happens in the Editor when a form owner selects "Delete option" twice for the same option on a radio or checkbox question. Selecting it does not close the menu, and the confirmation dialog is fetched from the server before it appears, so a second selection is possible while the first is still loading. Two dialogs then open, one behind the other.
+
+Confirming the first dialog deletes the chosen option correctly. Confirming the second dialog looks for that same option again, cannot find it because it has already gone, and deletes the last option in the list instead. It then fails before removing that last option from the page.
+
+So two options are deleted: the one the form owner chose, and the last option in the list, which they never selected and were never asked about. The last option is still visible on screen, so the form owner has no way of knowing it has been removed. Saving deletes it permanently, with no warning.
+
+More likely when the API is responding slowly, as this widens the window for a second selection.
+
+**Reproduced (Aug 2026):**
+
+1. Open a radio or checkbox question with at least 3 options.
+2. In developer tools, add a network throttling profile with a latency of 3000ms and select it. This mimics a slow API response.
+3. Open the menu for an option that is NOT the last one in the list, and select "Delete option".
+4. Wait around 1.5 seconds and select "Delete option" again from the same menu.
+5. Two confirmation dialogs open. Confirm both.
+6. The chosen option is removed, and so is the last option in the list. The error is thrown. The last option stays visible on the page until it is reloaded, even though the Editor has already discarded it.
+
+Affects the form owner, who silently loses the last option in the question. Form fillers are affected once the form is published, as that option will be missing from the live form.
+
+Do not resolve until fixed. Contact the form owner and ask them to check whether the last option is missing from the affected question, as they will not have been told it was deleted.
+
 ### Error: cannot call methods on dialog prior to initialization; attempted to call method 'open'
 
 This is raised in fb-editor at `app/javascript/src/component_dialog_api_request.js` when `open()` is called on a dialog that no longer exists.
