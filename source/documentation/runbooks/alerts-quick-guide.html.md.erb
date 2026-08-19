@@ -122,6 +122,8 @@ This occurs when sending an email via Amazon SES in `app/services/adapters/amazo
 
 The root cause is a service name containing an unbalanced quote. The fix is to ensure the service name portion is properly quoted/escaped before being used in the `from_email_address`.
 
+Affects the form filler (email fails to send); caused by the form owner's service name. Do not resolve until the service name is fixed, or it will keep recurring.
+
 ### Adapters::PdfApi::ClientRequestError
 
 This is also seen in the pdf-generator as `PDFKit::ImproperWkhtmltopdfExitStatus (Command failed exitstatus=1)`.
@@ -143,6 +145,8 @@ Both are the same problem. The cause is something in that one submission's answe
 
 Note the affected submission may not have received its PDF.
 
+Affects the form filler (may not get their PDF); one submission only. Okay to resolve once you've identified the form and submission.
+
 ### Faraday::ForbiddenError
 This is raised by `V2::ProcessSubmissionJob` while it downloads a submission's uploaded attachments in `app/services/download_attachments.rb` (around the `connection.get('', {}, headers)` call). The submitter fetches each uploaded file from the user filestore and authenticates that request with the headers built in `DownloadAttachments#headers`. A `403 Forbidden` means the filestore rejected that request.
 
@@ -152,6 +156,8 @@ Due to the age of the error when investigating (>28 days), the exact cause is no
 - The uploaded file has already been removed from the user filestore, so the request is no longer authorised.
 
 If it was a normal run, a stale token past the 90 second skew window might be the cause. If it was a replay, the token skew has been overridden to 28 days.
+
+Affects the form filler (attachments may not reach the form owner). Okay to resolve if it's a one-off — check for a 'Failed Delayed Jobs' alert first.
 
 ### Adapters::JweWebhookDestination:: ClientRequestError -> Prawn::Errors::UnknownFont
 This appears as a `422` from `Adapters::JweWebhookDestination#send_webhook` when `V2::ProcessSubmissionJob` posts to `https://track-a-query.service.justice.gov.uk/api/rpi`. The `422` is the symptom. `Api::RpiController#create` on track-a-query catches an exception and returns `head :unprocessable_entity`.
@@ -169,12 +175,16 @@ If the submitted content (`rpi.to_markdown(target)`) needs italics, Prawn looks 
 
 A potential fix would be to add the italic font by including `italic: LAST_RESORT_FONT_FILE`.
 
+Affects the form filler (submission never reaches track-a-query). Do not resolve — needs a fix from the track-a-query team.
+
 ### TypeError: Cannot read properties of undefined (reading 'position')
 Occurs in fb-editor `applyPageFlowConnectorPaths` (`app/javascript/src/controller_services.js`) when drawing connector arrows in the **detached flows** section of the flow diagram.
 
 The page is trying to draw an arrow to its "next" page, but that page isn't in the diagram section being drawn, so the lookup returns nothing and the code fails reading `.position`.
 
 This is already caught and reported via `view.sentry.send(err)`, so it does not break the page, it just skips drawing that one arrow leaving a detached branch with a missing line.
+
+Affects the form owner in the Editor only, and is cosmetic (one missing arrow). Okay to resolve.
 
 ### Error: cannot call methods on dialog prior to initialization; attempted to call method 'open'
 
@@ -185,6 +195,8 @@ Dialogs in the Editor are ephemeral, a new `DialogApiRequest` is created each ti
 The activator (the link or button that opens the dialog, for example "Delete page..." in the page menu) is not destroyed with it. When the same activator is used again, the click listener added for the previous dialog is still attached and calls `open()` on that now-destroyed dialog, which throws this error.
 
 The user does not see a problem and the new dialog still opens correctly, but the stale call is reported to Sentry. It only occurs from the second time onwards when the activator is used.
+
+Affects the form owner in the Editor only, with no visible problem. Okay to resolve, or archive if noisy.
 
 ### There is a Sentry alert - how do I find out which form is causing the error?
 When a Sentry alert is triggered, general information regarding the alert can be accessed via the [Sentry dashboard](https://sentry.io/organizations/ministryofjustice/issues/). There will be a URL that is provided in the Sentry Issue, this will have the service ID in the path.
