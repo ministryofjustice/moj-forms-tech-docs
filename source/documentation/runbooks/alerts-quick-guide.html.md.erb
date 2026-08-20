@@ -221,17 +221,19 @@ The user does not see a problem and the new dialog still opens correctly, but th
 Affects the form owner in the Editor only, with no visible problem. Okay to resolve, or archive if noisy.
 
 ### UserDataStoreClientError: ENOERROR
-Happens when a form filler starts a form and the user data store refuses to save their session.
+Happens when a form filler starts or returns to a form and the user data store refuses to save or load their session.
 
-"ENOERROR" is not a real error. It is what the code says when it cannot work out what went wrong, so it tells you nothing on its own. Look at the Sentry breadcrumbs for the web request just before it — that is the real error. So far this has always been a "403 Forbidden" from the user data store.
+The error appears in two places, both with the same cause: saving a new session (`loadUserData` → `saveData`, a `POST`) when a form filler **starts** a form, and reading an existing session (`loadData` → `getData`, a `GET`) when a form filler **returns to** one. On the read path a `404` (no saved data) is handled quietly, but a `403` surfaces as the ENOERROR. Everything below applies to both.
+
+"ENOERROR" is not a real error. It is what the code says when it cannot work out what went wrong, so it tells you nothing on its own. Look at the Sentry breadcrumbs for the web request just before it — that is the real error. So far the underlying error has always been a "403 Forbidden" from the user data store.
 
 A 403 means the user data store did not trust the request. It gives the same 403 for every reason, so the cause is one of these:
 
 - **A missing key** — before trusting a request, the user data store asks another service for a key to check it against. If that request fails, or returns something unexpected, it carries on with no key and rejects everything. Usually a brief network problem.
 - **The key did not match** — the key was found but was the wrong one. More serious, raise with the team.
-- **The request's timestamp was outside the allowed window** — set by `MAX_IAT_SKEW_SECONDS` on the user data store. This trips if the timestamp is too old or too far ahead, and usually means the clocks on two servers disagree. Note this setting is per-service, so the value quoted in the Faraday::ForbiddenError entry does not apply here. If it is ever unset, the allowance becomes zero and almost everything is rejected.
+- **The request's timestamp was outside the allowed window** — set by `MAX_IAT_SKEW_SECONDS` on the user data store. The check trips if the timestamp is too old or too far ahead, and usually means the clocks on two servers disagree. Note this setting is per-service, so the value quoted in the Faraday::ForbiddenError entry does not apply here. If `MAX_IAT_SKEW_SECONDS` is ever unset, the allowance becomes zero and almost everything is rejected.
 
-Affects the form filler, who could not start the form. Form owners are not affected.
+Affects the form filler, who could not start or resume the form. Form owners are not affected.
 
 Okay to resolve if it is a one-off. Investigate if it happens again or affects several form fillers at once.
 
