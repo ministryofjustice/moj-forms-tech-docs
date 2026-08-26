@@ -1,0 +1,91 @@
+---
+title: Manual Testing
+last_reviewed_on: 2026-08-25
+review_in: 3 months
+---
+
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+## Context
+
+We have good coverage with automated testing in MOJ Forms
+
+Each application/ service has its own testing and there are 2 full end-to-end methods.
+
+### Acceptance Tests
+
+These are run during the deployment pipeline; the platform is built in the test/dev environment. Then a slew of tests is run against that platform. The deployment to live is blocked if these tests are not successful.
+
+### Smoke Test
+
+This is an end-to-end test that is run against the live-prod environment. An additional assurance test after deployment.
+
+However, we do currently have a gap (as of writing August 2026). We cannot test sending emails and programmable test and clean up afterwards. This is due to the Department migrating to just using Microsoft and the testing used google.
+
+Due to this we need to manual test the platform to fully assure the whole platform.
+
+## End to End process
+
+* Log in to the Editor
+
+* Create a New Form
+
+* Build a Form
+
+* Publish a Form
+
+* Access a Form
+
+* Complete the form journey
+
+* Submit the form
+
+* Submission received
+
+## Test Editor vs Testable Editor
+
+Manual testing can take place in 2 different services.
+
+### Test Editor
+
+We have a test Editor; this runs in the formbuilder-saas-test namespace which also has the supporting services to run the test Editor. It uses the same Auth0 connection as live (as off writing).
+
+### Testable Editor
+
+If the Editor has a major feature or changes that would block using the test editor for the acceptance tests, then a developer will use a “testable” editor. This editor uses the same supporting services but is a separate editor running in the formbuilder-saas-test namespace, it will have a unique url for testing.
+
+## Basic Areas to Cover in a Manual Test
+
+* Log in test editor
+
+* Create new form
+
+* Name form after feature (so developer can find it)
+
+* Build form
+
+* Add ticket ref on start page
+
+* At least 5 pages
+
+* At least 1 branch
+
+* At least 1 file upload
+
+* Include the new feature, if there is one
+
+* Add settings
+
+* email to yourself
+
+* enable settings, if being developed or fixed
+
+* Test in preview – follow journey
+
+* Publish to test – fill out and submit
+
+* Publish to live – fill out and submit
+
+* Check the submissions
+
+There will be more nuanced things to test above these listed, this will be testing the work in the ticket.
