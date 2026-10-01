@@ -1,0 +1,70 @@
+---
+title: Admin Action Logging (Maintenance Mode)
+category: adr
+reference: ADR-018
+status: Accepted
+statusicon: ✅
+date: 2026-09-30
+statuses:
+    -   🤔 Proposed
+    -   ✅ Accepted
+    -   ❌ Rejected
+    -   ♻️ Amended
+    -   ⌛️ Superseded
+---
+
+# <%= current_page.data.reference %> - <%= current_page.data.title %>
+
+Date: <%= current_page.data.date %>
+
+## Status
+
+<%= current_page.data.statusicon %> <%= current_page.data.status %>
+
+## Admin Action Logging (Maintenance Mode)
+
+## Context
+Admins can enable or disable maintenance mode on a service from the admin section. There was no record of who did this or when, which made it hard to answer basic support questions ("who put this into maintenance mode, and when?").
+
+The requirement was narrow: know **that** maintenance mode was toggled, by whom, and when — not a full diff of every field on every save. A general-purpose versioning/audit gem was considered and ruled out as more than this needed: maintenance mode isn't a single stored field (it's the presence or absence of a config row, alongside separate heading/content rows), so a generic "before/after" record doesn't map cleanly onto "was maintenance mode on or off" — that would have to be derived, not read directly. A simple, purpose-built log was a better fit for the actual requirement.
+
+## Implementation
+
+`AdminEvent` is a plain ActiveRecord model with `user_id`, `service_id`, `action` (a free-text description, e.g. "Maintenance mode enabled"), and `created_at`. Each row is one, final, human-readable line describing what happened — no versioning or diffing.
+
+`Admin::ServicesController#update` calls a private `log_maintenance_mode_change` method after `MaintenanceModeSettingsUpdater` runs. This compares the maintenance mode value before the update (`was_enabled`, captured at the start of the action) against the value after, and only creates an `AdminEvent` if the toggle actually changed state — editing the heading or content text alone does not create a log entry.
+
+```ruby
+def log_maintenance_mode_change(was_enabled:)
+  now_enabled = maintenance_mode_params[:maintenance_mode] == '1'
+  return if was_enabled == now_enabled
+
+  AdminEvent.create!(
+    user_id: current_user&.id,
+    service_id: @service.service_id,
+    action: "Maintenance mode #{now_enabled ? 'enabled' : 'disabled'}"
+  )
+rescue StandardError => e
+  Sentry.capture_exception(e)
+end
+```
+
+Logging failures are rescued and reported to Sentry rather than raised — a problem writing the log entry should not prevent the actual maintenance mode change from being saved.
+
+`Admin::AdminEventsController#index` lists events most-recent-first, paginated with Kaminari (50 per page), and resolves each event's `service_id` to a readable service name via `MetadataApiClient::Service.latest_version`, falling back to the raw `service_id` if that lookup fails (e.g. the service has since been deleted). Events with no `user_id` (console or background actions) are shown as "Non-UI action (console or task)" rather than attributed to a person.
+
+A minimal `AdminEventDashboard` was added purely to satisfy Administrate's convention of resolving a dashboard/resource class per admin controller — it declares no attributes, since the page is a custom read-only list rather than a generated CRUD view.
+
+Both the pagination/rendering behaviour and the logging behaviour (event created on toggle, not created on unrelated edits, correct user/service attribution) are covered by request specs.
+
+## Consequences
+* Admins can now see who enabled or disabled maintenance mode for a service, and when, via a simple readable list.
+* This does **not** provide a general audit trail. Only the maintenance mode toggle is logged; other admin actions (editing announcements, publishing, config changes) are not covered by this mechanism and would need similar, deliberate logging added if that becomes a requirement.
+* There is no "before/after" value stored — only that a state change happened and what it changed to. This can't reconstruct prior heading/content text or be used to revert a change.
+* If writing an `AdminEvent` fails for any reason, the failure is swallowed (reported to Sentry, not surfaced to the admin) so the underlying maintenance mode change always succeeds — meaning the log itself is best-effort, not guaranteed complete.
+* A general-purpose versioning gem (PaperTrail) was evaluated and rejected for this use case; if a genuine need for full before/after diffing across multiple models arises later, that option remains rather than extending `AdminEvent`.
+
+## Constraints
+* `AdminEvent.user_id` is optional; events triggered outside a normal admin request (console, background job) are recorded with no user, not falsely attributed to anyone.
+* The service name shown on the events page is looked up live from the metadata API at render time, not stored on the event — if the API is unavailable or the service no longer exists, the page falls back to displaying the raw `service_id`.
+* This mechanism is specific to maintenance mode. Any future "admin did X" requirement will need its own explicit `AdminEvent.create!` call added at the relevant point — it is not automatic for other models or actions.
