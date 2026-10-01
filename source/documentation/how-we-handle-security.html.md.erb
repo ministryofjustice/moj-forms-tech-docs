@@ -1,7 +1,7 @@
 ---
 title: How does MOJ Forms handle security?
-last_reviewed_on: 2023-08-17
-review_in: 6 months
+last_reviewed_on: 2026-10-01
+review_in: 12 months
 ---
 
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
@@ -11,7 +11,7 @@ What is MOJ Forms - Publish digital forms quickly and easily. Give your users a 
 
 The whole platform is made from separate services that perform different tasks to collect user data in a structured, secure manner.
 
-MOJ Forms is listed as a Data Asset by the MOJ DPIA team, which means the MOJ Forms part of the DPIA process is already assured and only needs referencing. 
+MOJ Forms is listed as a Data Asset by the MOJ DPIA team, which means the MOJ Forms part of the DPIA process is already assured and only needs referencing.
 
 ## Editor
 The Editor is a staff facing application which provides the tools to build a form which meets the user journey. Add settings and publish to a test environment and then publish to the live environment.
@@ -24,7 +24,7 @@ Accessing the Editor we use Auth0 for Single Sign On which confirms the authenti
 The main services which lets MOJ Forms work are:
 
 1. Runner - The application is the form, it is citizen facing.
-2. User Datastore - Saves data entered in the form. 
+2. User Datastore - Saves data entered in the form.
 3. User Filestore - Save upload documents
 4. Malware Scanner - Scans uploaded documents for malware
 5. Submitter - Passes the data to the backend team as directed in the settings for the form.
@@ -40,18 +40,18 @@ Downstream services like the user datastore and filestore can request that publi
 
 ### End User data
 The data is transported over https and encrypted at rest using the session cookie generated when the user starts the form so it is stored encrypted per-user + per-form. This Sequential data is encrypted at rest in an RDS hosted in AWS, and user data is deleted after 28 days automatically.
-Documents are checked on upload via https that they meet the type and size validation and streamed to a malware checker, only then it is stored at rest encrypted in a S3 bucket. Only the internal services can add and get files from the filestore. 
+Documents are checked on upload via https that they meet the type and size validation and streamed to a malware checker, only then it is stored at rest encrypted in a S3 bucket. Only the internal services can add and get files from the filestore.
 We can save partial form progress which is stored in the same way as other user data, plus a record we use to resume progress (a record of the user, form and session token needed to resume progress) which is also encrypted at rest using a separate key. Once users resume progress (using a one time secret answer) these records have sensitive items (keys, answers etc) deleted immediately, and the record itself is deleted after 60 days.
 
 ### Submissions
-Once the end user has completed they submitted the data. This takes the data and processes it as determined in the settings. Either produced in a pdf or csv attached to an email or send encrypted data to an API endpoint. 
+Once the end user has completed they submitted the data. This takes the data and processes it as determined in the settings. Either produced in a pdf or csv attached to an email or send encrypted data to an API endpoint.
 
 ### Cloud platform
 MOJ forms is hosted in MOJ's strategic hosting environment [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/) which is a managed Kubernetes cluster. It is secure by default and can host service up to Secret.
 
 ##Development
 
-**Developers** - Part of the recruitment process is that each developer has at least BBPS clearance. 
+**Developers** - Part of the recruitment process is that each developer has at least BBPS clearance.
 
 **Code management** - All source code is held in github and public under the government open source licence, only deploy configurations are held internally. Each repository requires a pull request and is approved by a team member before merging into the main branch. 3rd party software and frameworks are managed using Dependabot, and there is a 3 day cooling off period before merging - if there is an issue a ticket is raised to fix when programmed in.
 
@@ -59,10 +59,6 @@ MOJ forms is hosted in MOJ's strategic hosting environment [Cloud Platform](http
 
 **Threat Model** - The team runs threat modelling exercises  either over the whole platform or for a distinct feature and the parts of the platform it interacts with.
 
-**ITSHC** - The platform was formally tested in 2021 (using the legacy editor and runner), since then ITSHCs are not available through central funding with the view that more continuous testing based approach is used. 
-MOJ Forms does have good coverage for testing in its deployment pipeline and routinely (at least quarterly or during a feature development cycle) tested using tools provided by cyber. 
+**Security Testing** - The whole platform has had an AppSec test in January 2026, with remediations made shortly afterwards and a full ITSHC in May 2026, with only one infomation advisory.
 
 > Security tooling used include Brakeman, CodeQL, Cymulate and OWASP ZAP
-
-
-
