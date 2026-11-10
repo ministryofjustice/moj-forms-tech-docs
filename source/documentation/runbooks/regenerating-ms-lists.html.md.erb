@@ -1,53 +1,114 @@
 ---
 title: Regenerating MS Lists
 category: runbooks
-last_reviewed_on: 2024-8-8
-review_in: 6 months
+last_reviewed_on: 2026-11-3
+review_in: 12 months
 ---
 <% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
 ## Context
-The MS List integration creates lists in the destination sharepoint site. When making changes to the submission behaviour, we may need to make a change that requires lists to be regenerated to continue receiving submissions.
+The MS List integration with send submission data to a list in the teams sharepoint site. 
+
+The normal process when making changes to a form adding a new field, changes to questions etc.), is when publishing that a new list is created.
+
+Some changes to the form and/ or changes to the submission settings can trigger an error.
+
+> We were unable to create a new Microsoft List.
+
+> Your form changes have not been published.
+
+
+### Replicate the Error
+While it is unknown how the actual error occurs. 
+
+The only method we have found is:
+
+- Change question content -> save -> publish. 
+
+- Unchecking "Enable MS Lists on..." then check "Enable MS Lists on..." with app_id
+
+- Revert question content -> save -> publish.
 
 
 ### Important considerations
 
-We are able to republish forms at the last published version via the admin. If we are creating a new list, we will need to republish the form to pick up the new list ID to send to.
+There are different scenarios on for the error:
 
-We are unable to make this changeover seamlessly, so will need to co-ordinate with form owners and potentially put forms into maintenance mode if the form owners cannot receive forms via email in the meantime.
+1. Form has no changes
+2. Form has updates to publish
+3. Breaking platform change
 
-Users may have unpublished changes to their form that aren't ready to go to live. Confirm they have not updated the form settings in a way that is not ready to go live (for instance, changes to email output content). If they have these, they will need to finish updating and republish themselves.
 
-We'll need to put forms into maintenance mode where necessary, then deploy the updates to the submitter, then regenerate the lists and republish the forms. Once a test submission is then sent through, the form can be brought out of maintenance mode. This will be easiest if co-ordinated with form owners so they can test.
+### Form has not been changed
 
-As outlined below, it's a longer and more manual process if the form owner has unpublished changes to their form that are not ready for live. As we will need to give notice ahead of such a deployment for co-ordinating downtime, it's worth exploring if form owners are happy to publish or discard any changes ahead of time.
+**Steps taken to Fix**
 
-### Knowing which forms are using the list integration
+- **Editor**: Make a small change (add a page) in the form and save
 
-In the admin/overviews section, generate a report for each environment. The report will contain a column 'Collect information in MS List'. Realistically, in the live-dev environment we can inform users and provide instructions for regenerating their list, but in live-production we will do what we can to avoid disruption to receiving submissions.
+- **Editor**: Remove the small change (remove the page) in the form and save
 
-This report can also highlight forms that receive via list but not also email for redundancy, so will _need_ downtime to avoid interruption.
+- **Editor**: publish the form - this will create a new list
 
-Confirm with form owners if they have unpublished changes, and if they need to have the form put into maintenance mode.
 
-### Regenerating the list when no unpublished changes are present
+### Form has updates
 
-If the form has no unpublished changes, this is straightforward - make a change to the form such as adding a new page. Save the form, then undo whatever change you made and save the form.
+This needs more intervention by republishing the previous live form and then publishing the new form. 
 
-This will create a new version of the form.
+Due to the way form handles versions we can not do this by pressing a button, so we need to create copies and change the metadata.
 
-Go to the publish page - for each environment, you should see the warning that explains a new version of the MS list will be created. Publish the form in the desired enviroments.
+The steps below should be carried out by a member of the Form teams, the **Admin** or **Editor** is the best place in the Editor to accomplish
+ the task.
 
-### Regenerating the list when unpublished changes are present
+**Steps taken to Fix**
 
-In the admin page for the service in question, you can see all previous versions, and see which version is currently published to each environment.
+- **Admin**: Put the published form into [Maintenance Mode](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/maintenace-mode.html#single-form)
 
-Take a copy of the latest version, and the version published.
+- **Admin**: Copy metadata of live published form - note the version_id (original)
 
-Make a change to the form via the editor and save - this will create a new version. Take a note of the version id, and change the version id in your copy of the version to be published.
+- **Admin**: Copy metadata of broken form (not published) - note the version_id (new)
 
-Paste in the version to be published with the updated version number - this should now be a new version of the form and is technically the 'latest' but will be identical to the last published version.
+- **Editor**: Make a small change in the form and save
 
-Publishing via the app should now also create a new list with the new version id.
+- **Admin**: Find the form metadata you just changed - note the version_id (changed)
 
-You can then restore the user's unpublished changes by creating a new version and copying in the form metadata from the 'latest' version they have changed but not published.
+- **Admin**: Edit the metadata of the form that was just changed
 
+    - Replace with “original” metadata
+
+    - change version_id to the “changed” version_id from the "original"
+
+- **Editor**: publish the form - this will create a new list
+
+- **Editor**: Make another small change in the form
+
+- **Admin**: Find the form metadata you just changed - note the version_id (reset)
+
+- **Admin**: Edit the metadata of the form that was just changed
+
+    - Replace with “new” metadata
+
+    - change version_id to the “reset” version_id from the "new"
+
+- **Editor**: publish the form - creates a new list
+
+- **Admin**: Take the published form out of [Maintenance Mode](https://ministryofjustice.github.io/moj-forms-tech-docs/documentation/runbooks/maintenace-mode.html#single-form)
+
+
+### Breaking platform change
+However rare this is, it could be an option.
+
+Find the forms which have list integration.
+
+**Admin** - Overviews - generate a report for each environment 
+
+The report will contain a column ‘Collect information in MS List’. 
+
+In the Test (live-dev) environment we can inform users and provide instructions for regenerating their list - **Form has NOT been changed** method.
+
+In the Live (live-production) we will do what we can to avoid disruption to receiving submissions.
+
+> This report can also highlight forms that receive via list but not also email for redundancy, so will need downtime to avoid interruption.
+
+Confirm with form owners if they have unpublished changes, and if they need to have the form put into maintenance mode and follow Forms have updates process.
+
+If the form has no unpublished changes, this is straightforward follow the **Form has NOT been changed** method.
