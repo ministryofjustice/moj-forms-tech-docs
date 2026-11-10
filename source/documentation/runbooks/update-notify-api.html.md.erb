@@ -25,4 +25,22 @@ Purpose: This runbook describes the steps to update the GOV.Notify API key used 
 
  - Commit, lock and push
  - Run the Editor pipeline to pick up the new api key
- 
+
+### Step 3. Testing the New Key
+Access an editor worker pod in saas-test. 
+
+```
+bundle exec rails c
+```
+
+```
+user = User.find{|u| u.email == "your.name@justice.gov.uk"}
+```
+
+```
+NewListMailer.new_ms_list_created(user: user, form_name: 'test via dj', list_name: "test", drive_name: "test").deliver_later
+```
+
+```
+NewListMailer.new_ms_list_created(user: user, form_name: 'test without dj', list_name: "test", drive_name: "test").deliver_now
+```
