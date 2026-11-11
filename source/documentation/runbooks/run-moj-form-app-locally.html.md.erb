@@ -1,0 +1,171 @@
+---
+title: Steps to run MOJ Form app locally
+category: runbooks
+last_reviewed_on: 2026-11-11
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+
+## Namespacing
+
+![Namespacing](/images/namespacing.png)
+
+## Docker Containerisation
+
+![Docker containers](/images/docker-containers.png)
+
+## Run MOJ forms locally via Docker
+
+### Goals
+
+Group containers into functional networks:
+
+- `app-net` — app + api + workers + metadata + token cache
+- `db-net` — Postgres/Redis, shared only with the services that need them
+
+Expose only the ports your host actually needs (usually zero for internal services).
+
+Prevent containers from accessing services they shouldn't.
+
+## Repositories involved
+
+The following repositories may need changes during this process:
+
+- `fb-user-datastore`
+- `fb-editor`
+- `fb-metadata-api`
+- `fb-submitter`
+- the services in `fb-runner` (note: `fb-runner` does not have its own database)
+- `hmcts-complaints-formbuilder-adapter`
+
+## Applications
+
+### fb-editor
+
+Services
+
+- editor-app, editor-workers
+- editor-db
+- editor-metadata-api
+- editor-metadata-db
+- editor-service-token-cache-api
+- editor-service-token-cache-redis
+
+Command
+
+`make setup`
+
+URL
+
+[http://localhost:9090/](http://localhost:9090/)
+
+### fb-runner
+
+Services
+
+- runner-app
+- runner-service-token-cache-api
+- runner-service-token-cache-redis
+- user-datastore-api
+- user-datastore-db
+- user-filestore-api
+- localstack
+
+Command
+
+`make setup`
+
+URL
+
+[http://localhost:9000/](http://localhost:9000/)
+
+### fb-submitter
+
+Services
+
+- submitter-api, submitter-worker
+- submitter-db
+- pdf-generator-api
+
+Command
+
+`make setup`
+
+### fb-metadata-presenter
+
+Rails engine responsible for rendering the MoJ Form Builder metadata into Welcome to GOV.UK design system components.
+
+### Notes:
+
+Update env variable `LOCALSTACK_AUTH_TOKEN` while setting up fb-runner. Use a valid
+token taken from a LocalStack account. This token must **never** be pushed to GitHub —
+it is for local testing only.
+
+## Testing changes to fb-user-datastore with fb-runner
+
+To exercise local `fb-user-datastore` changes through `fb-runner`:
+
+1. Push your `fb-user-datastore` changes to a branch on GitHub. The local `fb-runner`
+   service config references the branch, so the changes must be available remotely for
+   runner to pick them up.
+2. Point the local `fb-runner` service config at that branch.
+3. Run `fb-runner` locally with `make setup`, using the new Docker Postgres.
+4. Open [http://localhost:9000/](http://localhost:9000/) and complete a form that
+   includes an upload file feature.
+5. Attempt to submit the form.
+
+> The "The specified bucket does not exist" error below will sometimes arise when
+> attempting to confirm an uploaded file.
+
+## Troubleshooting
+
+Error: "The specified bucket does not exist"
+
+```
+user-filestore-api  | [UploadsController] Unexpected error: The specified bucket does not exist
+user-filestore-api  | Completed 503 Service Unavailable in 437ms (Views: 0.3ms | Allocations: 163352)
+```
+
+Solution: Execute the following command from localstack-main container
+
+```
+docker exec -it localstack-main /bin/sh  -c "awslocal s3api create-bucket --bucket moj-formbuilder"
+```
+
+For development and test environments disable the following lines from Dockerfile to reflect the file changes
+
+```
+RUN bundle config set deployment true
+RUN bundle config set without 'test development'
+```
+
+## 🎉 What This Achieves
+
+### 🔒 Security
+
+No external access to:
+
+- Postgres
+- Redis
+- Metadata API
+- Service Token Cache API
+- User Data store API
+- User File store API
+- Submitter API
+- PDF Generator API
+- Workers
+
+Only the main app is reachable from your laptop or browser.
+
+### 🚀 Performance
+
+Network cross-talk is limited.
+
+### 🧼 Cleaner Dev UX
+
+No more Port Mapping.
+
+### 🧩 Separation of concerns
+
+- `app-net`: application business logic
+- `db-net`: persistence layer
