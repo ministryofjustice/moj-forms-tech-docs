@@ -1,0 +1,53 @@
+---
+title: Slack
+category: runbooks
+last_reviewed_on: 2026-11-23
+review_in: 6 months
+---
+<% if current_page.url != "/" %># <%= current_page.data.title %><% end %>
+## Context
+Slack is a collaboration platform that serves as a communication hub for the MOJ Forms team. It enables real-time messaging, incident management, DevOps collaboration, and integration with the platform.
+
+There are *MS Teams* channels also for those without access to Slack.
+
+## MOJ Forms Team Channels
+
+- **\#ask-formbuilder**
+The support channel for MoJ Forms.
+If you have any questions, feedback or suggestions for the MoJ Forms team contact us here!
+- **\#form-builder-alerts**
+Main alerts channel for all Live-Production platform services
+- **\#form-builder-alerts-400s**
+Main alerts channel for all Live-Production 400 alerts from the runners, normally unknown URL
+- **\#form-builder-alerts-low-severity**
+Main alerts channel for environment not including Live-Production platform services
+- **\#form-builder-deployments**
+Deployments alerts from the pipelines
+- **\#moj-forms-dev**
+Github alerts
+- **\#cdpt-moj-forms-team [private]**
+Main Team Channel
+- **\#form-builder-keyboard-samurais [private]**
+Developers Channel
+- **\#moj-forms-live-form-approvals [private]**
+Form Editor needing to publish a live form
+- **\#moj-forms-notifications [private]**
+Place for notifications regarding MOJ Forms services. (new users, forms published to live, form owner swaps etc.)
+- **\#moj-forms-technical-discussions [private]**
+Team channel to raise issue around the platform technoloy
+- **\#moj-forms-test-notifications [private]**
+Same as the \#moj-forms-notifications but for the test services
+- **\#moj-forms-ucd-work [private]**
+Team channel to raise issue around UCD
+
+## Webhooks
+Webhooks provide a simple mechanism for external systems to send automated notifications into Slack channels using HTTP requests. By combining Slack channels, monitoring systems, source control platforms, and webhooks, technical teams can create automated, real-time operational visibility across development, testing, and production environments.
+
+###Adding a webhook
+
+- Sign into [Slack Dev](https://api.slack.com/) if you have access, ask the team if not
+- Manage Apps > select *moj_forms* application
+- Incoming  Webhook > Add New Webhook > Select Channel and complete
+- Test it using the curl command
+- Copy the Webhook URL to –deploy repo for the service it's needed in
+- In the app, link the secret in the delpoy-eks folder and update both deploy ment and secrets yaml files.
